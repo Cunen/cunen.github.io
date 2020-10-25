@@ -17,14 +17,29 @@
     form {
       display: flex;
       flex-direction: column;
-      input {
+      .dualButtons {
+        display: flex;
+        justify-content: space-between;
+        button {
+          width: calc(50% - 8px);
+          background-color: transparent;
+          border: 1px solid $border;
+        }
+      }
+      button {
         height: 30px;
+      }
+      input, select {
+        margin: 8px 0;
+        height: 30px;
+      }
+      select {
+        height: 36px;
       }
       .durationButtons {
         display: flex;
         button {
           background-color: transparent;
-          height: 30px;
           width: 75px;
           border: 1px solid gray;
           margin: 8px;

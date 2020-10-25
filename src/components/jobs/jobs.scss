@@ -1,22 +1,64 @@
-.jobsContainer {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-evenly;
-    width: 100%;
-    max-width: 800px;
-    padding: 16px 0;
-    max-height: calc(100vh - 50px);
-    overflow-x: hidden;
-    overflow-y: auto;
+@import '../../theme/theme.scss';
 
-    .jobCube {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        box-shadow: 1px 1px 5px gray;
-        height: 150px;
-        width: 150px;
-        margin: 8px;
+.jobsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 16px 0;
+  max-height: calc(100vh - 50px);
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  max-width: 1000px;
+  @media only screen and (max-width: 1000px) {
+    max-width: 800px;
+  }
+  @media only screen and (max-width: 800px) {
+    max-width: 600px;
+  }
+  @media only screen and (max-width: 600px) {
+    max-width: 400px;
+  }
+  @media only screen and (max-width: 400px) {
+    max-width: 200px;
+  }
+
+
+  
+  .jobCube {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-shadow: 1px 1px 5px gray;
+    height: 184px;
+    width: 184px;
+    margin: 8px;
+    .jobBtn {
+      height: 50%;
+      width: 100%;
+      border: 0px;
+      &:last-child {
+          border-top: 1px solid $border;
+      }
+    }
+  }
+}
+
+.timeleft {
+    position: absolute;
+    right: 0px;
+    top: 8px;
+    padding: 4px;
+    border-radius: 8px 0 0 8px;
+    &.early {
+      background-color: $ok;
+    }
+    &.soon {
+      background-color: $warning;
+    }
+    &.late {
+      background-color: $danger;
     }
 }
