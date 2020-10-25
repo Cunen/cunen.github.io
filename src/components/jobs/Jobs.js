@@ -6,6 +6,7 @@ import './jobs.scss';
 
 function Jobs({ firestore, user }) {
 	const [jobs, setJobs] = React.useState([]);
+	const [users, setUsers] = React.useState([]);
 	const [selectedJob, setSelectedJob] = React.useState();
 	const [editModalOpen, setEditModalOpen] = React.useState(false);
 
@@ -18,6 +19,18 @@ function Jobs({ firestore, user }) {
 				}
 			});
 			setJobs(jobItems);
+		});
+	}, [firestore]);
+
+	React.useEffect(() => {
+		firestore.collection('users').onSnapshot(snapshot => {
+			const userItems = snapshot.docs.map(doc => {
+				return {
+					id: doc.id,
+					...doc.data(),
+				}
+			});
+			setUsers(userItems);
 		});
 	}, [firestore]);
 
@@ -44,9 +57,15 @@ function Jobs({ firestore, user }) {
 						firestore={firestore}
 						selectedJob={selectedJob}
 						setSelectedJob={setSelectedJob}
-						openEditModal={handleOpenEditModal} />
+						openEditModal={handleOpenEditModal}
+						assignee={users.find(user => user.email === job.assignee)} />
 			})}
-			{editModalOpen && <EditModal closeEditModal={handleModalClose} firestore={firestore} job={selectedJob} />}
+			{editModalOpen && <EditModal
+				closeEditModal={handleModalClose}
+				firestore={firestore}
+				job={selectedJob}
+				users={users} />
+			}
 	</div>;
 }
 

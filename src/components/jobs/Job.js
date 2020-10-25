@@ -16,7 +16,7 @@ function Timeleft({ job }) {
   const getUnitAndTimeLeft = () => {
     const diff = Math.abs(secondDiff)
     if (diff < minute) {
-      return diff + ' seconds';
+      return Math.floor(diff) + ' seconds';
     } else if (diff < hour) {
       return Math.floor(diff / minute) + ' minutes';
     } else if (diff < day) {
@@ -45,8 +45,14 @@ function Timeleft({ job }) {
   </div>;
 }
 
-export default function Job({ job, firestore, selectedJob, setSelectedJob, openEditModal }) {
+function AssigneeBubble({ url }) {
+  return <img className="assigneeBubble" src={url} alt={url} />
+}
+
+export default function Job({ job, firestore, selectedJob, setSelectedJob, openEditModal, assignee }) {
   const { getCategoryIcon } = useCategories();
+
+  console.log(assignee);
 
   const handleClick = () => {
     setSelectedJob(job);
@@ -66,6 +72,7 @@ export default function Job({ job, firestore, selectedJob, setSelectedJob, openE
             <button className="jobBtn" onClick={openEditModal}>Edit</button>
           </>
         : <>
+          {assignee && <AssigneeBubble url={assignee.imageUrl} />}
           <Timeleft job={job} />
           {getCategoryIcon(job.category, 70)}
           {job.name}

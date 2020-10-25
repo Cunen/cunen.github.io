@@ -1,6 +1,6 @@
 import React from 'react';
 import {IconContext} from 'react-icons';
-import {FaUtensils, FaBed, FaShoppingCart} from 'react-icons/fa';
+import {FaUtensils, FaBed, FaShoppingCart, FaToilet, FaHiking, FaCouch, FaHome} from 'react-icons/fa';
 
 const categories = [
   {
@@ -12,9 +12,25 @@ const categories = [
     icon: <FaUtensils />,
   },
   {
+    name: 'Living room',
+    icon: <FaCouch />,
+  },
+  {
+    name: 'House',
+    icon: <FaHome />,
+  },
+  {
     name: 'Shopping',
     icon: <FaShoppingCart />,
   },
+  {
+    name: 'Toilet',
+    icon: <FaToilet />,
+  },
+  {
+    name: 'Outside',
+    icon: <FaHiking />,
+  }
 ]
 
 export function useCategories() {

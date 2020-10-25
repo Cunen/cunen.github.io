@@ -14,18 +14,20 @@ const intervalUnits = [
   { title: 'Months', milliseconds: monthInMilliseconds },
 ]
 
-export default function EditModal({ firestore, closeEditModal, job }) {
+export default function EditModal({ firestore, closeEditModal, job, users }) {
   const { categories } = useCategories();
   const [name, setName] = React.useState(job ? job.name : '');
   const [interval, setInterval] = React.useState(job ? job.interval : 1);
   const [intervalUnit, setIntervalUnit] = React.useState(job ? job.intervalUnit : intervalUnits[0]);
   const [points, setPoints] = React.useState(job ? job.points : 1);
   const [category, setCategory] = React.useState(job ? job.category : categories[0].name);
+  const [assignee, setAssignee] = React.useState(job ? job.assignee : 'nobody');
 
   const handleNameChange = event => setName(event.currentTarget.value);
   const handleIntervalChange = event => setInterval(event.currentTarget.value);
   const handlePointsChange = event => setPoints(event.currentTarget.value);
   const handleCategoryChange = event => setCategory(event.currentTarget.value);
+  const handleAssigneeChange = event => setAssignee(event.currentTarget.value);
 
   const handleCloseClick = event => {
     if (event.target.id === 'modalBackground') {
@@ -43,6 +45,7 @@ export default function EditModal({ firestore, closeEditModal, job }) {
         points,
         category,
         completedAt: new Date(),
+        assignee,
     });
     closeEditModal();
   };
@@ -57,6 +60,7 @@ export default function EditModal({ firestore, closeEditModal, job }) {
       intervalUnit,
       points,
       category,
+      assignee,
     });
     closeEditModal();
   }
@@ -71,16 +75,20 @@ export default function EditModal({ firestore, closeEditModal, job }) {
   return <div id="modalBackground" className="modalBackground" onClick={handleCloseClick} onSubmit={job ? handleEditJob : handleAddJob}>
     <div className="modal">
       <form>
-        <p>{job ? 'Edit job' : 'Create a job'}</p>
-        <input type="text" name="name" placeholder="Name" value={name} onChange={handleNameChange}/>
-        <p>Category</p>
-        <select name="category" value={category} onChange={handleCategoryChange}>
+        <label htmlFor="name">
+          {job ? 'Edit job' : 'Create a job'}
+        </label>
+        <input type="text" id="name" name="name" placeholder="Name" value={name} onChange={handleNameChange}/>
+
+        <label htmlFor="category">Category</label>
+        <select name="category" id="category" value={category} onChange={handleCategoryChange}>
           {categories.map(cat => {
             return <option key={cat.name} value={cat.name}>{cat.name}</option>
           })}
         </select>
-        <p>Repeat every</p>
-        <input type="number" name="interval" value={interval} onChange={handleIntervalChange} />
+
+        <label htmlFor="interval">Repeat every</label>
+        <input type="number" name="interval" id="interval" value={interval} onChange={handleIntervalChange} />
         <div className="durationButtons">
           {intervalUnits.map(unit => {
             return <button
@@ -91,8 +99,18 @@ export default function EditModal({ firestore, closeEditModal, job }) {
             </button>;
           })}
         </div>
-        <p>Points</p>
-        <input type="number" name="points" value={points} onChange={handlePointsChange} />
+
+        <label htmlFor="points">Points</label>
+        <input type="number" name="points" id="points" value={points} onChange={handlePointsChange} />
+
+        <label htmlFor="assignee">Assignee</label>
+        <select name="assignee" id="assignee" value={assignee} onChange={handleAssigneeChange}>
+          <option value="nobody">Anyone</option>
+          {users.map(user => {
+            return <option key={user.email} value={user.email}>{user.name}</option>;
+          })}
+        </select>
+
         {!job && <button type="submit" disabled={!name}>Create</button>}
         {job && <div className="dualButtons">
           <button type="subbmit">Save</button>
