@@ -1,0 +1,22 @@
+.jobsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 100%;
+    max-width: 800px;
+    padding: 16px 0;
+    max-height: calc(100vh - 50px);
+    overflow-x: hidden;
+    overflow-y: auto;
+
+    .jobCube {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        box-shadow: 1px 1px 5px gray;
+        height: 150px;
+        width: 150px;
+        margin: 8px;
+    }
+}

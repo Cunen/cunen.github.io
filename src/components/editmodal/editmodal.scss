@@ -1,0 +1,44 @@
+@import '../../theme/theme.scss';
+
+.modalBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .modal {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    form {
+      display: flex;
+      flex-direction: column;
+      input {
+        height: 30px;
+      }
+      .durationButtons {
+        display: flex;
+        button {
+          background-color: transparent;
+          height: 30px;
+          width: 75px;
+          border: 1px solid gray;
+          margin: 8px;
+          &.selected {
+            background-color: $orange;
+          }
+        }
+        button:first-child {
+          margin-left: 0px;
+        }
+        button:last-child {
+          margin-right: 0px;
+        }
+      }
+    }
+  }
+}
