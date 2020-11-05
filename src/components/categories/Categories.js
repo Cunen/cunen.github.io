@@ -1,6 +1,5 @@
 import React from 'react';
-import {IconContext} from 'react-icons';
-import {FaUtensils, FaBed, FaShoppingCart, FaToilet, FaHiking, FaCouch, FaHome, FaPlus} from 'react-icons/fa';
+import {FaUtensils, FaBed, FaShoppingCart, FaToilet, FaHiking, FaCouch, FaHome, FaPlus, FaBars, FaRegCheckSquare} from 'react-icons/fa';
 
 export const categoriesAndIcons = [
   {
@@ -41,6 +40,14 @@ export const categoriesAndIcons = [
   {
     name: 'Plus',
     icon: <FaPlus />,
+  },
+  {
+    name: 'Menu',
+    icon: <FaBars />,
+  },
+  {
+    name: 'Check',
+    icon: <FaRegCheckSquare />,
   }
 ]
 

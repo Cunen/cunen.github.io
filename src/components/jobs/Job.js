@@ -1,5 +1,4 @@
 import React from 'react';
-import { useCategories } from '../categories/Categories';
 import Icon from '../icon/Icon';
 
 function Timeleft({ job }) {

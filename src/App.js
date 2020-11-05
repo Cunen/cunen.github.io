@@ -7,6 +7,8 @@ import { useAuthState } from 'react-firebase-hooks/auth';
 import Jobs from './components/jobs/Jobs';
 import { IconContext } from 'react-icons';
 import { FaSignInAlt } from 'react-icons/fa';
+import Icon from './components/icon/Icon';
+import Tasks from './components/tasks/Tasks';
 
 firebase.initializeApp({
   apiKey: 'AIzaSyDuLhFU-X9QUqlx0Cw1sn92eAtB7pSOSk0',
@@ -70,6 +72,25 @@ function SignOut() {
   </button>;
 }
 
+function NavMenu({ selectedView, setSelectedView }) {
+  const [open, setOpen] = React.useState(false);
+
+  const getClassName = view => {
+    if (selectedView === view) return 'selected';
+    return '';
+  }
+
+  return <div className="clickableMenu" onClick={() => setOpen(!open)}>
+    <Icon icon="Menu" color="white" />
+    {open &&
+      <div className="navMenu">
+        <button className={getClassName('jobs')} onClick={() => setSelectedView('jobs')}>Jobs</button>
+        <button className={getClassName('tasks')}  onClick={() => setSelectedView('tasks')}>Tasks</button>
+      </div>
+    }
+  </div>;
+}
+
 function UserInfo({ user }) {
   const [logoutVisible, setLogoutVisible] = React.useState(false);
 
@@ -87,13 +108,26 @@ function UserInfo({ user }) {
 
 function App() {
   const [user] = useAuthState(auth);
+  const savedView = localStorage.getItem('selectedView');
+  const [selectedView, setSelectedView] = React.useState(savedView || 'jobs');
+
+  const handleSetSelectedView = (view) => {
+    setSelectedView(view);
+    localStorage.setItem('selectedView', view);
+  };
 
   return (
     <div className='App'>
       <div className="header">
-        <UserInfo user={user} />
+        <div className="headerMenu">
+          <NavMenu selectedView={selectedView} setSelectedView={handleSetSelectedView} />
+        </div>
+        <div className="headerInfo">
+          <UserInfo user={user} />
+        </div>
       </div>
-      {user && <Jobs firestore={firestore} user={user} />}
+      {user && selectedView === 'jobs' && <Jobs firestore={firestore} user={user} />}
+      {user && selectedView === 'tasks' && <Tasks firestore={firestore} user={user} />}
       {!user && <SignIn />}
     </div>
   );

@@ -22,7 +22,6 @@ function Jobs({ firestore, user }) {
 			const sortedJobs = orderBy(jobItems, job => {
 				return job.completedAt.seconds + job.interval * (job.intervalUnit.milliseconds / 1000);
 			});
-			console.log(sortedJobs);
 			setJobs(sortedJobs);
 		});
 	}, [firestore]);

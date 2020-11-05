@@ -19,10 +19,16 @@
   padding: 0px 16px;
   height: 50px;
   display: flex;
-  flex-direction: row-reverse;
+  justify-content: space-between;
   align-items: center;
   box-shadow: 0px 0px 5px black;
   background-color: $orange;
+
+  .headerInfo {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+  }
 
   .userImage {
     width: 40px;
@@ -30,6 +36,34 @@
     border-radius: 20px;
     box-shadow: 0px 0px 5px $border;
     margin: 0 16px;
+  }
+
+  .clickableMenu {
+    cursor: pointer;
+    position: relative;
+    .navMenu {
+      position: absolute;
+      background: white;
+      top: 35px;
+      left: 8px;
+      z-index: 2;
+      box-shadow: 0px 0px 5px black;
+      button {
+        height: 50px;
+        width: 150px;
+        background: transparent;
+        border: 1px solid $border;
+        border-top: none;
+        &:first-child {
+          border-top: 1px solid $border;
+        }
+        &.selected {
+          font-size: 16px;
+          font-weight: 700;
+          color: $orange;
+        }
+      }
+    }
   }
 }
 
@@ -51,4 +85,5 @@
   top: 66px;
   height: 100px;
   width: 100px;
+  z-index: 2;
 }
