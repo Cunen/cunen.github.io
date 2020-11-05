@@ -1,5 +1,6 @@
 import React from 'react';
 import { useCategories } from '../categories/Categories';
+import Icon from '../icon/Icon';
 
 function Timeleft({ job }) {
   const completedAtMilliseconds = job.completedAt.seconds * 1000;
@@ -50,33 +51,41 @@ function AssigneeBubble({ url }) {
 }
 
 export default function Job({ job, firestore, selectedJob, setSelectedJob, openEditModal, assignee }) {
-  const { getCategoryIcon } = useCategories();
+  const [confirm, setConfirm] = React.useState(false);
 
-  console.log(assignee);
+  React.useEffect(() => {
+    if (selectedJob !== job) {
+      setConfirm(false);
+    }
+  }, [selectedJob, job]);
 
   const handleClick = () => {
-    setSelectedJob(job);
+    selectedJob === job ? setSelectedJob(undefined) : setSelectedJob(job);
   }
 
   const markAsDone = () => {
+    setConfirm(false);
     const item = firestore.collection('jobs').doc(job.id);
     item.update({
       completedAt: new Date(),
     });
   }
 
-  return <div className="jobCube" onClick={handleClick}>
-      {job === selectedJob
-        ? <>
-            <button className="jobBtn" onClick={markAsDone}>Mark done</button>
-            <button className="jobBtn" onClick={openEditModal}>Edit</button>
-          </>
-        : <>
-          {assignee && <AssigneeBubble url={assignee.imageUrl} />}
-          <Timeleft job={job} />
-          {getCategoryIcon(job.category, 70)}
-          {job.name}
-        </>
-      }
-  </div>
+  return <>
+    <div className="jobCube" onClick={handleClick}>
+      {assignee && <AssigneeBubble url={assignee.imageUrl} />}
+      <Timeleft job={job} />
+      <Icon icon={job.category} size={30} />
+      {job.name}
+    </div>
+    {selectedJob === job &&
+      <div className="expandedJob">
+        <button className="jobBtn" onClick={openEditModal}>Edit</button>
+        {confirm
+          ? <button className="jobBtn" onClick={markAsDone}>Are you sure?</button>
+          : <button className="jobBtn" onClick={() => setConfirm(true)}>Mark done</button>
+        }
+      </div>
+    }
+  </>
 };

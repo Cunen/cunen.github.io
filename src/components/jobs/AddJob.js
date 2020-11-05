@@ -1,14 +1,9 @@
 import React from 'react';
-import { IconContext } from 'react-icons';
-import { FaPlus } from 'react-icons/fa';
+import Icon from '../icon/Icon';
 
 export default function AddJob({ openCreateModal }) {
   return <div className="addJob jobCube" onClick={openCreateModal}>
-      <IconContext.Provider value={{ style: {fontSize: '100px', color: "rgb(0, 123, 255)"}}}>
-        <div>
-          <FaPlus />
-        </div>
-      </IconContext.Provider>
+      <Icon icon="Plus" size={30} color="rgb(0, 123, 255)" />
       Add a new job
   </div>;
 };

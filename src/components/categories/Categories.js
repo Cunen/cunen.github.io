@@ -1,49 +1,50 @@
 import React from 'react';
 import {IconContext} from 'react-icons';
-import {FaUtensils, FaBed, FaShoppingCart, FaToilet, FaHiking, FaCouch, FaHome} from 'react-icons/fa';
+import {FaUtensils, FaBed, FaShoppingCart, FaToilet, FaHiking, FaCouch, FaHome, FaPlus} from 'react-icons/fa';
 
-const categories = [
+export const categoriesAndIcons = [
   {
     name: 'Bedroom',
     icon: <FaBed />,
+    isCategory: true,
   },
   {
     name: 'Kitchen',
     icon: <FaUtensils />,
+    isCategory: true,
   },
   {
     name: 'Living room',
     icon: <FaCouch />,
+    isCategory: true,
   },
   {
     name: 'House',
     icon: <FaHome />,
+    isCategory: true,
   },
   {
     name: 'Shopping',
     icon: <FaShoppingCart />,
+    isCategory: true,
   },
   {
     name: 'Toilet',
     icon: <FaToilet />,
+    isCategory: true,
   },
   {
     name: 'Outside',
     icon: <FaHiking />,
+    isCategory: true,
+  },
+  {
+    name: 'Plus',
+    icon: <FaPlus />,
   }
 ]
 
 export function useCategories() {
-  const getCategoryIcon = (category, size = 24, color = 'black') => {
-    const cat = categories.find(entry => entry.name === category);
-    if (!cat) return <>404</>;
-    return <IconContext.Provider value={{ style: {fontSize: size + 'px', color }}}>
-      <div>
-        {cat.icon}
-      </div>
-    </IconContext.Provider>
-  }
-
-
-  return { categories, getCategoryIcon };
+  const categories = categoriesAndIcons.filter(i => i.isCategory);
+  return { categories };
 };

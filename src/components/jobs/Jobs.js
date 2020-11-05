@@ -1,3 +1,4 @@
+import { orderBy } from 'lodash';
 import React from 'react';
 import EditModal from '../editmodal/EditModal';
 import AddJob from './AddJob';
@@ -18,7 +19,11 @@ function Jobs({ firestore, user }) {
 					...doc.data(),
 				}
 			});
-			setJobs(jobItems);
+			const sortedJobs = orderBy(jobItems, job => {
+				return job.completedAt.seconds + job.interval * (job.intervalUnit.milliseconds / 1000);
+			});
+			console.log(sortedJobs);
+			setJobs(sortedJobs);
 		});
 	}, [firestore]);
 
@@ -49,7 +54,6 @@ function Jobs({ firestore, user }) {
 	}
 
 	return <div className="jobsContainer">
-			<AddJob firestore={firestore} user={user} openCreateModal={handleOpenCreateModal} />
 			{jobs && jobs.map(job => {
 					return <Job
 						key={job.id}
@@ -60,6 +64,7 @@ function Jobs({ firestore, user }) {
 						openEditModal={handleOpenEditModal}
 						assignee={users.find(user => user.email === job.assignee)} />
 			})}
+			<AddJob firestore={firestore} user={user} openCreateModal={handleOpenCreateModal} />
 			{editModalOpen && <EditModal
 				closeEditModal={handleModalClose}
 				firestore={firestore}
