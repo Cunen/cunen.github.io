@@ -8,7 +8,7 @@ function Days({ days, title, size, variant, selectedDate, setSelectedDate, activ
 		<Container>
 			{days.map((day, i) => {
 				if (day === null) {
-					return <Day key={'nullday-' + i} day={day} />;
+					return <Day key={'nullday-' + i} day={day} size={size} variant={variant} />;
 				}
 				const acts = activities.filter(act => {
 					const dateMatch = act.date === day;

@@ -54,6 +54,7 @@ function Day({ day, size, variant, selectedDate, setSelectedDate, activities }) 
 }
 
 const NullDay = styled.div`
+	transition: all 1s;
 	background-color: #0e0e0e;
 	border: 1px solid #040404;
 	width: ${props => props.width || 32}px;
