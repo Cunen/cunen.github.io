@@ -4,6 +4,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import Days from './Days';
 import Options from './Options';
 import DayDialog from './DayDialog';
+import {  monthFromNumber } from '../utils/dateUtils';
 
 const getDaysInYear = year => {
 	const startDate = new Date(year, 0, 1);
@@ -35,28 +36,62 @@ function Stats({ db, setUser, user }) {
 	}, []);
 
 	const renderYear = () => {
-		return <Days title={year} days={days} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} activities={activities} />;
+		return <Days
+			title={year}
+			days={days}
+			size={size}
+			variant={variant}
+			selectedDate={selectedDate}
+			setSelectedDate={setSelectedDate}
+			activities={activities} />;
 	}
 
 	const renderMonths = () => {
 		const array = new Array(12).fill(0);
 		return <>{array.map((m, i) => {
 			const dates = days.filter(date => date.getMonth() === i);
-			return <Days key={'month'+i} title={'Month ' + (i + 1)} days={dates} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} activities={activities} />;
+			return <Days
+				key={'month'+i}
+				title={monthFromNumber(i)}
+				days={dates}
+				size={size}
+				variant={variant}
+				selectedDate={selectedDate}
+				setSelectedDate={setSelectedDate}
+				activities={activities} />;
 		})}</>
 	}
 
 	const renderWeeks = () => {
 		const weeks = [];
 		let week = [];
+		let first = true;
 		days.forEach(day => {
 			week.push(day);
 			if (day.getDay() === 0) {
+				if (first && week.length < 7) {
+					const array = new Array(7 - week.length).fill(null);
+					week.unshift(...array);
+					first = false;
+				}
+				weeks.push([...week]);
+				week = [];
+			} else if (day.getDate() === 31 && day.getMonth() === 11) {
+				const array = new Array(7 - week.length).fill(null);
+				week.push(...array);
 				weeks.push([...week]);
 				week = [];
 			}
 		});
-		return weeks.map((week, i) => <Days key={'week'+i} title={'Week ' + i} days={week} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} activities={activities} />)
+		return weeks.map((week, i) => <Days
+			key={'week'+i}
+			title={'Week ' + i}
+			days={week}
+			size={size}
+			variant={variant}
+			selectedDate={selectedDate}
+			setSelectedDate={setSelectedDate}
+			activities={activities} />)
 	}
 
 	const renderDays = () => {

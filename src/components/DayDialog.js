@@ -77,11 +77,11 @@ function DayDialog({ dbRef, db, selectedDate, setSelectedDate, activities, setAc
 	const activitiesForDay = getActivitiesForSelectedDate();
 
 	return <Dialog open={!!selectedDate} onClose={handleModalClose}>
-		<DialogTitle>
+		<DialogTitle style={{ padding: '16px' }}>
 			<TitleContent>
-				<Button onClick={() => handleDateChange(-1)}><ArrowLeftIcon /></Button>
+				<IconButton onClick={() => handleDateChange(-1)}><ArrowLeftIcon /></IconButton>
 				<DateTitle>{monthFromDate(selectedDate)} {dayOrderFromDate(selectedDate)}, {selectedDate?.getFullYear()}</DateTitle>
-				<Button onClick={() => handleDateChange(1)}><ArrowRightIcon /></Button>
+				<IconButton onClick={() => handleDateChange(1)}><ArrowRightIcon /></IconButton>
 			</TitleContent>
 		</DialogTitle>
 		<DialogContent>
@@ -140,22 +140,29 @@ const BGWrapper = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: space-evenly;
-	width: 448px;
+	flex-wrap: wrap;
+	width: calc(min(448px, 100%));
 `;
 
 const ListWrapper = styled.div`
 	display: flex;
 	justify-content: center;
 	min-height: 360px;
+	@media (max-width: 460px) {
+		margin-left: -24px;
+		margin-right: -24px;
+	}
 `;
 
 const TitleContent = styled.div`
 	display: flex;
+	align-items: center;
 `;
 
 const DateTitle = styled.div`
 	display: flex;
 	justify-content: center;
+	font-size: 16px;
 	flex: 1;
 `;
 

@@ -29,6 +29,12 @@ const getHeight = (size, variant) => {
 
 
 function Day({ day, size, variant, selectedDate, setSelectedDate, activities }) {
+
+	if (day === null) {
+		return <NullDay width={getWidth(size, variant)} height={getHeight(size, variant)} />
+	}
+
+
 	const handleClick = () => setSelectedDate(day);
 	const hasActivities = activities.length > 0;
 	const today = new Date();
@@ -46,6 +52,13 @@ function Day({ day, size, variant, selectedDate, setSelectedDate, activities }) 
 		onClick={handleClick}>
 	</Wrapper>;
 }
+
+const NullDay = styled.div`
+	background-color: #0e0e0e;
+	border: 1px solid #040404;
+	width: ${props => props.width || 32}px;
+	height: ${props => props.height || 32}px;
+`;
 
 const Wrapper = styled.div`
 	border: 1px solid ${props => props.borderColor};

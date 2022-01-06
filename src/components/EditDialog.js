@@ -168,7 +168,7 @@ const InputWrapper = styled.div`
 	display: flex;
 	flex-direction: column;
 	gap: 16px;
-	min-width: 400px;
+	min-width: calc(min(400px, 100%));
 	min-height: 314px;
 `;
 

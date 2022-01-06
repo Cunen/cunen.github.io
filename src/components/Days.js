@@ -6,7 +6,10 @@ function Days({ days, title, size, variant, selectedDate, setSelectedDate, activ
 	return <Wrapper>
 		<Title>{title}</Title>
 		<Container>
-			{days.map(day => {
+			{days.map((day, i) => {
+				if (day === null) {
+					return <Day key={'nullday-' + i} day={day} />;
+				}
 				const acts = activities.filter(act => {
 					const dateMatch = act.date === day;
 					const secondsMatch = act.date?.seconds === day.getTime() / 1000;
