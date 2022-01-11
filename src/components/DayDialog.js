@@ -43,7 +43,6 @@ function DayDialog({ dbRef, db, selectedDate, setSelectedDate, activities, setAc
 	}
 
 	const deleteActivity = (id) => {
-		console.log(id);
 		deleteDoc(doc(db, userCollection, id));
 		setActivities(activities.filter(a => a.id !== id));
 	}

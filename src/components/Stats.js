@@ -5,8 +5,9 @@ import Days from './Days';
 import Options from './Options';
 import DayDialog from './DayDialog';
 import {  monthFromNumber } from '../utils/dateUtils';
+import ImportDialog from './ImportDialog';
 
-const getDaysInYear = year => {
+export const getDaysInYear = year => {
 	const startDate = new Date(year, 0, 1);
 	const endDate = new Date(year + 1, 0, 1);
 	const days = [];
@@ -17,15 +18,28 @@ const getDaysInYear = year => {
 	return days;
 }
 
+export const getCodeFromWindowSearch = () => {
+	const search = window.location.search;
+	const replaced = search.replace('?', '');
+	const split = replaced.split('&');
+	const obj = {}
+	split.forEach(s => {
+		const equalSplit = s.split('=');
+		obj[equalSplit[0]] = equalSplit[1];
+	});
+	return obj.code;
+}
+
 function Stats({ db, setUser, user }) {
-	const [year] = React.useState(2022);
-	const [days] = React.useState(getDaysInYear(year));
+	const [year, setYear] = React.useState(2022);
+	const [days, setDays] = React.useState(getDaysInYear(year));
 	const [range, setRange] = React.useState('year');
   const [size, setSize] = React.useState('m');
   const [variant, setVariant] = React.useState('square');
 	const [selectedDate, setSelectedDate] = React.useState();
 	const [activities, setActivities] = React.useState([]);
 	const [userCollection] = React.useState('activities-' + user.user.uid);
+	const [importOpen, setImportOpen] = React.useState(false);
 	const dbRef = collection(db, userCollection);
 
 	React.useEffect(() => {
@@ -120,13 +134,17 @@ function Stats({ db, setUser, user }) {
 
 	return <Wrapper>
 		<Options
+			year={year}
+			setYear={setYear}
+			setDays={setDays}
 			range={range}
 			variant={variant}
 			size={size}
 			handleRangeChange={handleRangeChange}
 			handleVariantChange={handleVariantChange}
 			handleSizeChange={handleSizeChange}
-			setUser={setUser} />
+			setUser={setUser}
+			setImportOpen={setImportOpen} />
 		<Scrollable>
 			{renderDays()}
 		</Scrollable>
@@ -138,6 +156,12 @@ function Stats({ db, setUser, user }) {
 			setSelectedDate={setSelectedDate}
 			setActivities={setActivities}
 			userCollection={userCollection} />
+		<ImportDialog
+			open={importOpen || !!getCodeFromWindowSearch()}
+			close={setImportOpen}
+			db={db}
+			userCollection={userCollection}
+			dbRef={dbRef} />
 	</Wrapper>;
 }
 

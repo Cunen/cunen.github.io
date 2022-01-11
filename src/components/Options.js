@@ -1,10 +1,30 @@
-import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Button, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
 import Logout from './Logout';
+import { getDaysInYear } from './Stats';
 
-function Options({ range, variant, size, handleRangeChange, handleVariantChange, handleSizeChange, setUser }) {
+function Options({ range, variant, size, handleRangeChange, handleVariantChange, handleSizeChange, setUser, setImportOpen, year, setYear, setDays }) {
+	const handleYearChange = (e, value) => {
+		setYear(e.target.value);
+		setDays(getDaysInYear(e.target.value));
+	}
+
 	return <Wrapper>
+		<InputLabel id="yearlabel">Year</InputLabel>
+			<Select
+				labelId="yearlabel"
+				id="year-select"
+				value={year}
+				label="Year"
+				onChange={handleYearChange}
+			>
+			<MenuItem value={2022}>2022</MenuItem>
+			<MenuItem value={2021}>2021</MenuItem>
+			<MenuItem value={2020}>2020</MenuItem>
+			<MenuItem value={2019}>2019</MenuItem>
+			<MenuItem value={2018}>2018</MenuItem>
+		</Select>
 		<ToggleButtonGroup color="primary" value={range} exclusive onChange={handleRangeChange}>
 			<ToggleButton value="year">YEAR</ToggleButton>
 			<ToggleButton value="month">MONTH</ToggleButton>
@@ -20,6 +40,7 @@ function Options({ range, variant, size, handleRangeChange, handleVariantChange,
 			<ToggleButton value="m">M</ToggleButton>
 			<ToggleButton value="l">L</ToggleButton>
 		</ToggleButtonGroup>
+		<Button variant="contained" onClick={() => setImportOpen(true)}>Import</Button>
 		<Logout setUser={setUser} />
 	</Wrapper>;
 }

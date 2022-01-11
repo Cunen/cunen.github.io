@@ -11,9 +11,10 @@ function Days({ days, title, size, variant, selectedDate, setSelectedDate, activ
 					return <Day key={'nullday-' + i} day={day} size={size} variant={variant} />;
 				}
 				const acts = activities.filter(act => {
-					const dateMatch = act.date === day;
-					const secondsMatch = act.date?.seconds === day.getTime() / 1000;
-					return dateMatch || secondsMatch;
+					const activityDate = act.date.toDate();
+					return activityDate.getDate() === day.getDate()
+						&& activityDate.getMonth() === day.getMonth()
+						&& activityDate.getFullYear() === day.getFullYear();
 				});
 				return <Day key={day} day={day} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} activities={acts} /> 
 			})}

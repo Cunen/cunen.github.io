@@ -9,6 +9,7 @@ import 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import Login from './components/Login';
 
+
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
@@ -33,11 +34,14 @@ function App() {
   const tracker = localStorage.getItem('cunen-is-tracking-you');
   const [user, setUser] = React.useState(tracker ? JSON.parse(tracker) : undefined);
 
+  console.log(window.location.search);
+
+
   return (
     <ThemeProvider theme={darkTheme}>
       <Wrapper>
-        {user && <Stats db={db} setUser={setUser} user={user} />}
-        {!user && <Login setUser={setUser} />}
+        {!user ? <Login setUser={setUser} /> 
+        : <Stats db={db} setUser={setUser} user={user} />}
       </Wrapper>
     </ThemeProvider>
   );
