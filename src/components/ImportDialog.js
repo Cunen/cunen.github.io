@@ -121,7 +121,7 @@ function ImportDialog({ db, dbRef, userCollection, open, close }) {
 
 	const authorize = () => {
 		const { origin } = window.location;
-		window.location.href = `http://www.strava.com/oauth/authorize?client_id=${clientID}&response_type=code&redirect_uri=${origin}&approval_prompt=force&scope=activity:read_all`;
+		window.location.href = `http://www.strava.com/oauth/authorize?client_id=${clientID}&response_type=code&redirect_uri=${origin}/exchange_token&approval_prompt=force&scope=activity:read_all`;
 	}
 
 	const handleClientIDChange = (e) => {

@@ -8,6 +8,7 @@ import 'firebase/firestore';
 import 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import Login from './components/Login';
+import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
 
 
 const darkTheme = createTheme({
@@ -40,8 +41,16 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <Wrapper>
-        {!user ? <Login setUser={setUser} /> 
-        : <Stats db={db} setUser={setUser} user={user} />}
+        {!user && <Login setUser={setUser} />}
+        {user &&
+        <Switch>
+          <Route exact path="/exchange_token">
+            <Login setUser={setUser} />
+          </Route>
+          <Route path="/">
+            <Stats db={db} setUser={setUser} user={user} />
+          </Route>
+        </Switch>}
       </Wrapper>
     </ThemeProvider>
   );
