@@ -105,6 +105,8 @@ function EditDialog({ activity, activities, setActivities, close, db, userCollec
 					<ToggleButton value="Run"><TypeIcon type="Run" /></ToggleButton>
 					<ToggleButton value="Gym"><TypeIcon type="Gym" /></ToggleButton>
 					<ToggleButton value="Cycle"><TypeIcon type="Cycle" /></ToggleButton>
+					<ToggleButton value="Hike"><TypeIcon type="Hike" /></ToggleButton>
+					<ToggleButton value="Kayak"><TypeIcon type="Kayak" /></ToggleButton>
 				</ToggleButtonGroup>
 
 				<InputWrapper>
@@ -133,7 +135,7 @@ function EditDialog({ activity, activities, setActivities, close, db, userCollec
 						}
 					</>}
 
-					{simple && <Typography>Duration ({duration / 60} min)</Typography>}
+					{simple && <Typography>Duration ({(duration / 60).toFixed(0)} min)</Typography>}
 					{simple 
 						? <Slider value={duration / 60} min={0} max={300} aria-label="Default" valueLabelDisplay="auto" onChange={handleSimpleDurationChange} />
 						: <TextField
@@ -146,7 +148,7 @@ function EditDialog({ activity, activities, setActivities, close, db, userCollec
 							}} />
 					}
 
-					{simple && <Typography>Calories ({calories} kcal)</Typography>}
+					{simple && <Typography>Calories ({calories.toFixed(0)} kcal)</Typography>}
 					{simple 
 						? <Slider value={calories} step={16} min={0} max={1000} aria-label="Default" valueLabelDisplay="auto" onChange={handleCaloriesChange} />
 						: <TextField

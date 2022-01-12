@@ -32,24 +32,32 @@ function ImportDialog({ db, dbRef, userCollection, open, close }) {
 			case 'Run':
 				return 'Run'
 			case 'WeightTraining':
+			case 'Workout':
 				return 'Gym';
 			case 'Walk':
+				return 'Walk';
+			case 'Kayaking':
+				return 'Kayak';
+			case 'Hike':
+				return 'Hike';
 			default:
-				return 'Walk'
+				return 'Other'
 		}
 	}
 
 	const getCaloriesByType = (type, duration, distance) => {
+		if (!duration && !distance) return 0;
 		switch (type) {
 			case 'Ride':
 				return Math.floor(30 * (distance / 1000));
 			case 'Walk':
+			case 'Hike':
 				return Math.floor(60 * (distance / 1000));
 			case 'Run':
 				return Math.floor(75 * (distance / 1000));
 			case 'Gym':
-				return Math.floor(366 * ((duration / 60) / 60));
 			default:
+				return Math.floor(366 * ((duration / 60) / 60));
 		}
 	}
 

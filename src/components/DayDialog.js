@@ -35,7 +35,7 @@ function DayDialog({ dbRef, db, selectedDate, setSelectedDate, activities, setAc
 			startTime: new Date(),
 			duration: 1800,
 			distance: 3500,
-			type: type || 'walk',
+			type: type || 'Other',
 		};
 		const addedDoc = await addDoc(dbRef, activity);
 		const addedActivity = await getDoc(addedDoc);
