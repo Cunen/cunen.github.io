@@ -30,7 +30,7 @@ export const getCodeFromWindowSearch = () => {
 	return obj.code;
 }
 
-function Stats({ db, setUser, user }) {
+function Stats({ db, user, importOpen, setImportOpen }) {
 	const [year, setYear] = React.useState(2022);
 	const [days, setDays] = React.useState(getDaysInYear(year));
 	const [range, setRange] = React.useState('year');
@@ -39,7 +39,6 @@ function Stats({ db, setUser, user }) {
 	const [selectedDate, setSelectedDate] = React.useState();
 	const [activities, setActivities] = React.useState([]);
 	const [userCollection] = React.useState('activities-' + user.user.uid);
-	const [importOpen, setImportOpen] = React.useState(false);
 	const dbRef = collection(db, userCollection);
 
 	React.useEffect(() => {
@@ -142,9 +141,7 @@ function Stats({ db, setUser, user }) {
 			size={size}
 			handleRangeChange={handleRangeChange}
 			handleVariantChange={handleVariantChange}
-			handleSizeChange={handleSizeChange}
-			setUser={setUser}
-			setImportOpen={setImportOpen} />
+			handleSizeChange={handleSizeChange} />
 		<Scrollable>
 			{renderDays()}
 		</Scrollable>

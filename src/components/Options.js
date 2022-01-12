@@ -1,24 +1,22 @@
-import { Button, InputLabel, MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { MenuItem, Select, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
-import Logout from './Logout';
 import { getDaysInYear } from './Stats';
 
-function Options({ range, variant, size, handleRangeChange, handleVariantChange, handleSizeChange, setUser, setImportOpen, year, setYear, setDays }) {
+function Options({ range, variant, size, handleRangeChange, handleVariantChange, handleSizeChange, year, setYear, setDays }) {
 	const handleYearChange = (e, value) => {
 		setYear(e.target.value);
 		setDays(getDaysInYear(e.target.value));
 	}
 
 	return <Wrapper>
-		<InputLabel id="yearlabel">Year</InputLabel>
-			<Select
-				labelId="yearlabel"
-				id="year-select"
-				value={year}
-				label="Year"
-				onChange={handleYearChange}
-			>
+		<Select
+			labelId="yearlabel"
+			id="year-select"
+			value={year}
+			label="Year"
+			onChange={handleYearChange}
+		>
 			<MenuItem value={2022}>2022</MenuItem>
 			<MenuItem value={2021}>2021</MenuItem>
 			<MenuItem value={2020}>2020</MenuItem>
@@ -40,16 +38,14 @@ function Options({ range, variant, size, handleRangeChange, handleVariantChange,
 			<ToggleButton value="m">M</ToggleButton>
 			<ToggleButton value="l">L</ToggleButton>
 		</ToggleButtonGroup>
-		<Button variant="contained" onClick={() => setImportOpen(true)}>Import</Button>
-		<Logout setUser={setUser} />
 	</Wrapper>;
 }
 
 const Wrapper = styled.div`
   display: flex;
-	flex-wrap: wrap;
-	flex: 0 1;
 	justify-content: center;
+	flex-wrap: wrap;
+	overflow: hidden;
 	padding: 16px;
 	padding-bottom: 0px;
   gap: 16px;

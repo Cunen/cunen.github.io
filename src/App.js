@@ -8,7 +8,11 @@ import 'firebase/firestore';
 import 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import Login from './components/Login';
-import { Route, BrowserRouter as Router, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
+import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MenuIcon from '@mui/icons-material/Menu';
+import { getAuth } from 'firebase/auth';
 
 
 const darkTheme = createTheme({
@@ -33,25 +37,63 @@ const db = getFirestore(firebase);
 function App() {
   // Get tracked lol
   const tracker = localStorage.getItem('cunen-is-tracking-you');
+
   const [user, setUser] = React.useState(tracker ? JSON.parse(tracker) : undefined);
+  const [menuAnchor, setMenuAnchor] = React.useState(null);
+  const [accountAnchor, setAccountAnchor] = React.useState();
+  const [importOpen, setImportOpen] = React.useState(false);
 
-  console.log(window.location.search);
+  const toggleMenu = (e) => setMenuAnchor(e.currentTarget);
+  const closeMenu = () => setMenuAnchor(null);
 
+  const toggleAccount = (e) => setAccountAnchor(e.currentTarget);
+  const closeAccount = () => setAccountAnchor(null);
+
+  const logout = () => {
+    setAccountAnchor(null);
+    const auth = getAuth();
+    auth.signOut();
+    setUser(undefined);
+    localStorage.removeItem('cunen-is-tracking-you');
+  }
+
+  const openImport = () => {
+    setAccountAnchor(null);
+    setImportOpen(true);
+  }
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <Wrapper>
-        {!user && <Login setUser={setUser} />}
-        {user &&
-        <Switch>
-          <Route exact path="/exchange_token">
-            <Login setUser={setUser} />
-          </Route>
-          <Route path="/">
-            <Stats db={db} setUser={setUser} user={user} />
-          </Route>
-        </Switch>}
-      </Wrapper>
+      <AppBar position="fixed">
+        <Toolbar>
+          <IconButton onClick={toggleMenu}>
+            <MenuIcon />
+          </IconButton>
+          <Menu id="menu" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
+            <MenuItem onClick={closeMenu}>Active Days</MenuItem>
+          </Menu>
+          <Typography sx={{ flexGrow: 1 }}>Activity Visualizer</Typography>
+          {user && <>
+            <IconButton onClick={toggleAccount}>
+              <AccountCircleIcon />
+            </IconButton>
+            <Menu id="account" anchorEl={accountAnchor} open={Boolean(accountAnchor)} onClose={closeAccount}>
+              <MenuItem onClick={logout}>Logout</MenuItem>
+              <MenuItem onClick={openImport}>Import</MenuItem>
+            </Menu>
+          </>}
+        </Toolbar>
+
+        <Wrapper>
+          {!user && <Login setUser={setUser} />}
+          {user &&
+          <Switch>
+            <Route path="/">
+              <Stats db={db} user={user} importOpen={importOpen} setImportOpen={setImportOpen} />
+            </Route>
+          </Switch>}
+        </Wrapper>
+      </AppBar>
     </ThemeProvider>
   );
 }
