@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { collection, getDocs } from 'firebase/firestore';
-import Days from './Days';
 import Options from './Options';
 import DayDialog from './DayDialog';
-import {  monthFromNumber } from '../utils/dateUtils';
 import ImportDialog from './ImportDialog';
+import DayGroups from './Days/DayGroups';
 
 export const getDaysInYear = year => {
 	const startDate = new Date(year, 0, 1);
@@ -39,6 +38,7 @@ function Stats({ db, user, importOpen, setImportOpen }) {
 	const [selectedDate, setSelectedDate] = React.useState();
 	const [activities, setActivities] = React.useState([]);
 	const [userCollection] = React.useState('activities-' + user.user.uid);
+	const [heatmap, setHeatmap] = React.useState(null);
 	const dbRef = collection(db, userCollection);
 
 	React.useEffect(() => {
@@ -47,77 +47,6 @@ function Stats({ db, user, importOpen, setImportOpen }) {
 			setActivities(acts);
 		})
 	}, []);
-
-	const renderYear = () => {
-		return <Days
-			title={year}
-			days={days}
-			size={size}
-			variant={variant}
-			selectedDate={selectedDate}
-			setSelectedDate={setSelectedDate}
-			activities={activities} />;
-	}
-
-	const renderMonths = () => {
-		const array = new Array(12).fill(0);
-		return <>{array.map((m, i) => {
-			const dates = days.filter(date => date.getMonth() === i);
-			return <Days
-				key={'month'+i}
-				title={monthFromNumber(i)}
-				days={dates}
-				size={size}
-				variant={variant}
-				selectedDate={selectedDate}
-				setSelectedDate={setSelectedDate}
-				activities={activities} />;
-		})}</>
-	}
-
-	const renderWeeks = () => {
-		const weeks = [];
-		let week = [];
-		let first = true;
-		days.forEach(day => {
-			week.push(day);
-			if (day.getDay() === 0) {
-				if (first && week.length < 7) {
-					const array = new Array(7 - week.length).fill(null);
-					week.unshift(...array);
-					first = false;
-				}
-				weeks.push([...week]);
-				week = [];
-			} else if (day.getDate() === 31 && day.getMonth() === 11) {
-				const array = new Array(7 - week.length).fill(null);
-				week.push(...array);
-				weeks.push([...week]);
-				week = [];
-			}
-		});
-		return weeks.map((week, i) => <Days
-			key={'week'+i}
-			title={'Week ' + i}
-			days={week}
-			size={size}
-			variant={variant}
-			selectedDate={selectedDate}
-			setSelectedDate={setSelectedDate}
-			activities={activities} />)
-	}
-
-	const renderDays = () => {
-		switch(range) {
-			case 'week':
-				return renderWeeks();
-			case 'month':
-				return renderMonths();
-			case 'year':
-			default:
-				return renderYear();
-		}
-	}
 
 	const handleRangeChange = (e, value) => {
 		setRange(value);
@@ -141,9 +70,20 @@ function Stats({ db, user, importOpen, setImportOpen }) {
 			size={size}
 			handleRangeChange={handleRangeChange}
 			handleVariantChange={handleVariantChange}
-			handleSizeChange={handleSizeChange} />
+			handleSizeChange={handleSizeChange}
+			heatmap={heatmap}
+			setHeatmap={setHeatmap} />
 		<Scrollable>
-			{renderDays()}
+			<DayGroups
+				days={days}
+				year={year}
+				activities={activities}
+				range={range}
+				size={size}
+				variant={variant}
+				selectedDate={selectedDate}
+				setSelectedDate={setSelectedDate}
+				heatmap={heatmap} />
 		</Scrollable>
 		<DayDialog
 			db={db}

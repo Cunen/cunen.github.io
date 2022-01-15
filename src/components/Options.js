@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { getDaysInYear } from './Stats';
 
-function Options({ range, variant, size, handleRangeChange, handleVariantChange, handleSizeChange, year, setYear, setDays }) {
+function Options({ range, variant, size, handleRangeChange, handleVariantChange, handleSizeChange, year, setYear, setDays, heatmap, setHeatmap }) {
 	const handleYearChange = (e, value) => {
 		setYear(e.target.value);
 		setDays(getDaysInYear(e.target.value));
@@ -37,6 +37,10 @@ function Options({ range, variant, size, handleRangeChange, handleVariantChange,
 			<ToggleButton value="s">S</ToggleButton>
 			<ToggleButton value="m">M</ToggleButton>
 			<ToggleButton value="l">L</ToggleButton>
+		</ToggleButtonGroup>
+		<ToggleButtonGroup color="primary" exclusive value={heatmap} onChange={(e,v) => setHeatmap(v)}>
+			<ToggleButton value="calories">Calories</ToggleButton>
+			<ToggleButton value="minutes">Time</ToggleButton>
 		</ToggleButtonGroup>
 	</Wrapper>;
 }
