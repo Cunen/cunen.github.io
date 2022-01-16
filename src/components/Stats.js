@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { collection, getDocs } from 'firebase/firestore';
 import Options from './Options';
 import DayDialog from './DayDialog';
-import ImportDialog from './ImportDialog';
 import DayGroups from './Days/DayGroups';
 
 export const getDaysInYear = year => {
@@ -15,18 +14,6 @@ export const getDaysInYear = year => {
 		startDate.setDate(startDate.getDate() + 1);
 	}
 	return days;
-}
-
-export const getCodeFromWindowSearch = () => {
-	const search = window.location.search;
-	const replaced = search.replace('?', '');
-	const split = replaced.split('&');
-	const obj = {}
-	split.forEach(s => {
-		const equalSplit = s.split('=');
-		obj[equalSplit[0]] = equalSplit[1];
-	});
-	return obj.code;
 }
 
 function Stats({ db, user, importOpen, setImportOpen }) {
@@ -93,12 +80,6 @@ function Stats({ db, user, importOpen, setImportOpen }) {
 			setSelectedDate={setSelectedDate}
 			setActivities={setActivities}
 			userCollection={userCollection} />
-		<ImportDialog
-			open={importOpen || !!getCodeFromWindowSearch()}
-			close={setImportOpen}
-			db={db}
-			userCollection={userCollection}
-			dbRef={dbRef} />
 	</Wrapper>;
 }
 

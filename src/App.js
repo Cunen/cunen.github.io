@@ -8,11 +8,14 @@ import 'firebase/firestore';
 import 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import Login from './components/Login';
-import { Route, Switch } from 'react-router-dom';
+import { NavLink, Route, Switch } from 'react-router-dom';
 import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import { getAuth } from 'firebase/auth';
+import Import from './components/Import';
+import AuthCodePage from './components/AuthCodePage';
+import Profile, { profileIsAuthorized } from './components/Profile';
 
 
 const darkTheme = createTheme({
@@ -33,6 +36,18 @@ const firebase = initializeApp({
 });
 
 const db = getFirestore(firebase);
+
+const getCodeFromWindowSearch = () => {
+	const search = window.location.search;
+	const replaced = search.replace('?', '');
+	const split = replaced.split('&');
+	const obj = {}
+	split.forEach(s => {
+		const equalSplit = s.split('=');
+		obj[equalSplit[0]] = equalSplit[1];
+	});
+	return obj.code;
+}
 
 function App() {
   // Get tracked lol
@@ -57,9 +72,10 @@ function App() {
     localStorage.removeItem('cunen-is-tracking-you');
   }
 
-  const openImport = () => {
-    setAccountAnchor(null);
-    setImportOpen(true);
+  const code = getCodeFromWindowSearch();
+
+  if (code) {
+    return <AuthCodePage code={code} />;
   }
 
   return (
@@ -70,7 +86,8 @@ function App() {
             <MenuIcon />
           </IconButton>
           <Menu id="menu" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
-            <MenuItem onClick={closeMenu}>Active Days</MenuItem>
+            <MenuItem onClick={closeMenu}><NavButton to="/">Active Days</NavButton></MenuItem>
+            <MenuItem onClick={closeMenu} disabled={!profileIsAuthorized()}><NavButton to="/import">Import</NavButton></MenuItem>
           </Menu>
           <Typography sx={{ flexGrow: 1 }}>Activity Visualizer</Typography>
           {user && <>
@@ -78,8 +95,8 @@ function App() {
               <AccountCircleIcon />
             </IconButton>
             <Menu id="account" anchorEl={accountAnchor} open={Boolean(accountAnchor)} onClose={closeAccount}>
+              <MenuItem><NavButton to="/profile">Profile</NavButton></MenuItem>
               <MenuItem onClick={logout}>Logout</MenuItem>
-              <MenuItem onClick={openImport}>Import</MenuItem>
             </Menu>
           </>}
         </Toolbar>
@@ -88,6 +105,12 @@ function App() {
           {!user && <Login setUser={setUser} />}
           {user &&
           <Switch>
+            <Route exact path="/profile">
+              <Profile />
+            </Route>
+            <Route exact path="/import">
+              <Import db={db} user={user} />
+            </Route>
             <Route path="/">
               <Stats db={db} user={user} importOpen={importOpen} setImportOpen={setImportOpen} />
             </Route>
@@ -104,6 +127,13 @@ const Wrapper = styled.div`
   display: flex;
   background-color: #000;
   color: white;
+`;
+
+const NavButton = styled(NavLink)`
+  text-decoration: none;
+  color: white;
+  width: 100%;
+  height: 100%;
 `;
 
 export default App;
