@@ -25,7 +25,7 @@ function Profile() {
 
 	const handleClientIDChange = (e) => {
 		const clonedInfo = { ...importInfo };
-		clonedInfo.clientID = e.target.value;
+		clonedInfo.clientID = e.target.value.trim();
 		clonedInfo.expires = null;
 		clonedInfo.authToken = '';
 		clonedInfo.refreshToken = '';
@@ -35,7 +35,7 @@ function Profile() {
 
 	const handleClientSecretChange = (e) => {
 		const clonedInfo = { ...importInfo };
-		clonedInfo.clientSecret = e.target.value;
+		clonedInfo.clientSecret = e.target.value.trim();
 		clonedInfo.expires = null;
 		clonedInfo.authToken = '';
 		clonedInfo.refreshToken = '';
