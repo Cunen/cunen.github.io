@@ -57,8 +57,6 @@ function Days({ days, size, variant, selectedDate, setSelectedDate, heatmap, day
 		return sum;
 	}, [days]);
 
-	if (!dayVisualizer) return null;
-
 	const renderDays = () => {
 		if (!dayVisualizer) return null;
 		return <Wrapper>
