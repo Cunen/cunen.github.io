@@ -5,7 +5,7 @@ import Days from '../Days';
 import { getWidth } from './Day';
 import Heatmap from './Heatmap';
 
-function DayGroups({ days, year, activities, range, size, variant, selectedDate, setSelectedDate, heatmap }) {
+function DayGroups({ days, year, activities, range, size, variant, selectedDate, setSelectedDate, heatmap, dayVisualizer, dataVisualizer }) {
 	const [daysInWeeks, setDaysInWeeks] = React.useState([]);
 	const [daysInMonths, setDaysInMonths] = React.useState([]);
 	const [daysInYear, setDaysInYear] = React.useState([]);
@@ -91,7 +91,7 @@ function DayGroups({ days, year, activities, range, size, variant, selectedDate,
 		return <>
 			<Typography>{year}</Typography>
 			<Heatmap days={daysInYear} height={64} maxWidth={daysInYear.length * (getWidth(size, variant) + 6)} mode={heatmap} />
-			<Days days={daysInYear} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} />
+			<Days days={daysInYear} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} dayVisualizer={dayVisualizer} dataVisualizer={dataVisualizer} />
 		</>;
 	}
 
@@ -101,7 +101,7 @@ function DayGroups({ days, year, activities, range, size, variant, selectedDate,
 			return <>
 				<Typography>{monthFromNumber(i)}</Typography>
 				<Heatmap days={daysInMonth} height={32} maxWidth={daysInMonth.length * (getWidth(size, variant) + 6)} mode={heatmap} />
-				<Days days={daysInMonth} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} />
+				<Days days={daysInMonth} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} dayVisualizer={dayVisualizer} dataVisualizer={dataVisualizer} />
 			</>
 		});
 	}
@@ -112,7 +112,7 @@ function DayGroups({ days, year, activities, range, size, variant, selectedDate,
 			return <>
 				<Typography>Week {i}</Typography>
 				<Heatmap days={daysInWeek} height={16} maxWidth={7 * getWidth(size, variant) + 6 * 6} mode={heatmap} />
-				<Days days={daysInWeek} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} />
+				<Days days={daysInWeek} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} dayVisualizer={dayVisualizer} dataVisualizer={dataVisualizer} />
 			</>
 		});
 	}

@@ -25,7 +25,9 @@ function Stats({ db, user, importOpen, setImportOpen }) {
 	const [selectedDate, setSelectedDate] = React.useState();
 	const [activities, setActivities] = React.useState([]);
 	const [userCollection] = React.useState('activities-' + user.user.uid);
-	const [heatmap, setHeatmap] = React.useState(null);
+	const [heatmap, setHeatmap] = React.useState('');
+	const [dayVisualizer, setDayVisualizer] = React.useState(true);
+	const [dataVisualizer, setDataVisualizer] = React.useState(false);
 	const dbRef = collection(db, userCollection);
 
 	React.useEffect(() => {
@@ -50,15 +52,19 @@ function Stats({ db, user, importOpen, setImportOpen }) {
 	return <Wrapper>
 		<Options
 			year={year}
-			setYear={setYear}
-			setDays={setDays}
 			range={range}
 			variant={variant}
+			heatmap={heatmap}
 			size={size}
+			dayVisualizer={dayVisualizer}
+			dataVisualizer={dataVisualizer}
+			setDataVisualizer={setDataVisualizer}
+			setDayVisualizer={setDayVisualizer}
 			handleRangeChange={handleRangeChange}
 			handleVariantChange={handleVariantChange}
 			handleSizeChange={handleSizeChange}
-			heatmap={heatmap}
+			setYear={setYear}
+			setDays={setDays}
 			setHeatmap={setHeatmap} />
 		<Scrollable>
 			<DayGroups
@@ -70,7 +76,9 @@ function Stats({ db, user, importOpen, setImportOpen }) {
 				variant={variant}
 				selectedDate={selectedDate}
 				setSelectedDate={setSelectedDate}
-				heatmap={heatmap} />
+				heatmap={heatmap}
+				dayVisualizer={dayVisualizer}
+				dataVisualizer={dataVisualizer} />
 		</Scrollable>
 		<DayDialog
 			db={db}
