@@ -48,11 +48,6 @@ function Options({ range, variant, size, handleRangeChange, handleVariantChange,
 				<ToggleButton value="calories">Calories</ToggleButton>
 				<ToggleButton value="minutes">Time</ToggleButton>
 			</ToggleButtonGroup>
-			<ToggleButtonGroup color="primary">
-				<ToggleButton value="">Active Days</ToggleButton>
-				<ToggleButton value="calories">Calories</ToggleButton>
-				<ToggleButton value="minutes">Time</ToggleButton>
-			</ToggleButtonGroup>
 			<FormControlLabel control={<Switch checked={dayVisualizer} onChange={() => setDayVisualizer(!dayVisualizer)}/>} label="Days Visualizer" />
 			<FormControlLabel control={<Switch checked={dataVisualizer} onChange={() => setDataVisualizer(!dataVisualizer)} />} label="Show data" />
 		</>}
