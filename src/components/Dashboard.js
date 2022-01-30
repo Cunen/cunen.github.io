@@ -153,7 +153,7 @@ function Dashboard({ activities, year }) {
               <Typography>Distance</Typography>
             </CircleLabel>
             <CircularProgress variant="determinate" size={160} thickness={8} value={oDist} color="secondary" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={cDist} color="info" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={cDist} color="warning" />
             <CircularProgress variant="determinate" size={160} thickness={8} value={rDist} color="error" />
             <CircularProgress variant="determinate" size={160} thickness={8} value={wDist} color="success" />
           </Circle>

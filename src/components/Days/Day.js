@@ -1,9 +1,9 @@
+import { CircularProgress, Typography } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
 import { getColorFromCalories, getColorFromTime } from './Heatmap';
 
-export const getWidth = (size, variant) => {
-	if (variant === 'vertical') return 8;
+export const getSize = (size) => {
 	switch (size) {
 		case 's':
 			return 24;
@@ -15,24 +15,10 @@ export const getWidth = (size, variant) => {
 	}
 }
 
-export const getHeight = (size, variant) => {
-	if (variant === 'horizontal') return 8;
-	switch (size) {
-		case 's':
-			return  24;
-		case 'l':
-			return  40;
-		case 'm':
-			default:
-				return 32;
-	}
-}
-
-
-function Day({ day, size, variant, selectedDate, setSelectedDate, activities, heatmap }) {
+function Day({ day, size, selectedDate, setSelectedDate, activities, heatmap }) {
 
 	if (day === null) {
-		return <NullDay width={getWidth(size, variant)} height={getHeight(size, variant)} />
+		return <NullDay width={getSize(size)} height={getSize(size)} />
 	}
 
 	const handleClick = () => setSelectedDate(day);
@@ -40,27 +26,29 @@ function Day({ day, size, variant, selectedDate, setSelectedDate, activities, he
 	const today = new Date();
 	const isToday = day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear();
 	const isSelected = selectedDate && day.getDate() === selectedDate.getDate() && day.getMonth() === selectedDate.getMonth() && day.getFullYear() === selectedDate.getFullYear();
-	const outline = isToday || isSelected;
 	const borderColor = isSelected ? '#ff0000' : isToday ? '#ffffff' : '#505050';
-	const caloriesSum = Object.values(activities).reduce((a, b) => a + b.calories, 0);
-	const timeSum = Object.values(activities).reduce((a, b) => a + b.duration, 0);
-	const activityColor = !hasActivities 
-		? 'transparent'
-		: heatmap === 'calories'
-			? getColorFromCalories(caloriesSum)
-			: heatmap === 'minutes'
-				? getColorFromTime(timeSum)
-				: 'hsl(133, 54%, 43%)';
+	const itemSize = getSize(size);
 
+	const aCount = activities.length || 1;
+
+	const walks = (activities.filter(a => a.type === 'Walk').length / aCount) * 100;
+	const gyms = (activities.filter(a => a.type === 'Gym').length / aCount) * 100 + walks;
+	const cycles = (activities.filter(a => a.type === 'Cycle').length / aCount) * 100 + gyms;
+	const runs = (activities.filter(a => a.type === 'Run').length / aCount) * 100 + cycles;
+	const others = (activities.filter(a => !(['Walk', 'Run', 'Cycle', 'Gym'].includes(a.type))).length / aCount) * 100 + runs;
 
 	return <Wrapper
-		activityColor={activityColor}
-		width={getWidth(size, variant)}
-		height={getHeight(size, variant)}
-		outline={outline}
-		borderColor={borderColor}
+		size={itemSize}
+		borderColor={hasActivities ? 'transparent' : borderColor}
 		onClick={handleClick}>
-			{variant === 'square' && activities.length ? <CornerBadge>{activities.length}</CornerBadge> : ''}
+			{hasActivities && <CircleWrapper size={itemSize}>
+				<CircularProgress variant="determinate" size={itemSize} thickness={10} value={others} color="secondary" />
+				<CircularProgress variant="determinate" size={itemSize} thickness={10} value={runs} color="error" />
+				<CircularProgress variant="determinate" size={itemSize} thickness={10} value={cycles} color="warning" />
+				<CircularProgress variant="determinate" size={itemSize} thickness={10} value={gyms} color="info" />
+				<CircularProgress variant="determinate" size={itemSize} thickness={10} value={walks} color="success" />
+				<Typography fontSize={12}>{activities.length}</Typography>
+			</CircleWrapper>}
 	</Wrapper>;
 }
 
@@ -72,29 +60,25 @@ const NullDay = styled.div`
 	height: ${props => props.height || 32}px;
 `;
 
+const CircleWrapper = styled.div`
+	width: ${props => props.size || 32}px;
+	height: ${props => props.size || 32}px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	& > span {
+		position: absolute;
+	}
+`;
+
 const Wrapper = styled.div`
 	display: flex;
 	position: relative;
-	
+	border-radius: 50%;
 	border: 1px solid ${props => props.borderColor};
-	background-color: ${props => props.activityColor};
 	transition: all 1s;
-	outline: ${props => `${Number(props.outline)}px solid ${props.borderColor}`};
-	width: ${props => props.width || 32}px;
-	height: ${props => props.height || 32}px;
-`;
-
-const CornerBadge = styled.div`
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 12px;
-	height: 12px;
-	position: absolute;
-	font-size: 12px;
-	color: #424242;
-	top: 0;
-	left: 0;
+	width: ${props => props.size || 32}px;
+	height: ${props => props.size || 32}px;
 `;
 
 export default Day;

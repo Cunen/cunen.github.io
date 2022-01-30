@@ -3,7 +3,7 @@ import { Button, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
 
-function Options({ range, variant, size, handleRangeChange, handleVariantChange, handleSizeChange, heatmap, setHeatmap }) {
+function Options({ range, size, handleRangeChange, handleSizeChange, heatmap, setHeatmap }) {
 	const [showOptions, setShowOptions] = React.useState(false);
 
 	const toggleVisibility = () => {
@@ -19,11 +19,6 @@ function Options({ range, variant, size, handleRangeChange, handleVariantChange,
 				<ToggleButton value="year">YEARLY</ToggleButton>
 				<ToggleButton value="month">MONTHLY</ToggleButton>
 				<ToggleButton value="week">WEEKLY</ToggleButton>
-			</ToggleButtonGroup>
-			<ToggleButtonGroup color="primary" value={variant} exclusive onChange={handleVariantChange}>
-				<ToggleButton value="square">SQUARE</ToggleButton>
-				<ToggleButton value="horizontal">HORIZONTAL</ToggleButton>
-				<ToggleButton value="vertical">VERTICAL</ToggleButton>
 			</ToggleButtonGroup>
 			<ToggleButtonGroup color="primary" value={size} exclusive onChange={handleSizeChange}>
 				<ToggleButton value="s">SMALL</ToggleButton>

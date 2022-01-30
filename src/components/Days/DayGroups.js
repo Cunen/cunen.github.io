@@ -2,10 +2,10 @@ import { Typography } from '@mui/material';
 import React from 'react';
 import { monthFromNumber } from '../../utils/dateUtils';
 import Days from '../Days';
-import { getWidth } from './Day';
+import { getSize } from './Day';
 import Heatmap from './Heatmap';
 
-function DayGroups({ days, year, activities, range, size, variant, selectedDate, setSelectedDate, heatmap }) {
+function DayGroups({ days, year, activities, range, size, selectedDate, setSelectedDate, heatmap }) {
 	const [daysInWeeks, setDaysInWeeks] = React.useState([]);
 	const [daysInMonths, setDaysInMonths] = React.useState([]);
 	const [daysInYear, setDaysInYear] = React.useState([]);
@@ -90,8 +90,8 @@ function DayGroups({ days, year, activities, range, size, variant, selectedDate,
 		if (range !== 'year') return;
 		return <>
 			<Typography>{year}</Typography>
-			<Heatmap days={daysInYear} height={64} maxWidth={daysInYear.length * (getWidth(size, variant) + 6)} mode={heatmap} />
-			<Days days={daysInYear} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} />
+			<Heatmap days={daysInYear} height={64} maxWidth={daysInYear.length * (getSize(size) + 6)} mode={heatmap} />
+			<Days days={daysInYear} size={size} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} />
 		</>;
 	}
 
@@ -100,8 +100,8 @@ function DayGroups({ days, year, activities, range, size, variant, selectedDate,
 		return daysInMonths.map((daysInMonth, i) => {
 			return <>
 				<Typography>{monthFromNumber(i)}</Typography>
-				<Heatmap days={daysInMonth} height={32} maxWidth={daysInMonth.length * (getWidth(size, variant) + 6)} mode={heatmap} />
-				<Days days={daysInMonth} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} />
+				<Heatmap days={daysInMonth} height={32} maxWidth={daysInMonth.length * (getSize(size) + 6)} mode={heatmap} />
+				<Days days={daysInMonth} size={size} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} />
 			</>
 		});
 	}
@@ -111,8 +111,8 @@ function DayGroups({ days, year, activities, range, size, variant, selectedDate,
 		return daysInWeeks.map((daysInWeek, i) => {
 			return <>
 				<Typography>Week {i}</Typography>
-				<Heatmap days={daysInWeek} height={16} maxWidth={7 * getWidth(size, variant) + 6 * 6} mode={heatmap} />
-				<Days days={daysInWeek} size={size} variant={variant} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} />
+				<Heatmap days={daysInWeek} height={16} maxWidth={7 * getSize(size) + 6 * 6} mode={heatmap} />
+				<Days days={daysInWeek} size={size} selectedDate={selectedDate} setSelectedDate={setSelectedDate} heatmap={heatmap} />
 			</>
 		});
 	}

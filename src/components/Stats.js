@@ -23,7 +23,6 @@ export const getDaysInYearTillToday = year => {
 function Stats({ db, user, year }) {
 	const [range, setRange] = React.useState('year');
   const [size, setSize] = React.useState('m');
-  const [variant, setVariant] = React.useState('square');
 	const [selectedDate, setSelectedDate] = React.useState();
 	const [activities, setActivities] = React.useState([]);
 	const [userCollection] = React.useState('activities-' + user.user.uid);
@@ -43,10 +42,6 @@ function Stats({ db, user, year }) {
 		setRange(value);
 	}
 
-  const handleVariantChange = (e, value) => {
-    setVariant(value);
-  }
-
   const handleSizeChange = (e, value) => {
     setSize(value);
   }
@@ -54,11 +49,9 @@ function Stats({ db, user, year }) {
 	return <Wrapper>
 		<Options
 			range={range}
-			variant={variant}
 			heatmap={heatmap}
 			size={size}
 			handleRangeChange={handleRangeChange}
-			handleVariantChange={handleVariantChange}
 			handleSizeChange={handleSizeChange}
 			setHeatmap={setHeatmap} />
 		<Scrollable>
@@ -68,7 +61,6 @@ function Stats({ db, user, year }) {
 				activities={activities}
 				range={range}
 				size={size}
-				variant={variant}
 				selectedDate={selectedDate}
 				setSelectedDate={setSelectedDate}
 				heatmap={heatmap} />
