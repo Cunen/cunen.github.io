@@ -6,16 +6,17 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { initializeApp } from 'firebase/app';
 import 'firebase/firestore';
 import 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import { collection, getDocs, getFirestore } from 'firebase/firestore';
 import Login from './components/Login';
 import { NavLink, Route, Switch } from 'react-router-dom';
-import { AppBar, IconButton, Menu, MenuItem, Toolbar, Typography } from '@mui/material';
+import { AppBar, IconButton, Menu, MenuItem, Select, Toolbar, Typography } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MenuIcon from '@mui/icons-material/Menu';
 import { getAuth } from 'firebase/auth';
 import Import from './components/Import';
 import AuthCodePage from './components/AuthCodePage';
 import Profile, { profileIsAuthorized } from './components/Profile';
+import Dashboard from './components/Dashboard';
 
 
 const darkTheme = createTheme({
@@ -56,7 +57,9 @@ function App() {
   const [user, setUser] = React.useState(tracker ? JSON.parse(tracker) : undefined);
   const [menuAnchor, setMenuAnchor] = React.useState(null);
   const [accountAnchor, setAccountAnchor] = React.useState();
-  const [importOpen, setImportOpen] = React.useState(false);
+  const [activities, setActivities] = React.useState([]);
+  const [yearActivities, setYearActivities] = React.useState([]);
+  const [year, setYear] = React.useState(new Date().getFullYear());
 
   const toggleMenu = (e) => setMenuAnchor(e.currentTarget);
   const closeMenu = () => setMenuAnchor(null);
@@ -74,6 +77,25 @@ function App() {
 
   const code = getCodeFromWindowSearch();
 
+  // Load user activities when User changes
+  React.useEffect(() => {
+    if (!user) return;
+    const currentUserCollection = 'activities-' + user.user.uid
+    const dbRef = collection(db, currentUserCollection);
+    getDocs(dbRef).then(res => {
+      const acts = res.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+      setActivities(acts);
+    })
+  }, [user]);
+
+  // Get activities for selected year
+  React.useEffect(() => {
+    setYearActivities(activities.filter(a => {
+      const date = a.date.toDate();
+      return date.getFullYear() === year;
+    }));
+  }, [activities, year])
+
   if (code) {
     return <AuthCodePage code={code} />;
   }
@@ -81,15 +103,23 @@ function App() {
   return (
     <ThemeProvider theme={darkTheme}>
       <AppBar position="fixed">
-        <Toolbar>
+        <Toolbar style={{ minHeight: '64px' }}>
           <IconButton onClick={toggleMenu}>
             <MenuIcon />
           </IconButton>
           <Menu id="menu" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
-            <MenuItem onClick={closeMenu}><NavButton to="/">Active Days</NavButton></MenuItem>
+          <MenuItem onClick={closeMenu}><NavButton to="/">Dashboard</NavButton></MenuItem>
+            <MenuItem onClick={closeMenu}><NavButton to="/days">Active Days</NavButton></MenuItem>
             <MenuItem onClick={closeMenu} disabled={!profileIsAuthorized()}><NavButton to="/import">Import</NavButton></MenuItem>
           </Menu>
           <Typography sx={{ flexGrow: 1 }}>Activity Visualizer</Typography>
+          <Select size="small" value={year} onChange={(e) => setYear(e.target.value)}>
+            <MenuItem value={2022}>2022</MenuItem>
+            <MenuItem value={2021}>2021</MenuItem>
+            <MenuItem value={2020}>2020</MenuItem>
+            <MenuItem value={2019}>2019</MenuItem>
+            <MenuItem value={2018}>2018</MenuItem>
+          </Select>
           {user && <>
             <IconButton onClick={toggleAccount}>
               <AccountCircleIcon />
@@ -111,8 +141,11 @@ function App() {
             <Route exact path="/import">
               <Import db={db} user={user} />
             </Route>
+            <Route path="/days">
+              <Stats db={db} user={user} year={year} />
+            </Route>
             <Route path="/">
-              <Stats db={db} user={user} importOpen={importOpen} setImportOpen={setImportOpen} />
+              <Dashboard activities={yearActivities} year={year} />
             </Route>
           </Switch>}
         </Wrapper>
@@ -122,9 +155,9 @@ function App() {
 }
 
 const Wrapper = styled.div`
+  display: flex;
   width: 100vw;
   height: calc(100vh - 64px);
-  display: flex;
   background-color: #000;
   color: white;
 `;

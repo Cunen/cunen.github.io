@@ -41,7 +41,7 @@ function Day({ day, size, variant, selectedDate, setSelectedDate, activities, he
 	const isToday = day.getDate() === today.getDate() && day.getMonth() === today.getMonth() && day.getFullYear() === today.getFullYear();
 	const isSelected = selectedDate && day.getDate() === selectedDate.getDate() && day.getMonth() === selectedDate.getMonth() && day.getFullYear() === selectedDate.getFullYear();
 	const outline = isToday || isSelected;
-	const borderColor = isSelected ? '#ff0000' : isToday ? '#ffffff' : '#1e1e1e';
+	const borderColor = isSelected ? '#ff0000' : isToday ? '#ffffff' : '#505050';
 	const caloriesSum = Object.values(activities).reduce((a, b) => a + b.calories, 0);
 	const timeSum = Object.values(activities).reduce((a, b) => a + b.duration, 0);
 	const activityColor = !hasActivities 

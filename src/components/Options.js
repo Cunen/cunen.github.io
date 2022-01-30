@@ -1,16 +1,10 @@
 import { Settings } from '@mui/icons-material';
-import { Button, FormControlLabel, MenuItem, Select, Switch, ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { Button, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
-import { getDaysInYear } from './Stats';
 
-function Options({ range, variant, size, handleRangeChange, handleVariantChange, handleSizeChange, year, setYear, setDays, heatmap, setHeatmap, dataVisualizer, dayVisualizer, setDataVisualizer, setDayVisualizer }) {
+function Options({ range, variant, size, handleRangeChange, handleVariantChange, handleSizeChange, heatmap, setHeatmap }) {
 	const [showOptions, setShowOptions] = React.useState(false);
-
-	const handleYearChange = (e, value) => {
-		setYear(e.target.value);
-		setDays(getDaysInYear(e.target.value));
-	}
 
 	const toggleVisibility = () => {
 		setShowOptions(!showOptions);
@@ -21,13 +15,6 @@ function Options({ range, variant, size, handleRangeChange, handleVariantChange,
 			<Settings />
 		</Button>
 		{showOptions && <>
-			<Select value={year} onChange={handleYearChange}>
-				<MenuItem value={2022}>2022</MenuItem>
-				<MenuItem value={2021}>2021</MenuItem>
-				<MenuItem value={2020}>2020</MenuItem>
-				<MenuItem value={2019}>2019</MenuItem>
-				<MenuItem value={2018}>2018</MenuItem>
-			</Select>
 			<ToggleButtonGroup color="primary" value={range} exclusive onChange={handleRangeChange}>
 				<ToggleButton value="year">YEARLY</ToggleButton>
 				<ToggleButton value="month">MONTHLY</ToggleButton>
@@ -48,8 +35,6 @@ function Options({ range, variant, size, handleRangeChange, handleVariantChange,
 				<ToggleButton value="calories">Calories</ToggleButton>
 				<ToggleButton value="minutes">Time</ToggleButton>
 			</ToggleButtonGroup>
-			<FormControlLabel control={<Switch checked={dayVisualizer} onChange={() => setDayVisualizer(!dayVisualizer)}/>} label="Days Visualizer" />
-			<FormControlLabel control={<Switch checked={dataVisualizer} onChange={() => setDataVisualizer(!dataVisualizer)} />} label="Show data" />
 		</>}
 	</Wrapper>;
 }

@@ -16,9 +16,11 @@ export const getDaysInYear = year => {
 	return days;
 }
 
-function Stats({ db, user, importOpen, setImportOpen }) {
-	const [year, setYear] = React.useState(2022);
-	const [days, setDays] = React.useState(getDaysInYear(year));
+export const getDaysInYearTillToday = year => {
+	return getDaysInYear(year).filter(day => day < new Date());
+}
+
+function Stats({ db, user, year }) {
 	const [range, setRange] = React.useState('year');
   const [size, setSize] = React.useState('m');
   const [variant, setVariant] = React.useState('square');
@@ -26,8 +28,6 @@ function Stats({ db, user, importOpen, setImportOpen }) {
 	const [activities, setActivities] = React.useState([]);
 	const [userCollection] = React.useState('activities-' + user.user.uid);
 	const [heatmap, setHeatmap] = React.useState('');
-	const [dayVisualizer, setDayVisualizer] = React.useState(true);
-	const [dataVisualizer, setDataVisualizer] = React.useState(false);
 	const dbRef = collection(db, userCollection);
 
 	React.useEffect(() => {
@@ -36,6 +36,8 @@ function Stats({ db, user, importOpen, setImportOpen }) {
 			setActivities(acts);
 		})
 	}, []);
+
+	const daysInYear = React.useMemo(() => getDaysInYear(year), [year]);
 
 	const handleRangeChange = (e, value) => {
 		setRange(value);
@@ -51,24 +53,17 @@ function Stats({ db, user, importOpen, setImportOpen }) {
 
 	return <Wrapper>
 		<Options
-			year={year}
 			range={range}
 			variant={variant}
 			heatmap={heatmap}
 			size={size}
-			dayVisualizer={dayVisualizer}
-			dataVisualizer={dataVisualizer}
-			setDataVisualizer={setDataVisualizer}
-			setDayVisualizer={setDayVisualizer}
 			handleRangeChange={handleRangeChange}
 			handleVariantChange={handleVariantChange}
 			handleSizeChange={handleSizeChange}
-			setYear={setYear}
-			setDays={setDays}
 			setHeatmap={setHeatmap} />
 		<Scrollable>
 			<DayGroups
-				days={days}
+				days={daysInYear}
 				year={year}
 				activities={activities}
 				range={range}
@@ -76,9 +71,7 @@ function Stats({ db, user, importOpen, setImportOpen }) {
 				variant={variant}
 				selectedDate={selectedDate}
 				setSelectedDate={setSelectedDate}
-				heatmap={heatmap}
-				dayVisualizer={dayVisualizer}
-				dataVisualizer={dataVisualizer} />
+				heatmap={heatmap} />
 		</Scrollable>
 		<DayDialog
 			db={db}

@@ -19,7 +19,7 @@ const defaultInfo = {
 function Import({ db, user }) {
 	const [importInfo, setImportInfo] = React.useState(window.localStorage.getItem(lsCode) ? JSON.parse(window.localStorage.getItem(lsCode)) : defaultInfo);
 	const [before, setBefore] = React.useState(null);
-	const [after, setAfter] = React.useState(null);
+	const [after, setAfter] = React.useState(window.localStorage.getItem('cunen-last-import-date') ? new Date(window.localStorage.getItem('cunen-last-import-date')) : null);
 	const [importStatus, setImportStatus] = React.useState();
 	const [progress, setProgress] = React.useState(0);
 	const [userCollection] = React.useState('activities-' + user.user.uid);
@@ -167,6 +167,11 @@ function Import({ db, user }) {
 			}
 			setProgress(1);
 			setImportStatus();
+
+			const newDate = new Date();
+			newDate.setDate(newDate.getDate() - 1);
+			window.localStorage.setItem('cunen-last-import-date', newDate.toISOString());
+
 			window.location.href = window.location.origin;
 		} catch (err) {
 			console.error('Import error', err);
