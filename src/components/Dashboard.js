@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { getDaysInYearTillToday } from './Stats';
 
 function Dashboard({ activities, year }) {
+  const [activeType, setActiveType] = React.useState();
+
   const summary = React.useMemo(() => {
     const sum = {
       walks: 0, walkDist: 0, walkTime: 0, walkCalories: 0,
@@ -91,6 +93,70 @@ function Dashboard({ activities, year }) {
 
     const activeDayRatio = summary.activeDays.length / daysTillNow.length * 100;
 
+    const getClassByColorType = type => {
+      if (activeType && activeType !== type) return 'grayed';
+      return '';
+    }
+
+    const getLabel = () => {
+      switch (activeType) {
+        case 'Walk': return 'Walking';
+        case 'Cycle': return 'Cycling';
+        case 'Run': return 'Running';
+        case 'Gym': return 'Gym';
+        case 'Other': return 'Others';
+        default: return 'Labels';
+      }
+    }
+
+    const getCalories = () => {
+      switch (activeType) {
+        case 'Walk': return summary.walkCalories;
+        case 'Cycle': return summary.cycleCalories;
+        case 'Run': return summary.runCalories;
+        case 'Gym': return summary.gymCalories;
+        case 'Other': return summary.otherCalories;
+        default: return summary.calories;
+      }
+    }
+
+    const getActivities = () => {
+      switch (activeType) {
+        case 'Walk': return summary.walks;
+        case 'Cycle': return summary.cycles;
+        case 'Run': return summary.runs;
+        case 'Gym': return summary.gyms;
+        case 'Other': return summary.others;
+        default: return summary.activities;
+      }
+    }
+
+    const getTime = () => {
+      switch (activeType) {
+        case 'Walk': return `${(summary.walkTime / 3600).toFixed(0)}h ${((summary.walkTime % 3600) / 60).toFixed(0)}m`;
+        case 'Cycle': return `${(summary.cycleTime / 3600).toFixed(0)}h ${((summary.cycleTime % 3600) / 60).toFixed(0)}m`;
+        case 'Run': return `${(summary.runTime / 3600).toFixed(0)}h ${((summary.runTime % 3600) / 60).toFixed(0)}m`;
+        case 'Gym': return `${(summary.gymTime / 3600).toFixed(0)}h ${((summary.gymTime % 3600) / 60).toFixed(0)}m`;
+        case 'Other': return `${(summary.otherTime / 3600).toFixed(0)}h ${((summary.otherTime % 3600) / 60).toFixed(0)}m`;
+        default: return `${(summary.time / 3600).toFixed(0)}h ${((summary.time % 3600) / 60).toFixed(0)}m`;
+      }
+    }
+
+    const getDistance = () => {
+      switch (activeType) {
+        case 'Walk': return `${(summary.walkDist / 1000).toFixed(2)} km`;
+        case 'Cycle': return `${(summary.cycleDist / 1000).toFixed(2)} km`;
+        case 'Run': return `${(summary.runDist / 1000).toFixed(2)} km`;
+        case 'Gym': return `Fuaark`;
+        case 'Other': return `${(summary.otherDistance / 1000).toFixed(2)} km`;
+        default: return `${(summary.distance / 1000).toFixed(2)} km`;
+      }
+    }
+
+    const onTouchType = (type) => {
+      setActiveType(activeType === type ? undefined : type);
+    }
+
     return <>
       <Pair>
         <CircularWrapper>
@@ -105,14 +171,14 @@ function Dashboard({ activities, year }) {
         <CircularWrapper>
           <Circle>
             <CircleLabel>
-              <Typography>{summary.activities}</Typography>
+              <Typography>{getActivities()}</Typography>
               <Typography>Activities</Typography>
             </CircleLabel>
-            <CircularProgress variant="determinate" size={160} thickness={8} value={otherProg} color="secondary" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={gymsProg} color="info" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={cyclesProg} color="warning" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={runsProg} color="error" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={walksProg} color="success" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={otherProg} className={getClassByColorType('Other')} color="secondary" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={gymsProg} className={getClassByColorType('Gym')} color="info" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={cyclesProg} className={getClassByColorType('Cycle')} color="warning" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={runsProg} className={getClassByColorType('Run')} color="error" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={walksProg} className={getClassByColorType('Walk')} color="success" />
           </Circle>
         </CircularWrapper>
       </Pair>
@@ -120,27 +186,27 @@ function Dashboard({ activities, year }) {
         <CircularWrapper>
           <Circle>
             <CircleLabel>
-              <Typography>{(summary.time / 3600).toFixed(0)}h {((summary.time % 3600) / 60).toFixed(0)}m</Typography>
+              <Typography>{getTime()}</Typography>
               <Typography>Active Time</Typography>
             </CircleLabel>
-            <CircularProgress variant="determinate" size={160} thickness={8} value={oTime} color="secondary" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={gTime} color="info" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={cTime} color="warning" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={rTime} color="error" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={wTime} color="success" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={oTime} className={getClassByColorType('Other')} color="secondary" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={gTime} className={getClassByColorType('Gym')} color="info" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={cTime} className={getClassByColorType('Cycle')} color="warning" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={rTime} className={getClassByColorType('Run')} color="error" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={wTime} className={getClassByColorType('Walk')} color="success" />
           </Circle>
         </CircularWrapper>
         <CircularWrapper>
           <Circle>
             <CircleLabel>
-              <Typography>{summary.calories}</Typography>
+              <Typography>{getCalories()}</Typography>
               <Typography>Calories</Typography>
             </CircleLabel>
-            <CircularProgress variant="determinate" size={160} thickness={8} value={oCals} color="secondary" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={gCals} color="info" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={cCals} color="warning" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={rCals} color="error" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={wCals} color="success" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={oCals} className={getClassByColorType('Other')} color="secondary" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={gCals} className={getClassByColorType('Gym')} color="info" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={cCals} className={getClassByColorType('Cycle')} color="warning" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={rCals} className={getClassByColorType('Run')} color="error" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={wCals} className={getClassByColorType('Walk')} color="success" />
           </Circle>
 
         </CircularWrapper>
@@ -149,30 +215,60 @@ function Dashboard({ activities, year }) {
         <CircularWrapper>
           <Circle>
             <CircleLabel>
-              <Typography>{(summary.distance / 1000).toFixed(2)} km</Typography>
+              <Typography>{getDistance()}</Typography>
               <Typography>Distance</Typography>
             </CircleLabel>
-            <CircularProgress variant="determinate" size={160} thickness={8} value={oDist} color="secondary" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={cDist} color="warning" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={rDist} color="error" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={wDist} color="success" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={oDist} className={getClassByColorType('Other')} color="secondary" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={cDist} className={getClassByColorType('Cycle')} color="warning" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={rDist} className={getClassByColorType('Run')} color="error" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={wDist} className={getClassByColorType('Walk')} color="success" />
           </Circle>
         </CircularWrapper>
         <CircularWrapper>
-          <Circle>
+          <Circle className="no-animation">
             <CircleLabel>
-              <Typography>Labels</Typography>
+              <Typography>{getLabel()}</Typography>
             </CircleLabel>
-            <CircularProgress variant="determinate" size={160} thickness={8} value={100} color="secondary" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={80} color="info" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={60} color="warning" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={40} color="error" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={20} color="success" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={100} className={getClassByColorType('Other')} color="secondary" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={80} className={getClassByColorType('Gym')} color="info" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={60} className={getClassByColorType('Cycle')} color="warning" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={40} className={getClassByColorType('Run')} color="error" />
+            <CircularProgress variant="determinate" size={160} thickness={8} value={20} className={getClassByColorType('Walk')} color="success" />
             <DirectionsRun className="icon run" />
             <DirectionsWalk className="icon walk" />
             <DirectionsBike className="icon bike" />
             <FitnessCenter className="icon gym" />
             <ThumbUpAlt className="icon other" />
+            <LabelAction index={0}>
+              <LabelActionBlock
+                onTouchStart={() => onTouchType('Walk')}
+                onMouseEnter={() => setActiveType('Walk')}
+                onMouseLeave={() => setActiveType(undefined)} />
+            </LabelAction>
+            <LabelAction index={1}>
+              <LabelActionBlock
+                onTouchStart={() => onTouchType('Run')}
+                onMouseEnter={() => setActiveType('Run')}
+                onMouseLeave={() => setActiveType(undefined)} />
+            </LabelAction>
+            <LabelAction index={2}>
+              <LabelActionBlock
+                onTouchStart={() => onTouchType('Cycle')}
+                onMouseEnter={() => setActiveType('Cycle')}
+                onMouseLeave={() => setActiveType(undefined)} />
+            </LabelAction>
+            <LabelAction index={3}>
+              <LabelActionBlock
+                onTouchStart={() => onTouchType('Gym')}
+                onMouseEnter={() => setActiveType('Gym')}
+                onMouseLeave={() => setActiveType(undefined)} />
+            </LabelAction>
+            <LabelAction index={4}>
+              <LabelActionBlock
+                onTouchStart={() => onTouchType('Other')}
+                onMouseEnter={() => setActiveType('Other')}
+                onMouseLeave={() => setActiveType(undefined)} />
+            </LabelAction>
           </Circle>
         </CircularWrapper>
       </Pair>
@@ -181,6 +277,26 @@ function Dashboard({ activities, year }) {
 
   return <Wrapper>{renderCircles()}</Wrapper>;
 }
+
+const LabelAction = styled.div`
+  display: flex;
+  position: absolute;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  transform: rotate(${props => props.index * 72 + 36}deg);
+  pointer-events: none;
+  user-select: none;
+`;
+
+const LabelActionBlock = styled.div`
+  pointer-events: auto;
+  cursor: pointer;
+  border-radius: 100%;
+  height: 35px;
+  width: 85px;
+  user-select: none;
+`;
 
 const CircularWrapper = styled.div`
 	display: flex;
@@ -197,7 +313,13 @@ const Circle = styled.div`
 		position: absolute;
 		top: 0;
 		left: 0;
+    &.grayed > svg {
+      color: #1a1a1a;
+    }
 	}
+  &:not(.no-animation) > span > svg {
+    transition: color 250ms;
+  }
   & > .icon { position absolute; }
   & > .walk { top: 14px; left: 107px; }
   & > .run { top: 88px; left: 129px; }
