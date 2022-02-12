@@ -133,12 +133,12 @@ function Dashboard({ activities, year }) {
 
     const getTime = () => {
       switch (activeType) {
-        case 'Walk': return `${(summary.walkTime / 3600).toFixed(0)}h ${((summary.walkTime % 3600) / 60).toFixed(0)}m`;
-        case 'Cycle': return `${(summary.cycleTime / 3600).toFixed(0)}h ${((summary.cycleTime % 3600) / 60).toFixed(0)}m`;
-        case 'Run': return `${(summary.runTime / 3600).toFixed(0)}h ${((summary.runTime % 3600) / 60).toFixed(0)}m`;
-        case 'Gym': return `${(summary.gymTime / 3600).toFixed(0)}h ${((summary.gymTime % 3600) / 60).toFixed(0)}m`;
-        case 'Other': return `${(summary.otherTime / 3600).toFixed(0)}h ${((summary.otherTime % 3600) / 60).toFixed(0)}m`;
-        default: return `${(summary.time / 3600).toFixed(0)}h ${((summary.time % 3600) / 60).toFixed(0)}m`;
+        case 'Walk': return `${Math.floor(summary.walkTime / 3600)}h ${Math.floor((summary.walkTime % 3600) / 60)}m`;
+        case 'Cycle': return `${Math.floor(summary.cycleTime / 3600)}h ${Math.floor((summary.cycleTime % 3600) / 60)}m`;
+        case 'Run': return `${Math.floor(summary.runTime / 3600)}h ${Math.floor((summary.runTime % 3600) / 60)}m`;
+        case 'Gym': return `${Math.floor(summary.gymTime / 3600)}h ${Math.floor((summary.gymTime % 3600) / 60)}m`;
+        case 'Other': return `${Math.floor(summary.otherTime / 3600)}h ${Math.floor((summary.otherTime % 3600) / 60)}m`;
+        default: return `${Math.floor(summary.time / 3600)}h ${Math.floor((summary.time % 3600) / 60)}m`;
       }
     }
 
