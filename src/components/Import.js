@@ -22,7 +22,7 @@ function Import({ db, user }) {
 	const [after, setAfter] = React.useState(window.localStorage.getItem('cunen-last-import-date') ? new Date(window.localStorage.getItem('cunen-last-import-date')) : null);
 	const [importStatus, setImportStatus] = React.useState();
 	const [progress, setProgress] = React.useState(0);
-	const [userCollection] = React.useState('activities-' + user.user.uid);
+	const [userCollection] = React.useState('activities-' + user.uid);
 
 	const goToMain = () => {
 		window.location.href = window.location.origin;

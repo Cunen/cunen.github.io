@@ -25,7 +25,7 @@ function Stats({ db, user, year }) {
   const [size, setSize] = React.useState('m');
 	const [selectedDate, setSelectedDate] = React.useState();
 	const [activities, setActivities] = React.useState([]);
-	const [userCollection] = React.useState('activities-' + user.user.uid);
+	const [userCollection] = React.useState('activities-' + user.uid);
 	const [heatmap, setHeatmap] = React.useState('');
 	const dbRef = collection(db, userCollection);
 

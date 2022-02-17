@@ -1,17 +1,15 @@
 import { Button } from '@mui/material';
-import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, } from 'firebase/auth';
 import React from 'react';
 import styled from 'styled-components';
-
-
+import { auth } from '../App';
 
 function Login({ setUser }) {
 	const signInWithGoogle = () => {
 		const provider = new GoogleAuthProvider();
-		const auth = getAuth();
 		signInWithPopup(auth, provider).then(authUser => {
-			setUser(authUser);
-			localStorage.setItem('cunen-is-tracking-you', JSON.stringify(authUser));
+			setUser(authUser.user);
+			localStorage.setItem('cunen-is-tracking-you', JSON.stringify(authUser.user));
 		});
 	}
 

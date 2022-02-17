@@ -36,6 +36,8 @@ const firebase = initializeApp({
   measurementId: 'G-ZVBWH6CY7R'
 });
 
+export const auth = getAuth();
+
 const db = getFirestore(firebase);
 
 const getCodeFromWindowSearch = () => {
@@ -53,8 +55,7 @@ const getCodeFromWindowSearch = () => {
 function App() {
   // Get tracked lol
   const tracker = localStorage.getItem('cunen-is-tracking-you');
-
-  const [user, setUser] = React.useState(tracker ? JSON.parse(tracker) : undefined);
+  const [user, setUser] = React.useState(tracker ? JSON.parse(tracker) : auth.currentUser);
   const [menuAnchor, setMenuAnchor] = React.useState(null);
   const [accountAnchor, setAccountAnchor] = React.useState();
   const [activities, setActivities] = React.useState([]);
@@ -80,13 +81,17 @@ function App() {
   // Load user activities when User changes
   React.useEffect(() => {
     if (!user) return;
-    const currentUserCollection = 'activities-' + user.user.uid
+    const currentUserCollection = 'activities-' + user.uid
     const dbRef = collection(db, currentUserCollection);
     getDocs(dbRef).then(res => {
       const acts = res.docs.map(doc => ({ ...doc.data(), id: doc.id }));
       setActivities(acts);
     })
   }, [user]);
+
+  React.useState(() => {
+    window.setTimeout(() => setUser(auth.currentUser), 2000);
+  }, [auth])
 
   // Get activities for selected year
   React.useEffect(() => {
