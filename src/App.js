@@ -17,6 +17,7 @@ import Import from './components/Import';
 import AuthCodePage from './components/AuthCodePage';
 import Profile, { profileIsAuthorized } from './components/Profile';
 import Dashboard from './components/Dashboard';
+import Recap from './components/Recap';
 
 
 const darkTheme = createTheme({
@@ -41,15 +42,15 @@ export const auth = getAuth();
 const db = getFirestore(firebase);
 
 const getCodeFromWindowSearch = () => {
-	const search = window.location.search;
-	const replaced = search.replace('?', '');
-	const split = replaced.split('&');
-	const obj = {}
-	split.forEach(s => {
-		const equalSplit = s.split('=');
-		obj[equalSplit[0]] = equalSplit[1];
-	});
-	return obj.code;
+  const search = window.location.search;
+  const replaced = search.replace('?', '');
+  const split = replaced.split('&');
+  const obj = {}
+  split.forEach(s => {
+    const equalSplit = s.split('=');
+    obj[equalSplit[0]] = equalSplit[1];
+  });
+  return obj.code;
 }
 
 function App() {
@@ -113,7 +114,8 @@ function App() {
             <MenuIcon />
           </IconButton>
           <Menu id="menu" anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={closeMenu}>
-          <MenuItem onClick={closeMenu}><NavButton to="/">Dashboard</NavButton></MenuItem>
+            <MenuItem onClick={closeMenu}><NavButton to="/">Dashboard</NavButton></MenuItem>
+            <MenuItem onClick={closeMenu}><NavButton to="/recap">Recap</NavButton></MenuItem>
             <MenuItem onClick={closeMenu}><NavButton to="/days">Active Days</NavButton></MenuItem>
             <MenuItem onClick={closeMenu} disabled={!profileIsAuthorized()}><NavButton to="/import">Import</NavButton></MenuItem>
           </Menu>
@@ -139,20 +141,23 @@ function App() {
         <Wrapper>
           {!user && <Login setUser={setUser} />}
           {user &&
-          <Switch>
-            <Route exact path="/profile">
-              <Profile />
-            </Route>
-            <Route exact path="/import">
-              <Import db={db} user={user} />
-            </Route>
-            <Route path="/days">
-              <Stats db={db} user={user} year={year} />
-            </Route>
-            <Route path="/">
-              <Dashboard activities={yearActivities} year={year} />
-            </Route>
-          </Switch>}
+            <Switch>
+              <Route exact path="/profile">
+                <Profile />
+              </Route>
+              <Route exact path="/import">
+                <Import db={db} user={user} />
+              </Route>
+              <Route path="/days">
+                <Stats db={db} user={user} year={year} />
+              </Route>
+              <Route path="/recap">
+                <Recap activities={yearActivities} />
+              </Route>
+              <Route path="/">
+                <Dashboard activities={yearActivities} year={year} />
+              </Route>
+            </Switch>}
         </Wrapper>
       </AppBar>
     </ThemeProvider>

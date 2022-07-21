@@ -1,0 +1,263 @@
+import React from 'react';
+import styled from 'styled-components';
+import { DirectionsRun, DirectionsWalk, DirectionsBike, Straighten, AccessAlarm, Speed, LocalFireDepartment, FitnessCenter } from '@mui/icons-material'
+import { MenuItem, Select } from '@mui/material';
+import { monthFromNumber } from '../utils/dateUtils';
+
+function Recap({ activities }) {
+  const [month, setMonth] = React.useState(new Date().getMonth());
+
+  const getActivitiesForDay = React.useCallback((day) => {
+    return activities.filter(act => {
+      const activityDate = act.date.toDate();
+      return activityDate.getDate() === day.getDate()
+        && activityDate.getMonth() === day.getMonth()
+        && activityDate.getFullYear() === day.getFullYear();
+    });
+  }, [activities]);
+
+  const acties = React.useMemo(() => {
+    if (month === -1) return activities;
+    return activities.filter(act => act.date.toDate().getMonth() === month);
+  }, [activities, month]);
+
+  const days = React.useMemo(() => {
+    if (month === -1) return [];
+    const poop = [];
+    let d = new Date(2022, month, 1);
+    while (d.getMonth() === month) {
+      const newDate = new Date(d);
+      poop.push({ date: new Date(d), activities: getActivitiesForDay(newDate) });
+      d.setDate(d.getDate() + 1);
+    }
+    return poop;
+  }, [getActivitiesForDay, month]);
+
+  const summary = React.useMemo(() => {
+    const sum = {
+      walks: 0, walkDist: 0, walkTime: 0, walkCalories: 0,
+      runs: 0, runDist: 0, runTime: 0, runCalories: 0,
+      cycles: 0, cycleDist: 0, cycleTime: 0, cycleCalories: 0,
+      gyms: 0, gymTime: 0, gymCalories: 0,
+      others: 0, otherTime: 0, otherCalories: 0, otherDistance: 0,
+      activities: 0, distance: 0, time: 0, calories: 0, activeDays: [],
+    };
+    acties.forEach(activity => {
+      sum.activities++;
+      sum.time += activity.duration || 0;
+      sum.distance += activity.distance || 0;
+      sum.calories += activity.calories || 0;
+      const date = activity.date.toDate();
+      const dateStr = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
+      if (!sum.activeDays.includes(dateStr)) sum.activeDays.push(dateStr);
+      switch (activity.type) {
+        case 'Walk':
+          sum.walks++;
+          sum.walkTime += activity.duration || 0;
+          sum.walkCalories += activity.calories || 0;
+          sum.walkDist += activity.distance || 0;
+          break;
+        case 'Run':
+          sum.runs++;
+          sum.runTime += activity.duration || 0;
+          sum.runCalories += activity.calories || 0;
+          sum.runDist += activity.distance || 0;
+          break;
+        case 'Cycle':
+          sum.cycles++;
+          sum.cycleTime += activity.duration || 0;
+          sum.cycleCalories += activity.calories || 0;
+          sum.cycleDist += activity.distance || 0;
+          break;
+        case 'Gym':
+          sum.gyms++;
+          sum.gymTime += activity.duration || 0;
+          sum.gymCalories += activity.calories || 0;
+          break;
+        default:
+          sum.others++;
+          sum.otherTime += activity.duration || 0;
+          sum.otherCalories += activity.calories || 0;
+          sum.otherDist += activity.distance || 0;
+          break;
+      }
+    });
+
+    // Walk Averages
+    sum.avgWalkDist = sum.walkDist / sum.walks / 1000 || 0;
+    sum.avgWalkTime = sum.walkTime / sum.walks / 60 / 60 || 0;
+    sum.avgWalkCalories = sum.walkCalories / sum.walks || 0;
+    sum.avgWalkSpeed = sum.avgWalkDist / sum.avgWalkTime || 0;
+
+    // Run Averages
+    sum.avgRunDist = sum.runDist / sum.runs / 1000 || 0;
+    sum.avgRunTime = sum.runTime / sum.runs / 60 / 60 || 0;
+    sum.avgRunCalories = sum.runCalories / sum.runs || 0;
+    sum.avgRunSpeed = sum.avgRunDist / sum.avgRunTime || 0;
+
+    // Cycle Averages
+    sum.avgCycleDist = sum.cycleDist / sum.cycles / 1000 || 0;
+    sum.avgCycleTime = sum.cycleTime / sum.cycles / 60 / 60 || 0;
+    sum.avgCycleCalories = sum.cycleCalories / sum.cycles || 0;
+    sum.avgCycleSpeed = sum.avgCycleDist / sum.avgCycleTime || 0;
+
+    return sum;
+  }, [acties]);
+
+  return <Wrapper>
+    <Select value={month} onChange={(e) => setMonth(e.target.value)} autoWidth>
+      <MenuItem value={-1}>Year</MenuItem>
+      <MenuItem value={0}>{monthFromNumber(0)}</MenuItem>
+      <MenuItem value={1}>{monthFromNumber(1)}</MenuItem>
+      <MenuItem value={2}>{monthFromNumber(2)}</MenuItem>
+      <MenuItem value={3}>{monthFromNumber(3)}</MenuItem>
+      <MenuItem value={4}>{monthFromNumber(4)}</MenuItem>
+      <MenuItem value={5}>{monthFromNumber(5)}</MenuItem>
+      <MenuItem value={6}>{monthFromNumber(6)}</MenuItem>
+      <MenuItem value={7}>{monthFromNumber(7)}</MenuItem>
+      <MenuItem value={8}>{monthFromNumber(8)}</MenuItem>
+      <MenuItem value={9}>{monthFromNumber(9)}</MenuItem>
+      <MenuItem value={10}>{monthFromNumber(10)}</MenuItem>
+      <MenuItem value={11}>{monthFromNumber(11)}</MenuItem>
+    </Select>
+    <Recaps>
+      <RecapUnit>
+        <Title>
+          <DirectionsWalk /> Session Averages
+          <Highlight color="#66bb6a" />
+        </Title>
+        <Row>
+          <Average><AccessAlarm /> {Math.floor(summary.avgWalkTime)}h {Math.floor((summary.avgWalkTime * 60))}m</Average>
+          <Average><Straighten /> {summary.avgWalkDist.toFixed(2)} km</Average>
+        </Row>
+        <Row>
+          <Average><Speed /> {summary.avgWalkSpeed.toFixed(2)} km/h</Average>
+          <Average><LocalFireDepartment /> {summary.avgWalkCalories.toFixed()} kcal</Average>
+        </Row>
+      </RecapUnit>
+      <RecapUnit>
+        <Title>
+          <DirectionsRun /> Session Averages
+          <Highlight color="#f44336" />
+        </Title>
+        <Row>
+          <Average><AccessAlarm /> {Math.floor(summary.avgRunTime)}h {Math.floor((summary.avgRunTime * 60))}m</Average>
+          <Average><Straighten /> {summary.avgRunDist.toFixed(2)} km</Average>
+        </Row>
+        <Row>
+          <Average><Speed /> {summary.avgRunSpeed.toFixed(2)} km/h</Average>
+          <Average><LocalFireDepartment /> {summary.avgRunCalories.toFixed()} kcal</Average>
+        </Row>
+      </RecapUnit>
+      <RecapUnit>
+        <Title>
+          <DirectionsBike /> Session Averages
+          <Highlight color="#ffa726" />
+        </Title>
+        <Row>
+          <Average><AccessAlarm /> {Math.floor(summary.avgCycleTime)}h {Math.floor((summary.avgCycleTime * 60))}m</Average>
+          <Average><Straighten /> {summary.avgCycleDist.toFixed(2)} km</Average>
+        </Row>
+        <Row>
+          <Average><Speed /> {summary.avgCycleSpeed.toFixed(2)} km/h</Average>
+          <Average><LocalFireDepartment /> {summary.avgCycleCalories.toFixed()} kcal</Average>
+        </Row>
+      </RecapUnit>
+    </Recaps>
+    <DayGroup>
+      {days.map(day => {
+        return <Day key={day.date.toISOString()}>
+          {day.activities.some(a => a.type === 'Walk') && <DirectionsWalk color="success" />}
+          {day.activities.some(a => a.type === 'Run') && <DirectionsRun color="error" />}
+          {day.activities.some(a => a.type === 'Cycle') && <DirectionsBike color="warning" />}
+          {day.activities.some(a => a.type === 'Gym') && <FitnessCenter color="info" />}
+          {day.activities.some(a => a.type === 'Other') && <FitnessCenter color="secondary" />}
+        </Day>
+      })}
+    </DayGroup>
+  </Wrapper>;
+}
+
+const Recaps = styled.div`
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 16px;
+`;
+
+const DayGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 728px;
+`;
+
+const Day = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width: 96px;
+  height: 96px;
+  background: #080808;
+  & > * {
+    margin: 8px;
+    width: 32px;
+    height: 32px;
+  }
+  border-radius: 4px;
+`;
+
+const Title = styled.div`
+  display: flex;
+  position: relative;
+  width: 100%;
+  gap: 8px;
+  padding-bottom: 8px;
+`;
+
+const Row = styled.div`
+  display: flex;
+  gap: 32px;
+  flex: 1;
+  justify-content: space-between;
+`;
+
+const Highlight = styled.div`
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 4px;
+  border-radius: 2px; 
+  background-color: ${props => props.color};
+`;
+
+const RecapUnit = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  border-radius: 4px;
+  background-color: #080808;
+  padding: 16px;
+  gap: 32px;
+`;
+
+const Average = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 40px;
+  width: 128px;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  gap: 16px;
+  flex: 1;
+  overflow: auto;
+  & .MuiInputBase-root {
+    width: 256px;
+  }
+`;
+
+export default Recap;
