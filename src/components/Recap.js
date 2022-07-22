@@ -267,13 +267,15 @@ function Recap({ activities }) {
         </RecapUnit>
       </Recaps>
       <DayGroup>
-        <DayDay>Mon</DayDay>
-        <DayDay>Tue</DayDay>
-        <DayDay>Wed</DayDay>
-        <DayDay>Thu</DayDay>
-        <DayDay>Fri</DayDay>
-        <DayDay>Sat</DayDay>
-        <DayDay>Sun</DayDay>
+        {days.length > 0 && <>
+          <DayDay>Mon</DayDay>
+          <DayDay>Tue</DayDay>
+          <DayDay>Wed</DayDay>
+          <DayDay>Thu</DayDay>
+          <DayDay>Fri</DayDay>
+          <DayDay>Sat</DayDay>
+          <DayDay>Sun</DayDay>
+        </>}
         {days.map((day, i) => {
           if (day.date === null) return <NullDay key={"nullday" + i} />;
           return (
