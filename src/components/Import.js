@@ -116,7 +116,7 @@ function Import({ db, user }) {
 			} else {
 				goToMain();
 			}
-		} catch(err) {
+		} catch (err) {
 			console.error('Refresh Token Error', err);
 			goToMain();
 		}
@@ -140,13 +140,14 @@ function Import({ db, user }) {
 				rows = imported.data?.length;
 				page++;
 			}
-	
+
 			setImportStatus('Converting Data');
 			const activities = results.map(r => {
 				const type = convertStravaType(r.type);
 				const duration = r.elapsed_time;
 				const distance = r.distance;
 				const calories = getCaloriesByType(type, duration, distance);
+				const map = r.map ? r.map.summary_polyline : null;
 				return {
 					type,
 					calories,
@@ -155,9 +156,10 @@ function Import({ db, user }) {
 					date: new Date(r.start_date),
 					duration,
 					distance,
+					encodedPolyline: map,
 				};
 			});
-	
+
 			setImportStatus('Importing to Firebase');
 			setProgress(0);
 			for (const a in activities) {
@@ -189,29 +191,29 @@ function Import({ db, user }) {
 			<Chip label={isExpired() ? 'Authentication expired' : 'Authenticated'} color={isExpired() ? 'error' : 'success'} />
 			{authOk()
 				? <>
-						<LocalizationProvider dateAdapter={AdapterDateFns} locale={fiLocale}>
-							<DesktopDatePicker
-								label="After"
-								inputFormat="dd.MM.yyyy"
-								value={after}
-								onChange={handleAfterChange}
-								renderInput={(params) => <TextField {...params} />}
-							/>
-							<DesktopDatePicker
-								label="Before Date"
-								inputFormat="dd.MM.yyyy"
-								value={before}
-								onChange={handleBeforeChange}
-								renderInput={(params) => <TextField {...params} />}
-							/>
-							{!importStatus && <Button onClick={runStravaImport} variant="contained">Import</Button>}
-							{importStatus && <Loader>
-								<LoaderText>
-									<Typography>{(progress * 100).toFixed(1)}</Typography>
-								</LoaderText>
-								<Bar progress={progress * 100} />
-							</Loader>}
-						</LocalizationProvider>
+					<LocalizationProvider dateAdapter={AdapterDateFns} locale={fiLocale}>
+						<DesktopDatePicker
+							label="After"
+							inputFormat="dd.MM.yyyy"
+							value={after}
+							onChange={handleAfterChange}
+							renderInput={(params) => <TextField {...params} />}
+						/>
+						<DesktopDatePicker
+							label="Before Date"
+							inputFormat="dd.MM.yyyy"
+							value={before}
+							onChange={handleBeforeChange}
+							renderInput={(params) => <TextField {...params} />}
+						/>
+						{!importStatus && <Button onClick={runStravaImport} variant="contained">Import</Button>}
+						{importStatus && <Loader>
+							<LoaderText>
+								<Typography>{(progress * 100).toFixed(1)}</Typography>
+							</LoaderText>
+							<Bar progress={progress * 100} />
+						</Loader>}
+					</LocalizationProvider>
 				</>
 				: <>
 					<Button variant="contained" onClick={handleTokenRefresh}>Refresh Token</Button>
