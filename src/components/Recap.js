@@ -9,6 +9,8 @@ import {
   Speed,
   LocalFireDepartment,
   FitnessCenter,
+  Loop,
+  Functions,
 } from "@mui/icons-material";
 import { MenuItem, Select } from "@mui/material";
 import { monthFromNumber } from "../utils/dateUtils";
@@ -125,21 +127,40 @@ function Recap({ activities }) {
 
     // Walk Averages
     sum.avgWalkDist = sum.walkDist / sum.walks / 1000 || 0;
-    sum.avgWalkTime = sum.walkTime / sum.walks / 60 / 60 || 0;
+    sum.avgWalkTime = sum.walkTime / sum.walks / 3600 || 0;
     sum.avgWalkCalories = sum.walkCalories / sum.walks || 0;
     sum.avgWalkSpeed = sum.avgWalkDist / sum.avgWalkTime || 0;
 
+    sum.walkDist = sum.walkDist / 1000;
+    sum.walkTime = sum.walkTime / 3600;
+
     // Run Averages
     sum.avgRunDist = sum.runDist / sum.runs / 1000 || 0;
-    sum.avgRunTime = sum.runTime / sum.runs / 60 / 60 || 0;
+    sum.avgRunTime = sum.runTime / sum.runs / 3600 || 0;
     sum.avgRunCalories = sum.runCalories / sum.runs || 0;
     sum.avgRunSpeed = sum.avgRunDist / sum.avgRunTime || 0;
 
+    sum.runDist = sum.runDist / 1000;
+    sum.runTime = sum.runTime / 3600;
+
     // Cycle Averages
     sum.avgCycleDist = sum.cycleDist / sum.cycles / 1000 || 0;
-    sum.avgCycleTime = sum.cycleTime / sum.cycles / 60 / 60 || 0;
+    sum.avgCycleTime = sum.cycleTime / sum.cycles / 3600 || 0;
     sum.avgCycleCalories = sum.cycleCalories / sum.cycles || 0;
     sum.avgCycleSpeed = sum.avgCycleDist / sum.avgCycleTime || 0;
+
+    sum.cycleDist = sum.cycleDist / 1000;
+    sum.cycleTime = sum.cycleTime / 3600;
+
+    // Gym Averages
+    sum.avgGymTime = sum.gymTime / sum.gyms / 3600 || 0;
+    sum.avgGymCalories = sum.gymCalories / sum.gyms || 0;
+
+    sum.gymTime = sum.gymTime / 3600;
+
+    sum.time = sum.time / 3600;
+    sum.distance = sum.distance / 1000;
+    sum.speed = (sum.avgWalkSpeed * sum.walks + sum.avgCycleSpeed * sum.cycles + sum.avgRunSpeed * sum.runs) / (sum.walks + sum.runs + sum.cycles);
 
     return sum;
   }, [acties]);
@@ -194,78 +215,191 @@ function Recap({ activities }) {
           <DirectionsWalk color="success" className="icon" />
           <SumText color="#66bb6a">{summary.walks}</SumText>
           <Title className="title">
-            <DirectionsWalk /> Session Averages ({summary.walks})
+            <DirectionsWalk /> Walking Sessions ({summary.walks})
             <Highlight color="#66bb6a" />
           </Title>
-          <Row>
+          <RecapRow>
             <Average>
-              <AccessAlarm /> {Math.floor(summary.avgWalkTime)}h{" "}
-              {Math.floor((summary.avgWalkTime % 1) * 60)}m
+              <AccessAlarm />
+              <div>
+                {Math.floor(summary.walkTime)}h{" "}
+                {Math.floor((summary.walkTime % 1) * 60)}m
+              </div>
+              <div>
+                ({Math.floor(summary.avgWalkTime)}h{" "}
+                {Math.floor((summary.avgWalkTime % 1) * 60)}m avg)
+              </div>
             </Average>
             <Average>
-              <Straighten /> {summary.avgWalkDist.toFixed(2)} km
-            </Average>
-          </Row>
-          <Row>
-            <Average>
-              <Speed /> {summary.avgWalkSpeed.toFixed(2)} km/h
+              <LocalFireDepartment />
+              <div>{summary.walkCalories.toFixed()} kcal</div>
+              <div>({summary.avgWalkCalories.toFixed()} avg)</div>
             </Average>
             <Average>
-              <LocalFireDepartment /> {summary.avgWalkCalories.toFixed()} kcal
+              <Straighten />
+              <div>{summary.walkDist.toFixed(2)} km</div>
+              <div>({summary.avgWalkDist.toFixed(2)} avg)</div>
             </Average>
-          </Row>
+            <Average>
+              <Speed />
+              {summary.avgWalkSpeed.toFixed(2)} km/h
+            </Average>
+          </RecapRow>
         </RecapUnit>
         <RecapUnit bc="#f44336">
           <DirectionsRun color="error" className="icon" />
           <SumText color="#f44336">{summary.runs}</SumText>
           <Title className="title">
-            <DirectionsRun /> Session Averages ({summary.runs})
+            <DirectionsRun /> Running Sessions ({summary.runs})
             <Highlight color="#f44336" />
           </Title>
-          <Row>
+          <RecapRow>
             <Average>
-              <AccessAlarm /> {Math.floor(summary.avgRunTime)}h{" "}
-              {Math.floor((summary.avgRunTime % 1) * 60)}m
+              <AccessAlarm />
+              <div>{Math.floor(summary.runTime)}h{" "}
+                {Math.floor((summary.runTime % 1) * 60)}m</div>
+              <div>({Math.floor(summary.avgRunTime)}h{" "}
+                {Math.floor((summary.avgRunTime % 1) * 60)}m avg)</div>
             </Average>
             <Average>
-              <Straighten /> {summary.avgRunDist.toFixed(2)} km
+              <LocalFireDepartment />
+              <div>{summary.runCalories.toFixed()} kcal</div>
+              <div>({summary.avgRunCalories.toFixed()} avg)</div>
             </Average>
-          </Row>
-          <Row>
+            <Average>
+              <Straighten />
+              <div>{summary.runDist.toFixed(2)} km</div>
+              <div>({summary.avgRunDist.toFixed(2)} avg)</div>
+            </Average>
             <Average>
               <Speed /> {summary.avgRunSpeed.toFixed(2)} km/h
             </Average>
-            <Average>
-              <LocalFireDepartment /> {summary.avgRunCalories.toFixed()} kcal
-            </Average>
-          </Row>
+          </RecapRow>
         </RecapUnit>
         <RecapUnit bc="#ffa726">
           <SumText color="#ffa726">{summary.cycles}</SumText>
           <DirectionsBike color="warning" className="icon" />
           <Title className="title">
-            <DirectionsBike /> Session Averages ({summary.cycles})
+            <DirectionsBike /> Cycling Sessions ({summary.cycles})
             <Highlight color="#ffa726" />
           </Title>
-          <Row>
+          <RecapRow>
             <Average>
-              <AccessAlarm /> {Math.floor(summary.avgCycleTime)}h{" "}
-              {Math.floor((summary.avgCycleTime % 1) * 60)}m
+              <AccessAlarm />
+              <div>{Math.floor(summary.cycleTime)}h{" "}
+                {Math.floor((summary.cycleTime % 1) * 60)}m</div>
+              <div>({Math.floor(summary.avgCycleTime)}h{" "}
+                {Math.floor((summary.avgCycleTime % 1) * 60)}m avg)</div>
             </Average>
             <Average>
-              <Straighten /> {summary.avgCycleDist.toFixed(2)} km
+              <LocalFireDepartment />
+              <div>{summary.cycleCalories.toFixed()} kcal</div>
+              <div>({summary.avgCycleCalories.toFixed()} avg)</div>
             </Average>
-          </Row>
-          <Row>
+            <Average>
+              <Straighten />
+              <div>{summary.cycleDist.toFixed(2)} km</div>
+              <div>({summary.avgCycleDist.toFixed(2)} avg)</div>
+            </Average>
             <Average>
               <Speed /> {summary.avgCycleSpeed.toFixed(2)} km/h
             </Average>
+          </RecapRow>
+        </RecapUnit>
+        <RecapUnit bc="#29b6f6">
+          <SumText color="#29b6f6">{summary.gyms}</SumText>
+          <DirectionsBike color="warning" className="icon" />
+          <Title className="title">
+            <FitnessCenter /> Gym Sessions ({summary.gyms})
+            <Highlight color="#29b6f6" />
+          </Title>
+          <RecapRow>
             <Average>
-              <LocalFireDepartment /> {summary.avgCycleCalories.toFixed()} kcal
+              <AccessAlarm />
+              <div>{Math.floor(summary.gymTime)}h{" "}
+                {Math.floor((summary.gymTime % 1) * 60)}m</div>
+              <div>({Math.floor(summary.avgGymTime)}h{" "}
+                {Math.floor((summary.avgGymTime % 1) * 60)}m avg)</div>
             </Average>
-          </Row>
+            <Average>
+              <LocalFireDepartment />
+              <div>{summary.gymCalories.toFixed()} kcal</div>
+              <div>({summary.avgGymCalories.toFixed()} avg)</div>
+            </Average>
+            <Average></Average>
+            <Average></Average>
+          </RecapRow>
         </RecapUnit>
       </Recaps>
+      <Table>
+        <thead>
+          <Row>
+            <HeaderCell></HeaderCell>
+            <HeaderCell><Loop /></HeaderCell>
+            <HeaderCell><AccessAlarm /></HeaderCell>
+            <HeaderCell><LocalFireDepartment /></HeaderCell>
+            <HeaderCell><Straighten /></HeaderCell>
+            <HeaderCell><Speed /></HeaderCell>
+          </Row>
+        </thead>
+        <tbody>
+          <Row color="#66bb6a">
+            <Cell><DirectionsWalk /></Cell>
+            <Cell>{summary.walks}</Cell>
+            <Cell>
+              {Math.floor(summary.walkTime)}h{" "}
+              {Math.floor((summary.walkTime % 1) * 60)}m
+            </Cell>
+            <Cell>{summary.walkCalories.toFixed()}kcal</Cell>
+            <Cell>{summary.walkDist.toFixed(1)}km</Cell>
+            <Cell>{summary.avgWalkSpeed.toFixed(1)}km/h</Cell>
+          </Row>
+          <Row color="#f44336">
+            <Cell><DirectionsRun /></Cell>
+            <Cell>{summary.runs}</Cell>
+            <Cell>
+              {Math.floor(summary.runTime)}h{" "}
+              {Math.floor((summary.runTime % 1) * 60)}m
+            </Cell>
+            <Cell>{summary.runCalories.toFixed()}kcal</Cell>
+            <Cell>{summary.runDist.toFixed(1)}km</Cell>
+            <Cell>{summary.avgRunSpeed.toFixed(1)}km/h</Cell>
+          </Row>
+          <Row color="#ffa726">
+            <Cell><DirectionsBike /></Cell>
+            <Cell>{summary.cycles}</Cell>
+            <Cell>
+              {Math.floor(summary.cycleTime)}h{" "}
+              {Math.floor((summary.cycleTime % 1) * 60)}m
+            </Cell>
+            <Cell>{summary.cycleCalories.toFixed()}kcal</Cell>
+            <Cell>{summary.cycleDist.toFixed(1)}km</Cell>
+            <Cell>{summary.avgCycleSpeed.toFixed(1)}km/h</Cell>
+          </Row>
+          <Row color="#29b6f6">
+            <Cell><FitnessCenter /></Cell>
+            <Cell>{summary.gyms}</Cell>
+            <Cell>
+              {Math.floor(summary.gymTime)}h{" "}
+              {Math.floor((summary.gymTime % 1) * 60)}m
+            </Cell>
+            <Cell>{summary.gymCalories.toFixed()}kcal</Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+          </Row>
+          <Row color="#FFFFFF">
+            <Cell><Functions /></Cell>
+            <Cell>{summary.activities}</Cell>
+            <Cell>
+              {Math.floor(summary.time)}h{" "}
+              {Math.floor((summary.time % 1) * 60)}m
+            </Cell>
+            <Cell>{summary.calories.toFixed()}kcal</Cell>
+            <Cell>{summary.distance.toFixed(1)}km</Cell>
+            <Cell>{summary.speed.toFixed(1)}km/h</Cell>
+          </Row>
+        </tbody>
+      </Table>
       <DayGroup>
         {days.length > 0 && <>
           <DayDay>Mon</DayDay>
@@ -306,6 +440,38 @@ function Recap({ activities }) {
   );
 }
 
+const Table = styled.table`
+  display: none;
+  @media (max-width: 700px) {
+    display: initial;
+  }
+  border-spacing: 0px 16px;
+`;
+const Row = styled.tr`
+  & td {
+    background: ${(props) => props.color ? props.color + '40' : 'transparent'};
+    &:first-child {
+      border-radius: 16px 0 0 16px;
+      padding-left: 16px;
+    }
+  
+    &:last-child {
+      border-radius: 0 16px 16px 0;
+      padding-right: 16px;
+    }
+  }
+`;
+const HeaderCell = styled.th``;
+const Cell = styled.td`
+  align-items: center;
+  white-space: nowrap;
+  padding: 8px;
+  & svg {
+    margin-top: 4px;
+  }
+`;
+
+
 const SumText = styled.div`
   position: absolute;
   top: 4px;
@@ -327,7 +493,7 @@ const Recaps = styled.div`
   gap: 16px;
 
   @media (max-width: 700px) {
-    gap: 8px;
+    display: none;
   }
 `;
 
@@ -392,9 +558,10 @@ const Title = styled.div`
   padding-bottom: 8px;
 `;
 
-const Row = styled.div`
+const RecapRow = styled.div`
   display: flex;
-  gap: 32px;
+  flex-direction: column;
+  gap: 16px;
   flex: 1;
   justify-content: space-between;
 `;
@@ -446,11 +613,6 @@ const Average = styled.div`
   align-items: center;
   gap: 16px;
   height: 40px;
-  width: 128px;
-
-  @media (max-width: 700px) {
-    height: 32px;
-  }
 `;
 
 const Wrapper = styled.div`
