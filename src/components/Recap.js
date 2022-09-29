@@ -445,7 +445,7 @@ const Table = styled.table`
   @media (max-width: 700px) {
     display: initial;
   }
-  border-spacing: 0px 16px;
+  border-spacing: 0px 8px;
 `;
 const Row = styled.tr`
   & td {
@@ -465,10 +465,7 @@ const HeaderCell = styled.th``;
 const Cell = styled.td`
   align-items: center;
   white-space: nowrap;
-  padding: 8px;
-  & svg {
-    margin-top: 4px;
-  }
+  padding: 4px 8px;
 `;
 
 
