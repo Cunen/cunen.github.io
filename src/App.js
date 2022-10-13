@@ -18,6 +18,7 @@ import AuthCodePage from './components/AuthCodePage';
 import Profile, { profileIsAuthorized } from './components/Profile';
 import Dashboard from './components/Dashboard';
 import Recap from './components/Recap';
+import Map from './components/Map';
 
 
 const darkTheme = createTheme({
@@ -117,6 +118,7 @@ function App() {
             <MenuItem onClick={closeMenu}><NavButton to="/">Dashboard</NavButton></MenuItem>
             <MenuItem onClick={closeMenu}><NavButton to="/recap">Recap</NavButton></MenuItem>
             <MenuItem onClick={closeMenu}><NavButton to="/days">Active Days</NavButton></MenuItem>
+            <MenuItem onClick={closeMenu}><NavButton to="/map">Map</NavButton></MenuItem>
             <MenuItem onClick={closeMenu} disabled={!profileIsAuthorized()}><NavButton to="/import">Import</NavButton></MenuItem>
           </Menu>
           <Typography sx={{ flexGrow: 1 }}>Activity Visualizer</Typography>
@@ -153,6 +155,9 @@ function App() {
               </Route>
               <Route path="/recap">
                 <Recap activities={yearActivities} />
+              </Route>
+              <Route path="/map">
+                <Map activities={activities} />
               </Route>
               <Route path="/">
                 <Dashboard activities={yearActivities} year={year} />
