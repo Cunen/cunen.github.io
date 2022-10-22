@@ -22,10 +22,10 @@ export const getDaysInYearTillToday = year => {
 
 function Stats({ db, user, year }) {
 	const [range, setRange] = React.useState('year');
-  const [size, setSize] = React.useState('m');
+	const [size, setSize] = React.useState('m');
 	const [selectedDate, setSelectedDate] = React.useState();
 	const [activities, setActivities] = React.useState([]);
-	const [userCollection] = React.useState('activities-' + user.uid);
+	const [userCollection] = React.useState('activities-' + user);
 	const [heatmap, setHeatmap] = React.useState('');
 	const dbRef = collection(db, userCollection);
 
@@ -42,9 +42,9 @@ function Stats({ db, user, year }) {
 		setRange(value);
 	}
 
-  const handleSizeChange = (e, value) => {
-    setSize(value);
-  }
+	const handleSizeChange = (e, value) => {
+		setSize(value);
+	}
 
 	return <Wrapper>
 		<Options

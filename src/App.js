@@ -19,6 +19,7 @@ import Profile, { profileIsAuthorized } from './components/Profile';
 import Dashboard from './components/Dashboard';
 import Recap from './components/Recap';
 import Map from './components/Map';
+import Guest, { GuestDialog } from './components/Guest';
 
 
 const darkTheme = createTheme({
@@ -57,7 +58,10 @@ const getCodeFromWindowSearch = () => {
 function App() {
   // Get tracked lol
   const tracker = localStorage.getItem('cunen-is-tracking-you');
+
   const [user, setUser] = React.useState(tracker ? JSON.parse(tracker) : auth.currentUser);
+  const [guest, setGuest] = React.useState(null);
+
   const [menuAnchor, setMenuAnchor] = React.useState(null);
   const [accountAnchor, setAccountAnchor] = React.useState();
   const [activities, setActivities] = React.useState([]);
@@ -82,14 +86,14 @@ function App() {
 
   // Load user activities when User changes
   React.useEffect(() => {
-    if (!user) return;
-    const currentUserCollection = 'activities-' + user.uid
+    if (!user && !guest) return;
+    const currentUserCollection = 'activities-' + (guest || user.uid)
     const dbRef = collection(db, currentUserCollection);
     getDocs(dbRef).then(res => {
       const acts = res.docs.map(doc => ({ ...doc.data(), id: doc.id }));
       setActivities(acts);
     })
-  }, [user]);
+  }, [guest, user]);
 
   React.useState(() => {
     window.setTimeout(() => setUser(auth.currentUser), 2000);
@@ -139,19 +143,49 @@ function App() {
             </Menu>
           </>}
         </Toolbar>
-
+        <GuestDialog guest={guest} setGuest={setGuest} />
         <Wrapper>
-          {!user && <Login setUser={setUser} />}
-          {user &&
+          {!user && !guest && <Switch>
+            <Route path="/guest/:id">
+              <Guest guest={guest} setGuest={setGuest} />
+            </Route>
+            <Route exact path="/">
+              <Login setUser={setUser} />
+            </Route>
+          </Switch>}
+
+          {guest &&
             <Switch>
+              <Route exact path="/guest/:id">
+                <Guest guest={guest} setGuest={setGuest} />
+              </Route>
+              <Route path="/days">
+                <Stats db={db} user={guest} year={year} />
+              </Route>
+              <Route path="/recap">
+                <Recap activities={yearActivities} />
+              </Route>
+              <Route path="/map">
+                <Map activities={activities} />
+              </Route>
+              <Route path="/">
+                <Dashboard activities={yearActivities} year={year} />
+              </Route>
+            </Switch>}
+
+          {!guest && user &&
+            <Switch>
+              <Route exact path="/guest/:id">
+                <Guest guest={guest} setGuest={setGuest} />
+              </Route>
               <Route exact path="/profile">
-                <Profile />
+                <Profile user={user} />
               </Route>
               <Route exact path="/import">
                 <Import db={db} user={user} />
               </Route>
               <Route path="/days">
-                <Stats db={db} user={user} year={year} />
+                <Stats db={db} user={user.uid} year={year} />
               </Route>
               <Route path="/recap">
                 <Recap activities={yearActivities} />

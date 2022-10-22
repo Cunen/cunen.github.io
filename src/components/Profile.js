@@ -1,3 +1,4 @@
+import { ContentCopy } from '@mui/icons-material';
 import { Button, Chip, TextField, Typography } from '@mui/material';
 import React from 'react';
 import styled from 'styled-components';
@@ -16,7 +17,7 @@ export const profileIsAuthorized = () => {
 	return !!info.expires && !!info.authToken && !!info.refreshToken;
 }
 
-function Profile() {
+function Profile({ user }) {
 	const [importInfo, setImportInfo] = React.useState(window.localStorage.getItem(lsCode) ? JSON.parse(window.localStorage.getItem(lsCode)) : defaultInfo);
 
 	const isAuthorized = (e) => {
@@ -53,10 +54,18 @@ function Profile() {
 		window.location.href = `http://www.strava.com/oauth/authorize?client_id=${importInfo.clientID}&response_type=code&redirect_uri=${origin}/exchange_token&approval_prompt=force&scope=activity:read_all`;
 	}
 
+	const copyAccess = () => {
+		const url = [window.location.protocol + "/", window.location.host, "#/guest", user.uid];
+		navigator.clipboard.writeText(url.join('/'));
+	}
+
 	return <Wrapper>
 		<Strava>
 			<Typography variant="h4">Basic Information</Typography>
-			<Typography>I have no idea who you are...</Typography>
+			<Button variant="contained" onClick={copyAccess}>
+				<ContentCopy />
+				Copy Guest Access
+			</Button>
 
 			<Typography variant="h4">Strava API Information</Typography>
 			<Chip label={isAuthorized() ? 'Connected' : 'Unauthorized'} color={isAuthorized() ? 'success' : 'error'} />
