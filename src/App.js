@@ -127,6 +127,7 @@ function App() {
           </Menu>
           <Typography sx={{ flexGrow: 1 }}>Activity Visualizer</Typography>
           <Select size="small" value={year} onChange={(e) => setYear(e.target.value)}>
+            <MenuItem value={2023}>2023</MenuItem>
             <MenuItem value={2022}>2022</MenuItem>
             <MenuItem value={2021}>2021</MenuItem>
             <MenuItem value={2020}>2020</MenuItem>
@@ -163,7 +164,7 @@ function App() {
                 <Stats db={db} user={guest} year={year} />
               </Route>
               <Route path="/recap">
-                <Recap activities={yearActivities} />
+                <Recap activities={yearActivities} year={year} />
               </Route>
               <Route path="/map">
                 <Map activities={activities} />

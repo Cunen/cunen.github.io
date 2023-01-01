@@ -15,7 +15,7 @@ import {
 import { MenuItem, Select } from "@mui/material";
 import { monthFromNumber } from "../utils/dateUtils";
 
-function Recap({ activities }) {
+function Recap({ activities, year }) {
   const [month, setMonth] = React.useState(new Date().getMonth());
 
   const getActivitiesForDay = React.useCallback(
@@ -40,7 +40,7 @@ function Recap({ activities }) {
   const days = React.useMemo(() => {
     if (month === -1) return [];
     const mDays = [];
-    let d = new Date(2022, month, 1);
+    let d = new Date(year, month, 1);
 
     const offset = (d.getDay() || 7) - 1;
     mDays.push(...new Array(offset).fill({ date: null, activities: null }));
@@ -55,7 +55,7 @@ function Recap({ activities }) {
     }
 
     return mDays;
-  }, [getActivitiesForDay, month]);
+  }, [getActivitiesForDay, month, year]);
 
   const summary = React.useMemo(() => {
     const sum = {
