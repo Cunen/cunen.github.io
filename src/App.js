@@ -189,7 +189,7 @@ function App() {
                 <Stats db={db} user={user.uid} year={year} />
               </Route>
               <Route path="/recap">
-                <Recap activities={yearActivities} />
+                <Recap activities={yearActivities} year={year} />
               </Route>
               <Route path="/map">
                 <Map activities={activities} />
