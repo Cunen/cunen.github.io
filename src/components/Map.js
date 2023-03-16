@@ -26,30 +26,32 @@ function generateLayer(activities) {
   };
   */
 
-  const activitiesWithLines = activities.filter(a => !!a.encodedPolyline);
+  const activitiesWithLines = activities.filter((a) => !!a.encodedPolyline);
 
-  console.log('Activities with location:', activitiesWithLines.length);
+  console.log("Activities with location:", activitiesWithLines.length);
 
-  const coordinateSet = activitiesWithLines.map(a => {
-    return new Polyline().readGeometry(a.encodedPolyline, {
-      dataProjection: "EPSG:4326",
-      featureProjection: "EPSG:3857",
-    }).getCoordinates();
+  const coordinateSet = activitiesWithLines.map((a) => {
+    return new Polyline()
+      .readGeometry(a.encodedPolyline, {
+        dataProjection: "EPSG:4326",
+        featureProjection: "EPSG:3857",
+      })
+      .getCoordinates();
   });
 
-  console.log('Coordiante sets:', coordinateSet.length);
+  console.log("Coordiante sets:", coordinateSet.length);
 
   const pointFeatures = coordinateSet.flatMap((set) => {
-    return set.map(coord => new Feature({ geometry: new Point(coord) }));
+    return set.map((coord) => new Feature({ geometry: new Point(coord) }));
   });
 
-  console.log('Heatmap points: ', pointFeatures.length);
+  console.log("Heatmap points: ", pointFeatures.length);
 
   const features = activities
     .map((act) => {
       if (!act.encodedPolyline) return null;
       return new Feature({
-        type: 'route',
+        type: "route",
         geometry: new Polyline().readGeometry(act.encodedPolyline, {
           dataProjection: "EPSG:4326",
           featureProjection: "EPSG:3857",
@@ -58,8 +60,7 @@ function generateLayer(activities) {
     })
     .filter(Boolean);
   const source = new VectorSource({ features: pointFeatures });
-  return new Heatmap({ source, blur: 15, radius: 10, opacity: 0.5 });
-  // return new VectorLayer({ source, style: (f) => styles[f.get("type")] });
+  return new Heatmap({ source, blur: 5, radius: 3, opacity: 0.8 });
 }
 
 function Map({ activities }) {
