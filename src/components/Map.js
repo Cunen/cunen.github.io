@@ -6,15 +6,16 @@ import "ol/ol.css";
 import { Feature, Map as OlMap, View } from "ol";
 import TileLayer from "ol/layer/Tile";
 import OSM from "ol/source/OSM";
-import VectorLayer from "ol/layer/Vector";
+import Heatmap from "ol/layer/Heatmap";
 import VectorSource from "ol/source/Vector";
 import Polyline from "ol/format/Polyline";
-import Style from "ol/style/Style";
-import Stroke from "ol/style/Stroke";
+import { Point } from "ol/geom";
+import Coordinate from "ol/coordinate";
 
 let map = undefined;
 
 function generateLayer(activities) {
+  /*
   const styles = {
     route: new Style({
       stroke: new Stroke({
@@ -23,6 +24,26 @@ function generateLayer(activities) {
       }),
     }),
   };
+  */
+
+  const activitiesWithLines = activities.filter(a => !!a.encodedPolyline);
+
+  console.log('Activities with location:', activitiesWithLines.length);
+
+  const coordinateSet = activitiesWithLines.map(a => {
+    return new Polyline().readGeometry(a.encodedPolyline, {
+      dataProjection: "EPSG:4326",
+      featureProjection: "EPSG:3857",
+    }).getCoordinates();
+  });
+
+  console.log('Coordiante sets:', coordinateSet.length);
+
+  const pointFeatures = coordinateSet.flatMap((set) => {
+    return set.map(coord => new Feature({ geometry: new Point(coord) }));
+  });
+
+  console.log('Heatmap points: ', pointFeatures.length);
 
   const features = activities
     .map((act) => {
@@ -36,8 +57,9 @@ function generateLayer(activities) {
       });
     })
     .filter(Boolean);
-  const source = new VectorSource({ features });
-  return new VectorLayer({ source, style: (f) => styles[f.get("type")] });
+  const source = new VectorSource({ features: pointFeatures });
+  return new Heatmap({ source, blur: 15, radius: 10, opacity: 0.5 });
+  // return new VectorLayer({ source, style: (f) => styles[f.get("type")] });
 }
 
 function Map({ activities }) {

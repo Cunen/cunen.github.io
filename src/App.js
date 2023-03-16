@@ -21,6 +21,7 @@ import {
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import { getAuth } from "firebase/auth";
+
 import Import from "./components/Import";
 import AuthCodePage from "./components/AuthCodePage";
 import Profile, { profileIsAuthorized } from "./components/Profile";
@@ -96,11 +97,12 @@ function App() {
   // Load user activities when User changes
   React.useEffect(() => {
     if (!user && !guest) return;
-    const currentUserCollection = "activities-" + (guest || user.uid);
+    const currentUserCollection = "user-" + (guest || user.uid);
     const dbRef = collection(db, currentUserCollection);
     getDocs(dbRef).then((res) => {
-      const acts = res.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-      setActivities(acts);
+      const data = {};
+      res.docs.forEach((doc) => data[doc.id] = doc.data());
+      setActivities(data.activities.list);
     });
   }, [guest, user]);
 
