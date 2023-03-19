@@ -100,7 +100,7 @@ export const runStravaImport = async (
   before,
   redirect = true
 ) => {
-  if (!stravaAuthOk(firebaseUser)) return;
+  if (!stravaAuthOk(firebaseUser)) return [];
   const beforeEpoc = before ? `&before=${epochFromDate(before)}` : "";
   const afterEpoc = after ? `&after=${epochFromDate(after)}` : "";
   try {
@@ -166,6 +166,7 @@ export const runStravaImport = async (
       updatedUser.lastImport = new Date();
       setFirebaseUser(updatedUser);
       await setDoc(doc(db, `user-${firebaseUser.id}`, "user"), updatedUser);
+      return existingActivities;
     }
 
     if (redirect) {
@@ -174,6 +175,7 @@ export const runStravaImport = async (
   } catch (err) {
     console.error("Import error", err);
   }
+  return [];
 };
 
 function Import({ db, firebaseUser, setFirebaseUser }) {

@@ -81,6 +81,8 @@ function App() {
 
   const [guest, setGuest] = React.useState(null);
 
+  const [autoImported, setAutoImported] = React.useState(false);
+
   const [menuAnchor, setMenuAnchor] = React.useState(null);
   const [accountAnchor, setAccountAnchor] = React.useState();
   const [activities, setActivities] = React.useState([]);
@@ -125,28 +127,47 @@ function App() {
   }, [auth]);
 
   React.useEffect(() => {
-    if (!firebaseUser) return;
-    // THIS IS AUTOIMPORT
-    const authOk = stravaAuthOk(firebaseUser);
-    const expired = stravaAuthExpired(firebaseUser);
+    if (!firebaseUser || autoImported) return;
 
-    if (!authOk || !firebaseUser.lastImport) return;
+    const expired = stravaAuthExpired(firebaseUser);
 
     if (expired) {
       renewStravaAuth(db, firebaseUser, setFirebaseUser);
       return;
     }
 
+    // THIS IS AUTOIMPORT
+    const authOk = stravaAuthOk(firebaseUser);
+
+    if (!authOk || !firebaseUser.lastImport) return;
+
     const secondsAgo =
       epochFromDate(new Date()) - firebaseUser.lastImport.seconds;
 
     if (secondsAgo > 3600) {
+      setAutoImported(true);
       const after = firebaseUser.lastImport.toDate();
       // Run the import from one day before last import for safety
       after.setDate(after.getDate() - 1);
-      runStravaImport(db, firebaseUser, setFirebaseUser, after, null, false);
+      runStravaImport(
+        db,
+        firebaseUser,
+        setFirebaseUser,
+        after,
+        null,
+        false
+      ).then(async () => {
+        const dbRef = collection(db, "user-" + firebaseUser.id);
+        const response = await getDocs(dbRef);
+        const data = {};
+        response.docs.forEach((doc) => (data[doc.id] = doc.data()));
+        if (data.activities && data.activities.list) {
+          console.log(data.activities.list);
+          setActivities(data.activities.list);
+        }
+      });
     }
-  }, [firebaseUser]);
+  }, [firebaseUser, autoImported]);
 
   // Get activities for selected year
   React.useEffect(() => {
