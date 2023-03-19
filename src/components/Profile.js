@@ -1,96 +1,118 @@
-import { ContentCopy } from '@mui/icons-material';
-import { Button, Chip, TextField, Typography } from '@mui/material';
-import React from 'react';
-import styled from 'styled-components';
+import { ContentCopy } from "@mui/icons-material";
+import { Button, Chip, TextField, Typography } from "@mui/material";
+import React, { useEffect } from "react";
+import styled from "styled-components";
+import { doc, setDoc } from "firebase/firestore";
 
-export const lsCode = 'cunenTrackerData';
-const defaultInfo = {
-	clientID: '',
-	clientSecret: '',
-	expires: null,
-	authToken: '',
-	refreshToken: '',
-}
+export const profileIsAuthorized = (firebaseUser) => {
+  return (
+    firebaseUser &&
+    !!firebaseUser.authExpires &&
+    !!firebaseUser.authToken &&
+    !!firebaseUser.refreshToken
+  );
+};
 
-export const profileIsAuthorized = () => {
-	const info = window.localStorage.getItem(lsCode) ? JSON.parse(window.localStorage.getItem(lsCode)) : defaultInfo
-	return !!info.expires && !!info.authToken && !!info.refreshToken;
-}
+function Profile({ db, user, firebaseUser }) {
+  const [clientID, setClientID] = React.useState("");
+  const [clientSecret, setClientSecret] = React.useState("");
 
-function Profile({ user }) {
-	const [importInfo, setImportInfo] = React.useState(window.localStorage.getItem(lsCode) ? JSON.parse(window.localStorage.getItem(lsCode)) : defaultInfo);
+  const handleClientIDChange = (e) => {
+    setClientID(e.target.value.trim());
+  };
 
-	const isAuthorized = (e) => {
-		return !!importInfo.expires && !!importInfo.authToken && !!importInfo.refreshToken;
-	}
+  const handleClientSecretChange = (e) => {
+    setClientSecret(e.target.value.trim());
+  };
 
-	const handleClientIDChange = (e) => {
-		const clonedInfo = { ...importInfo };
-		clonedInfo.clientID = e.target.value.trim();
-		clonedInfo.expires = null;
-		clonedInfo.authToken = '';
-		clonedInfo.refreshToken = '';
-		window.localStorage.setItem(lsCode, JSON.stringify(clonedInfo));
-		setImportInfo(clonedInfo);
-	}
+  const authorize = async () => {
+    const { origin } = window.location;
 
-	const handleClientSecretChange = (e) => {
-		const clonedInfo = { ...importInfo };
-		clonedInfo.clientSecret = e.target.value.trim();
-		clonedInfo.expires = null;
-		clonedInfo.authToken = '';
-		clonedInfo.refreshToken = '';
-		window.localStorage.setItem(lsCode, JSON.stringify(clonedInfo));
-		setImportInfo(clonedInfo);
-	}
+    if (!clientID || isNaN(clientID) || !clientSecret) {
+      console.warn("Incorrect ClientId or clientSecret");
+      return;
+    }
 
-	const authorize = () => {
-		const { origin } = window.location;
-		const { clientID } = importInfo;
-		if (!clientID && isNaN(clientID)) {
-			console.warn('Incorrect ClientID');
-			return;
-		}
-		window.location.href = `http://www.strava.com/oauth/authorize?client_id=${importInfo.clientID}&response_type=code&redirect_uri=${origin}/exchange_token&approval_prompt=force&scope=activity:read_all`;
-	}
+    const updatedUser = { ...firebaseUser };
+    updatedUser.clientID = clientID;
+    updatedUser.clientSecret = clientSecret;
+    await setDoc(doc(db, `user-${firebaseUser.id}`, "user"), updatedUser);
 
-	const copyAccess = () => {
-		const url = [window.location.protocol + "/", window.location.host, "#/guest", user.uid];
-		navigator.clipboard.writeText(url.join('/'));
-	}
+    window.location.href = `http://www.strava.com/oauth/authorize?client_id=${clientID}&response_type=code&redirect_uri=${origin}/exchange_token&approval_prompt=force&scope=activity:read_all`;
+  };
 
-	return <Wrapper>
-		<Strava>
-			<Typography variant="h4">Basic Information</Typography>
-			<Button variant="contained" onClick={copyAccess}>
-				<ContentCopy />
-				Copy Guest Access
-			</Button>
+  const copyAccess = () => {
+    const url = [
+      window.location.protocol + "/",
+      window.location.host,
+      "#/guest",
+      user.uid,
+    ];
+    navigator.clipboard.writeText(url.join("/"));
+  };
 
-			<Typography variant="h4">Strava API Information</Typography>
-			<Chip label={isAuthorized() ? 'Connected' : 'Unauthorized'} color={isAuthorized() ? 'success' : 'error'} />
-			<TextField label="Client ID" fullWidth value={importInfo.clientID} onChange={handleClientIDChange} />
-			<TextField label="Client secret" fullWidth value={importInfo.clientSecret} onChange={handleClientSecretChange} />
-			<Button onClick={authorize}>{isAuthorized() ? 'Re-authorize' : 'Authorize'}</Button>
-			<Typography>Disclaimer: This shit is not stored in db, it's handled in localStorage on your machine so obviously it comes with limitations</Typography>
-		</Strava>
-	</Wrapper>;
+  useEffect(() => {
+    if (firebaseUser) {
+      console.log(firebaseUser);
+      setClientSecret(firebaseUser.clientSecret);
+      setClientID(firebaseUser.clientID);
+    }
+  }, [firebaseUser]);
+
+  return (
+    <Wrapper>
+      <Strava>
+        <Typography variant="h4">Basic Information</Typography>
+        <Button variant="contained" onClick={copyAccess}>
+          <ContentCopy />
+          Copy Guest Access
+        </Button>
+
+        <Typography variant="h4">Strava API Information</Typography>
+        <Chip
+          label={
+            profileIsAuthorized(firebaseUser) ? "Connected" : "Unauthorized"
+          }
+          color={profileIsAuthorized(firebaseUser) ? "success" : "error"}
+        />
+        <TextField
+          label="Client ID"
+          fullWidth
+          value={clientID}
+          onChange={handleClientIDChange}
+        />
+        <TextField
+          label="Client secret"
+          fullWidth
+          value={clientSecret}
+          onChange={handleClientSecretChange}
+        />
+        <Button onClick={authorize}>
+          {profileIsAuthorized(firebaseUser) ? "Re-authorize" : "Authorize"}
+        </Button>
+        <Typography>
+          Disclaimer: This shit is not stored in db, it's handled in
+          localStorage on your machine so obviously it comes with limitations
+        </Typography>
+      </Strava>
+    </Wrapper>
+  );
 }
 
 const Wrapper = styled.div`
-	display: flex;
-	gap: 16px;
-	flex-direction: column;
-	flex: 1;
-	justify-content: center;
-	align-items: center;
+  display: flex;
+  gap: 16px;
+  flex-direction: column;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
 `;
 
 const Strava = styled.div`
-	gap: 16px;
-	display: flex;
-	flex-direction: column;
-	width: 400px;
+  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  width: 400px;
 `;
 
 export default Profile;

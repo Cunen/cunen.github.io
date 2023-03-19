@@ -10,7 +10,7 @@ import Heatmap from "ol/layer/Heatmap";
 import VectorSource from "ol/source/Vector";
 import Polyline from "ol/format/Polyline";
 import { Point } from "ol/geom";
-import Coordinate from "ol/coordinate";
+
 
 let map = undefined;
 
@@ -47,18 +47,18 @@ function generateLayer(activities) {
 
   console.log("Heatmap points: ", pointFeatures.length);
 
-  const features = activities
-    .map((act) => {
-      if (!act.encodedPolyline) return null;
-      return new Feature({
-        type: "route",
-        geometry: new Polyline().readGeometry(act.encodedPolyline, {
-          dataProjection: "EPSG:4326",
-          featureProjection: "EPSG:3857",
-        }),
-      });
-    })
-    .filter(Boolean);
+  // const features = activities
+  //   .map((act) => {
+  //     if (!act.encodedPolyline) return null;
+  //     return new Feature({
+  //       type: "route",
+  //       geometry: new Polyline().readGeometry(act.encodedPolyline, {
+  //         dataProjection: "EPSG:4326",
+  //         featureProjection: "EPSG:3857",
+  //       }),
+  //     });
+  //   })
+  //   .filter(Boolean);
   const source = new VectorSource({ features: pointFeatures });
   return new Heatmap({ source, blur: 5, radius: 3, opacity: 0.8 });
 }

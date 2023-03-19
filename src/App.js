@@ -22,7 +22,13 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import MenuIcon from "@mui/icons-material/Menu";
 import { getAuth } from "firebase/auth";
 
-import Import from "./components/Import";
+import Import, {
+  epochFromDate,
+  renewStravaAuth,
+  runStravaImport,
+  stravaAuthExpired,
+  stravaAuthOk,
+} from "./components/Import";
 import AuthCodePage from "./components/AuthCodePage";
 import Profile, { profileIsAuthorized } from "./components/Profile";
 import Dashboard from "./components/Dashboard";
@@ -70,6 +76,9 @@ function App() {
   const [user, setUser] = React.useState(
     tracker ? JSON.parse(tracker) : auth.currentUser
   );
+
+  const [firebaseUser, setFirebaseUser] = React.useState();
+
   const [guest, setGuest] = React.useState(null);
 
   const [menuAnchor, setMenuAnchor] = React.useState(null);
@@ -101,14 +110,39 @@ function App() {
     const dbRef = collection(db, currentUserCollection);
     getDocs(dbRef).then((res) => {
       const data = {};
-      res.docs.forEach((doc) => data[doc.id] = doc.data());
+      res.docs.forEach((doc) => (data[doc.id] = doc.data()));
       setActivities(data.activities.list);
+      setFirebaseUser(data.user);
     });
   }, [guest, user]);
 
   React.useState(() => {
     window.setTimeout(() => setUser(auth.currentUser), 2000);
   }, [auth]);
+
+  React.useEffect(() => {
+    if (!firebaseUser) return;
+    // THIS IS AUTOIMPORT
+    const authOk = stravaAuthOk(firebaseUser);
+    const expired = stravaAuthExpired(firebaseUser);
+
+    if (!authOk || !firebaseUser.lastImport) return;
+
+    if (expired) {
+      renewStravaAuth(db, firebaseUser, setFirebaseUser);
+      return;
+    }
+
+    const secondsAgo =
+      epochFromDate(new Date()) - firebaseUser.lastImport.seconds;
+
+    if (secondsAgo > 3600) {
+      const after = firebaseUser.lastImport.toDate();
+      // Run the import from one day before last import for safety
+      after.setDate(after.getDate() - 1);
+      runStravaImport(db, firebaseUser, setFirebaseUser, after, null, false);
+    }
+  }, [firebaseUser]);
 
   // Get activities for selected year
   React.useEffect(() => {
@@ -120,8 +154,8 @@ function App() {
     );
   }, [activities, year]);
 
-  if (code) {
-    return <AuthCodePage code={code} />;
+  if (code && firebaseUser) {
+    return <AuthCodePage db={db} code={code} firebaseUser={firebaseUser} />;
   }
 
   return (
@@ -149,7 +183,10 @@ function App() {
             <MenuItem onClick={closeMenu}>
               <NavButton to="/map">Map</NavButton>
             </MenuItem>
-            <MenuItem onClick={closeMenu} disabled={!profileIsAuthorized()}>
+            <MenuItem
+              onClick={closeMenu}
+              disabled={!profileIsAuthorized(firebaseUser)}
+            >
               <NavButton to="/import">Import</NavButton>
             </MenuItem>
           </Menu>
@@ -224,10 +261,14 @@ function App() {
                 <Guest guest={guest} setGuest={setGuest} />
               </Route>
               <Route exact path="/profile">
-                <Profile user={user} />
+                <Profile db={db} user={user} firebaseUser={firebaseUser} />
               </Route>
               <Route exact path="/import">
-                <Import db={db} user={user} />
+                <Import
+                  db={db}
+                  firebaseUser={firebaseUser}
+                  setFirebaseUser={setFirebaseUser}
+                />
               </Route>
               <Route path="/days">
                 <Stats db={db} user={user.uid} year={year} />
