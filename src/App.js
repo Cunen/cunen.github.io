@@ -111,8 +111,12 @@ function App() {
     getDocs(dbRef).then((res) => {
       const data = {};
       res.docs.forEach((doc) => (data[doc.id] = doc.data()));
-      setActivities(data.activities.list);
-      setFirebaseUser(data.user);
+      if (data.activities && data.activities.list) {
+        setActivities(data.activities.list);
+      }
+      if (data.user) {
+        setFirebaseUser(data.user);
+      }
     });
   }, [guest, user]);
 

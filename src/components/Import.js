@@ -191,7 +191,11 @@ function Import({ db, firebaseUser, setFirebaseUser }) {
 
   useEffect(() => {
     if (firebaseUser && firebaseUser.lastImport) {
-      setAfter(firebaseUser.lastImport.toDate());
+      if (firebaseUser.lastImport instanceof Date) {
+        setAfter(firebaseUser.lastImport);
+      } else {
+        setAfter(firebaseUser.lastImport.toDate());
+      }
     }
     if (!firebaseUser || !stravaAuthExpired(firebaseUser)) return;
     renewStravaAuth(db, firebaseUser, setFirebaseUser);
@@ -234,8 +238,8 @@ function Import({ db, firebaseUser, setFirebaseUser }) {
                     db,
                     firebaseUser,
                     setFirebaseUser,
-                    before,
-                    after
+                    after,
+                    before
                   )
                 }
                 variant="contained"
