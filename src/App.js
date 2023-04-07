@@ -105,6 +105,35 @@ function App() {
 
   const code = getCodeFromWindowSearch();
 
+  const streak = React.useMemo(() => {
+    let streak = 0;
+    let date = new Date();
+    date.setDate(date.getDate() - 1);
+
+    let activity = undefined;
+
+    const setActivity = () => {
+      activity = activities.find((a) => {
+        const activityDate = a.date.toDate();
+        return (
+          activityDate.getDate() === date.getDate() &&
+          activityDate.getMonth() === date.getMonth() &&
+          activityDate.getFullYear() === date.getFullYear()
+        );
+      });
+    };
+
+    setActivity();
+
+    while (activity) {
+      streak++;
+      date.setDate(date.getDate() - 1);
+      setActivity();
+    }
+
+    return streak;
+  }, [activities]);
+
   // Load user activities when User changes
   React.useEffect(() => {
     if (!user && !guest) return;
@@ -275,7 +304,7 @@ function App() {
                 <Map activities={activities} />
               </Route>
               <Route path="/">
-                <Dashboard activities={yearActivities} year={year} />
+                <Dashboard activities={yearActivities} streak={streak} year={year} />
               </Route>
             </Switch>
           )}
@@ -305,7 +334,7 @@ function App() {
                 <Map activities={activities} />
               </Route>
               <Route path="/">
-                <Dashboard activities={yearActivities} year={year} />
+                <Dashboard activities={yearActivities} streak={streak} year={year} />
               </Route>
             </Switch>
           )}

@@ -1,22 +1,47 @@
-import { DirectionsRun, DirectionsWalk, DirectionsBike, FitnessCenter, ThumbUpAlt } from '@mui/icons-material';
-import { CircularProgress, Typography } from '@mui/material';
-import React from 'react';
-import styled from 'styled-components';
-import { getDaysInYearTillToday } from './Stats';
+import {
+  DirectionsRun,
+  DirectionsWalk,
+  DirectionsBike,
+  FitnessCenter,
+  ThumbUpAlt,
+} from "@mui/icons-material";
+import { Chip, CircularProgress, Typography } from "@mui/material";
+import React from "react";
+import styled from "styled-components";
+import { getDaysInYearTillToday } from "./Stats";
+import { monthFromNumber } from "../utils/dateUtils";
 
-function Dashboard({ activities, year }) {
+function Dashboard({ activities, year, streak }) {
   const [activeType, setActiveType] = React.useState();
 
   const summary = React.useMemo(() => {
     const sum = {
-      walks: 0, walkDist: 0, walkTime: 0, walkCalories: 0,
-      runs: 0, runDist: 0, runTime: 0, runCalories: 0,
-      cycles: 0, cycleDist: 0, cycleTime: 0, cycleCalories: 0,
-      gyms: 0, gymTime: 0, gymCalories: 0,
-      others: 0, otherTime: 0, otherCalories: 0, otherDistance: 0,
-      activities: 0, distance: 0, time: 0, calories: 0, activeDays: [],
+      walks: 0,
+      walkDist: 0,
+      walkTime: 0,
+      walkCalories: 0,
+      runs: 0,
+      runDist: 0,
+      runTime: 0,
+      runCalories: 0,
+      cycles: 0,
+      cycleDist: 0,
+      cycleTime: 0,
+      cycleCalories: 0,
+      gyms: 0,
+      gymTime: 0,
+      gymCalories: 0,
+      others: 0,
+      otherTime: 0,
+      otherCalories: 0,
+      otherDistance: 0,
+      activities: 0,
+      distance: 0,
+      time: 0,
+      calories: 0,
+      activeDays: [],
     };
-    activities.forEach(activity => {
+    activities.forEach((activity) => {
       sum.activities++;
       sum.time += activity.duration || 0;
       sum.distance += activity.distance || 0;
@@ -25,25 +50,25 @@ function Dashboard({ activities, year }) {
       const dateStr = `${date.getDate()}-${date.getMonth()}-${date.getFullYear()}`;
       if (!sum.activeDays.includes(dateStr)) sum.activeDays.push(dateStr);
       switch (activity.type) {
-        case 'Walk':
+        case "Walk":
           sum.walks++;
           sum.walkTime += activity.duration || 0;
           sum.walkCalories += activity.calories || 0;
           sum.walkDist += activity.distance || 0;
           break;
-        case 'Run':
+        case "Run":
           sum.runs++;
           sum.runTime += activity.duration || 0;
           sum.runCalories += activity.calories || 0;
           sum.runDist += activity.distance || 0;
           break;
-        case 'Cycle':
+        case "Cycle":
           sum.cycles++;
           sum.cycleTime += activity.duration || 0;
           sum.cycleCalories += activity.calories || 0;
           sum.cycleDist += activity.distance || 0;
           break;
-        case 'Gym':
+        case "Gym":
           sum.gyms++;
           sum.gymTime += activity.duration || 0;
           sum.gymCalories += activity.calories || 0;
@@ -61,7 +86,39 @@ function Dashboard({ activities, year }) {
 
   const daysTillNow = React.useMemo(() => {
     return getDaysInYearTillToday(year);
-  }, [year])
+  }, [year]);
+
+  const days = React.useMemo(() => {
+    const mDays = [];
+    const today = new Date();
+    const month = today.getMonth() - 1;
+    let d = new Date(today.getFullYear(), month, 1);
+
+    const getActivitiesForDay = (day) => {
+      return activities.filter((act) => {
+        const activityDate = act.date.toDate();
+        return (
+          activityDate.getDate() === day.getDate() &&
+          activityDate.getMonth() === day.getMonth() &&
+          activityDate.getFullYear() === day.getFullYear()
+        );
+      });
+    };
+
+    const offset = (d.getDay() || 7) - 1;
+    mDays.push(...new Array(offset).fill({ date: null, activities: null }));
+
+    while (d.getMonth() === month) {
+      const newDate = new Date(d);
+      mDays.push({
+        date: new Date(d),
+        activities: getActivitiesForDay(newDate),
+      });
+      d.setDate(d.getDate() + 1);
+    }
+
+    return mDays;
+  }, [activities]);
 
   const renderCircles = () => {
     // Activity Distribution
@@ -91,215 +148,384 @@ function Dashboard({ activities, year }) {
     const cDist = (summary.cycleDist / summary.distance) * 100 + rDist;
     const oDist = (summary.otherDist / summary.distance) * 100 + cDist;
 
-    const activeDayRatio = summary.activeDays.length / daysTillNow.length * 100;
+    const activeDayRatio =
+      (summary.activeDays.length / daysTillNow.length) * 100;
 
-    const getClassByColorType = type => {
-      if (activeType && activeType !== type) return 'grayed';
-      return '';
-    }
+    const getClassByColorType = (type) => {
+      if (activeType && activeType !== type) return "grayed";
+      return "";
+    };
 
     const getLabel = () => {
       switch (activeType) {
-        case 'Walk': return 'Walking';
-        case 'Cycle': return 'Cycling';
-        case 'Run': return 'Running';
-        case 'Gym': return 'Gym';
-        case 'Other': return 'Others';
-        default: return 'Labels';
+        case "Walk":
+          return "Walking";
+        case "Cycle":
+          return "Cycling";
+        case "Run":
+          return "Running";
+        case "Gym":
+          return "Gym";
+        case "Other":
+          return "Others";
+        default:
+          return "Labels";
       }
-    }
+    };
+
+    const getActivityIcon = () => {
+      switch (activeType) {
+        case "Walk":
+          return <DirectionsWalk className="icon walk" />;
+        case "Cycle":
+          return <DirectionsBike className="icon bike" />;
+        case "Run":
+          return <DirectionsRun className="icon run" />;
+        case "Gym":
+          return <FitnessCenter className="icon gym" />;
+        case "Other":
+        default:
+          return <ThumbUpAlt className="icon other" />;
+      }
+    };
 
     const getCalories = () => {
-      switch (activeType) {
-        case 'Walk': return summary.walkCalories;
-        case 'Cycle': return summary.cycleCalories;
-        case 'Run': return summary.runCalories;
-        case 'Gym': return summary.gymCalories;
-        case 'Other': return summary.otherCalories;
-        default: return summary.calories;
-      }
-    }
+      let cals = summary.calories;
+      if (activeType === "Walk") cals = summary.walkCalories;
+      else if (activeType === "Cycle") cals = summary.cycleCalories;
+      else if (activeType === "Run") cals = summary.runCalories;
+      else if (activeType === "Gym") cals = summary.gymCalories;
+      else if (activeType === "Other") cals = summary.otherCalories;
+      const calsByDay = (cals / daysTillNow.length).toFixed(0);
+      return [cals, calsByDay];
+    };
 
     const getActivities = () => {
       switch (activeType) {
-        case 'Walk': return summary.walks;
-        case 'Cycle': return summary.cycles;
-        case 'Run': return summary.runs;
-        case 'Gym': return summary.gyms;
-        case 'Other': return summary.others;
-        default: return summary.activities;
+        case "Walk":
+          return summary.walks;
+        case "Cycle":
+          return summary.cycles;
+        case "Run":
+          return summary.runs;
+        case "Gym":
+          return summary.gyms;
+        case "Other":
+          return summary.others;
+        default:
+          return summary.activities;
       }
-    }
+    };
 
     const getTime = () => {
-      switch (activeType) {
-        case 'Walk': return `${Math.floor(summary.walkTime / 3600)}h ${Math.floor((summary.walkTime % 3600) / 60)}m`;
-        case 'Cycle': return `${Math.floor(summary.cycleTime / 3600)}h ${Math.floor((summary.cycleTime % 3600) / 60)}m`;
-        case 'Run': return `${Math.floor(summary.runTime / 3600)}h ${Math.floor((summary.runTime % 3600) / 60)}m`;
-        case 'Gym': return `${Math.floor(summary.gymTime / 3600)}h ${Math.floor((summary.gymTime % 3600) / 60)}m`;
-        case 'Other': return `${Math.floor(summary.otherTime / 3600)}h ${Math.floor((summary.otherTime % 3600) / 60)}m`;
-        default: return `${Math.floor(summary.time / 3600)}h ${Math.floor((summary.time % 3600) / 60)}m`;
-      }
-    }
+      let time = summary.time;
+      if (activeType === "Walk") time = summary.walkTime;
+      else if (activeType === "Cycle") time = summary.cycleTime;
+      else if (activeType === "Run") time = summary.runTime;
+      else if (activeType === "Gym") time = summary.gymTime;
+      else if (activeType === "Other") time = summary.otherTime;
+
+      const total = `${Math.floor(time / 3600)}h ${Math.floor(
+        (time % 3600) / 60
+      )}m`;
+
+      const dayTime = time / daysTillNow.length;
+
+      const perDay = `${Math.floor(dayTime / 3600)}h ${Math.floor(
+        (dayTime % 3600) / 60
+      )}m`;
+
+      return [total, perDay];
+    };
 
     const getDistance = () => {
-      switch (activeType) {
-        case 'Walk': return `${(summary.walkDist / 1000).toFixed(2)} km`;
-        case 'Cycle': return `${(summary.cycleDist / 1000).toFixed(2)} km`;
-        case 'Run': return `${(summary.runDist / 1000).toFixed(2)} km`;
-        case 'Gym': return `Fuaark`;
-        case 'Other': return `${(summary.otherDistance / 1000).toFixed(2)} km`;
-        default: return `${(summary.distance / 1000).toFixed(2)} km`;
-      }
-    }
+      let dist = summary.distance;
+      if (activeType === "Walk") dist = summary.walkDist;
+      else if (activeType === "Cycle") dist = summary.cycleDist;
+      else if (activeType === "Run") dist = summary.runDist;
+      else if (activeType === "Other") dist = summary.otherDistance;
+      const distance = `${(dist / 1000).toFixed(2)} km`;
+      const distByDay = (dist / daysTillNow.length).toFixed(0);
+      const distancePerDay = `${(distByDay / 1000).toFixed(2)} km`;
+      return [distance, distancePerDay];
+    };
 
     const onTouchType = (type) => {
       setActiveType(activeType === type ? undefined : type);
-    }
+    };
 
-    return <>
-      <Pair>
-        <CircularWrapper>
-          <Circle>
-            <CircleLabel>
-              <Typography>{activeDayRatio.toFixed(1)}%</Typography>
-              <Typography>Activity</Typography>
-            </CircleLabel>
-            <CircularProgress variant="determinate" size={160} thickness={8} value={activeDayRatio} />
-          </Circle>
-        </CircularWrapper>
-        <CircularWrapper>
-          <Circle>
-            <CircleLabel>
-              <Typography>{getActivities()}</Typography>
-              <Typography>Activities</Typography>
-            </CircleLabel>
-            <CircularProgress variant="determinate" size={160} thickness={8} value={otherProg} className={getClassByColorType('Other')} color="secondary" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={gymsProg} className={getClassByColorType('Gym')} color="info" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={cyclesProg} className={getClassByColorType('Cycle')} color="warning" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={runsProg} className={getClassByColorType('Run')} color="error" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={walksProg} className={getClassByColorType('Walk')} color="success" />
-          </Circle>
-        </CircularWrapper>
-      </Pair>
-      <Pair>
-        <CircularWrapper>
-          <Circle>
-            <CircleLabel>
-              <Typography>{getTime()}</Typography>
-              <Typography>Active Time</Typography>
-            </CircleLabel>
-            <CircularProgress variant="determinate" size={160} thickness={8} value={oTime} className={getClassByColorType('Other')} color="secondary" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={gTime} className={getClassByColorType('Gym')} color="info" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={cTime} className={getClassByColorType('Cycle')} color="warning" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={rTime} className={getClassByColorType('Run')} color="error" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={wTime} className={getClassByColorType('Walk')} color="success" />
-          </Circle>
-        </CircularWrapper>
-        <CircularWrapper>
-          <Circle>
-            <CircleLabel>
-              <Typography>{getCalories()}</Typography>
-              <Typography>Calories</Typography>
-            </CircleLabel>
-            <CircularProgress variant="determinate" size={160} thickness={8} value={oCals} className={getClassByColorType('Other')} color="secondary" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={gCals} className={getClassByColorType('Gym')} color="info" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={cCals} className={getClassByColorType('Cycle')} color="warning" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={rCals} className={getClassByColorType('Run')} color="error" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={wCals} className={getClassByColorType('Walk')} color="success" />
-          </Circle>
+    const getDayColor = (day) => {
+      if (!day.date) return "transparent";
+      else if (!day.activities || day.activities.length < 1) return "gray";
+      else if (day.activities.some((a) => a.type === "Gym")) return "#24245e";
+      else if (day.activities.some((a) => a.type === "Run")) return "#622828";
+      else if (day.activities.some((a) => a.type === "Cycle")) return "#664815";
+      else if (day.activities.some((a) => a.type === "Other")) return "#4d0a56";
+      else if (day.activities.some((a) => a.type === "Walk")) return "#155815";
+      return "gray";
+    };
 
-        </CircularWrapper>
-      </Pair>
-      <Pair>
-        <CircularWrapper>
-          <Circle>
-            <CircleLabel>
-              <Typography>{getDistance()}</Typography>
-              <Typography>Distance</Typography>
-            </CircleLabel>
-            <CircularProgress variant="determinate" size={160} thickness={8} value={oDist} className={getClassByColorType('Other')} color="secondary" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={cDist} className={getClassByColorType('Cycle')} color="warning" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={rDist} className={getClassByColorType('Run')} color="error" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={wDist} className={getClassByColorType('Walk')} color="success" />
-          </Circle>
-        </CircularWrapper>
-        <CircularWrapper>
-          <Circle className="no-animation">
-            <CircleLabel>
-              <Typography>{getLabel()}</Typography>
-            </CircleLabel>
-            <CircularProgress variant="determinate" size={160} thickness={8} value={100} className={getClassByColorType('Other')} color="secondary" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={80} className={getClassByColorType('Gym')} color="info" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={60} className={getClassByColorType('Cycle')} color="warning" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={40} className={getClassByColorType('Run')} color="error" />
-            <CircularProgress variant="determinate" size={160} thickness={8} value={20} className={getClassByColorType('Walk')} color="success" />
-            <DirectionsRun className="icon run" />
-            <DirectionsWalk className="icon walk" />
-            <DirectionsBike className="icon bike" />
-            <FitnessCenter className="icon gym" />
-            <ThumbUpAlt className="icon other" />
-            <LabelAction index={0}>
-              <LabelActionBlock
-                onTouchStart={() => onTouchType('Walk')}
-                onMouseEnter={() => setActiveType('Walk')}
-                onMouseLeave={() => setActiveType(undefined)} />
-            </LabelAction>
-            <LabelAction index={1}>
-              <LabelActionBlock
-                onTouchStart={() => onTouchType('Run')}
-                onMouseEnter={() => setActiveType('Run')}
-                onMouseLeave={() => setActiveType(undefined)} />
-            </LabelAction>
-            <LabelAction index={2}>
-              <LabelActionBlock
-                onTouchStart={() => onTouchType('Cycle')}
-                onMouseEnter={() => setActiveType('Cycle')}
-                onMouseLeave={() => setActiveType(undefined)} />
-            </LabelAction>
-            <LabelAction index={3}>
-              <LabelActionBlock
-                onTouchStart={() => onTouchType('Gym')}
-                onMouseEnter={() => setActiveType('Gym')}
-                onMouseLeave={() => setActiveType(undefined)} />
-            </LabelAction>
-            <LabelAction index={4}>
-              <LabelActionBlock
-                onTouchStart={() => onTouchType('Other')}
-                onMouseEnter={() => setActiveType('Other')}
-                onMouseLeave={() => setActiveType(undefined)} />
-            </LabelAction>
-          </Circle>
-        </CircularWrapper>
-      </Pair>
-    </>;
-  }
+    return (
+      <>
+        <Totals>
+          <Streak>
+            <Chip label={streak} color="primary" />
+            <Typography>Day streak</Typography>
+          </Streak>
+          <CircularWrapper>
+            <Circle>
+              <CircleLabel>
+                {!activeType && (
+                  <Typography>Day {daysTillNow.length}</Typography>
+                )}
+                {!activeType && (
+                  <Typography>{activeDayRatio.toFixed(1)}%</Typography>
+                )}
+                {activeType && <Typography>{getLabel()}</Typography>}
+                {activeType && getActivityIcon()}
+              </CircleLabel>
+              <CircularProgress
+                variant="determinate"
+                size={160}
+                thickness={8}
+                value={activeDayRatio}
+              />
+            </Circle>
+          </CircularWrapper>
+
+          <Streak>
+            <Chip label={getActivities()} color="primary" />
+            <Typography>Activities</Typography>
+          </Streak>
+        </Totals>
+
+        <Bar>
+          <Chunk
+            width={otherProg || 0}
+            className={getClassByColorType("Other")}
+            color="#4d0a56"
+            onTouchStart={() => onTouchType("Other")}
+            onMouseEnter={() => setActiveType("Other")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={gymsProg || 0}
+            className={getClassByColorType("Gym")}
+            color="#24245e"
+            onTouchStart={() => onTouchType("Gym")}
+            onMouseEnter={() => setActiveType("Gym")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={cyclesProg || 0}
+            className={getClassByColorType("Cycle")}
+            color="#664815"
+            onTouchStart={() => onTouchType("Cycle")}
+            onMouseEnter={() => setActiveType("Cycle")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={runsProg || 0}
+            className={getClassByColorType("Run")}
+            color="#622828"
+            onTouchStart={() => onTouchType("Run")}
+            onMouseEnter={() => setActiveType("Run")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={walksProg || 0}
+            className={getClassByColorType("Walk")}
+            color="#155815"
+            onTouchStart={() => onTouchType("Walk")}
+            onMouseEnter={() => setActiveType("Walk")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Typography>{getActivities()} activities</Typography>
+          <Typography>
+            {(getActivities() / daysTillNow.length).toFixed(1)} / day
+          </Typography>
+        </Bar>
+
+        <Bar>
+          <Chunk
+            width={oTime || 0}
+            className={getClassByColorType("Other")}
+            color="#4d0a56"
+            onTouchStart={() => onTouchType("Other")}
+            onMouseEnter={() => setActiveType("Other")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={gTime || 0}
+            className={getClassByColorType("Gym")}
+            color="#24245e"
+            onTouchStart={() => onTouchType("Gym")}
+            onMouseEnter={() => setActiveType("Gym")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={cTime || 0}
+            className={getClassByColorType("Cycle")}
+            color="#664815"
+            onTouchStart={() => onTouchType("Cycle")}
+            onMouseEnter={() => setActiveType("Cycle")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={rTime || 0}
+            className={getClassByColorType("Run")}
+            color="#622828"
+            onTouchStart={() => onTouchType("Run")}
+            onMouseEnter={() => setActiveType("Run")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={wTime || 0}
+            className={getClassByColorType("Walk")}
+            color="#155815"
+            onTouchStart={() => onTouchType("Walk")}
+            onMouseEnter={() => setActiveType("Walk")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Typography>{getTime()[0]}</Typography>
+          <Typography>{getTime()[1]}</Typography>
+        </Bar>
+
+        <Bar>
+          <Chunk
+            width={oCals || 0}
+            className={getClassByColorType("Other")}
+            color="#4d0a56"
+            onTouchStart={() => onTouchType("Other")}
+            onMouseEnter={() => setActiveType("Other")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={gCals || 0}
+            className={getClassByColorType("Gym")}
+            color="#24245e"
+            onTouchStart={() => onTouchType("Gym")}
+            onMouseEnter={() => setActiveType("Gym")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={cCals || 0}
+            className={getClassByColorType("Cycle")}
+            color="#664815"
+            onTouchStart={() => onTouchType("Cycle")}
+            onMouseEnter={() => setActiveType("Cycle")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={rCals || 0}
+            className={getClassByColorType("Run")}
+            color="#622828"
+            onTouchStart={() => onTouchType("Run")}
+            onMouseEnter={() => setActiveType("Run")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={wCals || 0}
+            className={getClassByColorType("Walk")}
+            color="#155815"
+            onTouchStart={() => onTouchType("Walk")}
+            onMouseEnter={() => setActiveType("Walk")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Typography>{getCalories()[0] + " kcal"}</Typography>
+          <Typography>{getCalories()[1] + " kcal"}</Typography>
+        </Bar>
+
+        <Bar>
+          <Chunk
+            width={oDist || 0}
+            className={getClassByColorType("Other")}
+            color="#4d0a56"
+            onTouchStart={() => onTouchType("Other")}
+            onMouseEnter={() => setActiveType("Other")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={cDist || 0}
+            className={getClassByColorType("Cycle")}
+            color="#664815"
+            onTouchStart={() => onTouchType("Cycle")}
+            onMouseEnter={() => setActiveType("Cycle")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={rDist || 0}
+            className={getClassByColorType("Run")}
+            color="#622828"
+            onTouchStart={() => onTouchType("Run")}
+            onMouseEnter={() => setActiveType("Run")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Chunk
+            width={wDist || 0}
+            className={getClassByColorType("Walk")}
+            color="#155815"
+            onTouchStart={() => onTouchType("Walk")}
+            onMouseEnter={() => setActiveType("Walk")}
+            onMouseLeave={() => setActiveType(undefined)}
+          />
+          <Typography>{getDistance()[0]}</Typography>
+          <Typography>{getDistance()[1]}</Typography>
+        </Bar>
+        <Typography>
+          Previous month: {monthFromNumber(new Date().getMonth() - 1)}
+        </Typography>
+        <PreviousMonth>
+          {days.map((day, i) => {
+            return <Day key={i} bg={getDayColor(day)} />;
+          })}
+        </PreviousMonth>
+      </>
+    );
+  };
 
   return <Wrapper>{renderCircles()}</Wrapper>;
 }
 
-const LabelAction = styled.div`
+const Bar = styled.div`
   display: flex;
-  position: absolute;
-  justify-content: center;
-  width: 100%;
-  height: 100%;
-  transform: rotate(${props => props.index * 72 + 36}deg);
-  pointer-events: none;
-  user-select: none;
+  height: 40px;
+  width: 344px;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+  & > p {
+    z-index: 1;
+  }
+
+  & > p:first-of-type {
+    margin-left: 16px;
+  }
+
+  & > p:last-of-type {
+    margin-right: 16px;
+  }
 `;
 
-const LabelActionBlock = styled.div`
-  pointer-events: auto;
-  cursor: pointer;
-  border-radius: 100%;
-  height: 35px;
-  width: 85px;
-  user-select: none;
+const Chunk = styled.div`
+  height: 40px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  transition: width 200ms;
+  transition: background-color 200ms;
+  width: ${(props) => props.width || 0}%;
+  background-color: ${(props) => props.color};
+
+  &.grayed {
+    background-color: #1c1c1c;
+  }
 `;
 
 const CircularWrapper = styled.div`
-	display: flex;
+  display: flex;
 `;
 
 const Circle = styled.div`
@@ -329,15 +555,23 @@ const Circle = styled.div`
 `;
 
 const CircleLabel = styled.div`
-	display: flex;
+  display: flex;
   flex-direction: column;
-	align-items: center;
-	justify-content: center;
+  align-items: center;
+  justify-content: center;
 `;
 
-const Pair = styled.div`
+const Totals = styled.div`
   display: flex;
-  gap: 16px;
+`;
+
+const Streak = styled.div`
+  display: flex;
+  width: 92px;
+  gap: 8px;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 const Wrapper = styled.div`
@@ -348,6 +582,20 @@ const Wrapper = styled.div`
   padding: 16px;
   gap: 16px;
   flex: 1;
+`;
+
+const PreviousMonth = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  width: 208px;
+  gap: 16px;
+`;
+
+const Day = styled.div`
+  width: 16px;
+  height: 16px;
+  border-radius: 16px;
+  background-color: ${(props) => props.bg || "red"};
 `;
 
 export default Dashboard;
