@@ -319,7 +319,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={cyclesProg || 0}
             className={getClassByColorType("Cycle")}
-            color="#664815"
+            color="#ffa726"
             onTouchStart={() => onTouchType("Cycle")}
             onMouseEnter={() => setActiveType("Cycle")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -366,7 +366,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={cTime || 0}
             className={getClassByColorType("Cycle")}
-            color="#664815"
+            color="#ffa726"
             onTouchStart={() => onTouchType("Cycle")}
             onMouseEnter={() => setActiveType("Cycle")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -411,7 +411,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={cCals || 0}
             className={getClassByColorType("Cycle")}
-            color="#664815"
+            color="#ffa726"
             onTouchStart={() => onTouchType("Cycle")}
             onMouseEnter={() => setActiveType("Cycle")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -448,7 +448,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={cDist || 0}
             className={getClassByColorType("Cycle")}
-            color="#664815"
+            color="#ffa726"
             onTouchStart={() => onTouchType("Cycle")}
             onMouseEnter={() => setActiveType("Cycle")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -479,16 +479,16 @@ function Dashboard({ activities, year, streak }) {
             <Typography>Walk</Typography>
           </Legend>
           <Legend>
-            <FitnessCenter className="icon gym" color="info" />
-            <Typography>Gym</Typography>
+            <DirectionsRun className="icon run" color="error" />
+            <Typography>Run</Typography>
           </Legend>
           <Legend>
             <DirectionsBike className="icon bike" color="warning" />
             <Typography>Cycle</Typography>
           </Legend>
           <Legend>
-            <DirectionsRun className="icon run" color="error" />
-            <Typography>Run</Typography>
+            <FitnessCenter className="icon gym" color="info" />
+            <Typography>Gym</Typography>
           </Legend>
           <Legend>
             <ThumbUpAlt className="icon other" color="secondary" />
