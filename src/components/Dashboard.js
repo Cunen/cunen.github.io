@@ -476,7 +476,7 @@ function Dashboard({ activities, year, streak }) {
         <Legends>
           <Legend>
             <DirectionsWalk className="icon walk" color="success" />
-            <Typography>Run</Typography>
+            <Typography>Walk</Typography>
           </Legend>
           <Legend>
             <FitnessCenter className="icon gym" color="info" />
@@ -513,7 +513,7 @@ function Dashboard({ activities, year, streak }) {
 
 const Legends = styled.div`
   display: flex;
-  gap: 12px;
+  gap: 10px;
 `;
 
 const Legend = styled.div`
