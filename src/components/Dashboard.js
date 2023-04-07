@@ -257,11 +257,11 @@ function Dashboard({ activities, year, streak }) {
     const getDayColor = (day) => {
       if (!day.date) return "transparent";
       else if (!day.activities || day.activities.length < 1) return "gray";
-      else if (day.activities.some((a) => a.type === "Gym")) return "#24245e";
-      else if (day.activities.some((a) => a.type === "Run")) return "#622828";
-      else if (day.activities.some((a) => a.type === "Cycle")) return "#664815";
-      else if (day.activities.some((a) => a.type === "Other")) return "#4d0a56";
-      else if (day.activities.some((a) => a.type === "Walk")) return "#155815";
+      else if (day.activities.some((a) => a.type === "Gym")) return "#29b6f6";
+      else if (day.activities.some((a) => a.type === "Run")) return "#f44336";
+      else if (day.activities.some((a) => a.type === "Cycle")) return "#ffa726";
+      else if (day.activities.some((a) => a.type === "Other")) return "#ce93d8";
+      else if (day.activities.some((a) => a.type === "Walk")) return "#66bb6a";
       return "gray";
     };
 
@@ -303,7 +303,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={otherProg || 0}
             className={getClassByColorType("Other")}
-            color="#4d0a56"
+            color="#ce93d8"
             onTouchStart={() => onTouchType("Other")}
             onMouseEnter={() => setActiveType("Other")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -311,7 +311,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={gymsProg || 0}
             className={getClassByColorType("Gym")}
-            color="#24245e"
+            color="#29b6f6"
             onTouchStart={() => onTouchType("Gym")}
             onMouseEnter={() => setActiveType("Gym")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -327,7 +327,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={runsProg || 0}
             className={getClassByColorType("Run")}
-            color="#622828"
+            color="#f44336"
             onTouchStart={() => onTouchType("Run")}
             onMouseEnter={() => setActiveType("Run")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -335,7 +335,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={walksProg || 0}
             className={getClassByColorType("Walk")}
-            color="#155815"
+            color="#66bb6a"
             onTouchStart={() => onTouchType("Walk")}
             onMouseEnter={() => setActiveType("Walk")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -350,7 +350,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={oTime || 0}
             className={getClassByColorType("Other")}
-            color="#4d0a56"
+            color="#ce93d8"
             onTouchStart={() => onTouchType("Other")}
             onMouseEnter={() => setActiveType("Other")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -358,7 +358,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={gTime || 0}
             className={getClassByColorType("Gym")}
-            color="#24245e"
+            color="#29b6f6"
             onTouchStart={() => onTouchType("Gym")}
             onMouseEnter={() => setActiveType("Gym")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -374,7 +374,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={rTime || 0}
             className={getClassByColorType("Run")}
-            color="#622828"
+            color="#f44336"
             onTouchStart={() => onTouchType("Run")}
             onMouseEnter={() => setActiveType("Run")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -382,7 +382,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={wTime || 0}
             className={getClassByColorType("Walk")}
-            color="#155815"
+            color="#66bb6a"
             onTouchStart={() => onTouchType("Walk")}
             onMouseEnter={() => setActiveType("Walk")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -395,7 +395,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={oCals || 0}
             className={getClassByColorType("Other")}
-            color="#4d0a56"
+            color="#ce93d8"
             onTouchStart={() => onTouchType("Other")}
             onMouseEnter={() => setActiveType("Other")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -403,7 +403,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={gCals || 0}
             className={getClassByColorType("Gym")}
-            color="#24245e"
+            color="#29b6f6"
             onTouchStart={() => onTouchType("Gym")}
             onMouseEnter={() => setActiveType("Gym")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -419,7 +419,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={rCals || 0}
             className={getClassByColorType("Run")}
-            color="#622828"
+            color="#f44336"
             onTouchStart={() => onTouchType("Run")}
             onMouseEnter={() => setActiveType("Run")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -427,7 +427,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={wCals || 0}
             className={getClassByColorType("Walk")}
-            color="#155815"
+            color="#66bb6a"
             onTouchStart={() => onTouchType("Walk")}
             onMouseEnter={() => setActiveType("Walk")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -440,7 +440,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={oDist || 0}
             className={getClassByColorType("Other")}
-            color="#4d0a56"
+            color="#ce93d8"
             onTouchStart={() => onTouchType("Other")}
             onMouseEnter={() => setActiveType("Other")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -456,7 +456,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={rDist || 0}
             className={getClassByColorType("Run")}
-            color="#622828"
+            color="#f44336"
             onTouchStart={() => onTouchType("Run")}
             onMouseEnter={() => setActiveType("Run")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -464,7 +464,7 @@ function Dashboard({ activities, year, streak }) {
           <Chunk
             width={wDist || 0}
             className={getClassByColorType("Walk")}
-            color="#155815"
+            color="#66bb6a"
             onTouchStart={() => onTouchType("Walk")}
             onMouseEnter={() => setActiveType("Walk")}
             onMouseLeave={() => setActiveType(undefined)}
@@ -472,6 +472,30 @@ function Dashboard({ activities, year, streak }) {
           <Typography>{getDistance()[0]}</Typography>
           <Typography>{getDistance()[1]}</Typography>
         </Bar>
+
+        <Legends>
+          <Legend>
+            <DirectionsWalk className="icon walk" color="success" />
+            <Typography>Run</Typography>
+          </Legend>
+          <Legend>
+            <FitnessCenter className="icon gym" color="info" />
+            <Typography>Gym</Typography>
+          </Legend>
+          <Legend>
+            <DirectionsBike className="icon bike" color="warning" />
+            <Typography>Cycle</Typography>
+          </Legend>
+          <Legend>
+            <DirectionsRun className="icon run" color="error" />
+            <Typography>Run</Typography>
+          </Legend>
+          <Legend>
+            <ThumbUpAlt className="icon other" color="secondary" />
+            <Typography>Other</Typography>
+          </Legend>
+        </Legends>
+
         <Typography>
           Previous month: {monthFromNumber(new Date().getMonth() - 1)}
         </Typography>
@@ -487,6 +511,16 @@ function Dashboard({ activities, year, streak }) {
   return <Wrapper>{renderCircles()}</Wrapper>;
 }
 
+const Legends = styled.div`
+  display: flex;
+  gap: 12px;
+`;
+
+const Legend = styled.div`
+  align-items: center;
+  display: flex;
+`;
+
 const Bar = styled.div`
   display: flex;
   height: 40px;
@@ -498,6 +532,9 @@ const Bar = styled.div`
   overflow: hidden;
   & > p {
     z-index: 1;
+    color: black;
+    font-weight: 500;
+    pointer-events: none;
   }
 
   & > p:first-of-type {
