@@ -261,6 +261,7 @@ function Dashboard({ activities, year, streak }) {
       else if (day.activities.some((a) => a.type === "Run")) return "#f44336";
       else if (day.activities.some((a) => a.type === "Cycle")) return "#ffa726";
       else if (day.activities.some((a) => a.type === "Other")) return "#ce93d8";
+      else if (day.activities.some((a) => a.type === "Workout")) return "#ce93d8";
       else if (day.activities.some((a) => a.type === "Walk")) return "#66bb6a";
       return "#ce93d8";
     };
