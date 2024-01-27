@@ -250,6 +250,7 @@ function App() {
             value={year}
             onChange={(e) => setYear(e.target.value)}
           >
+            <MenuItem value={2023}>2024</MenuItem>
             <MenuItem value={2023}>2023</MenuItem>
             <MenuItem value={2022}>2022</MenuItem>
             <MenuItem value={2021}>2021</MenuItem>
@@ -304,7 +305,11 @@ function App() {
                 <Map activities={activities} />
               </Route>
               <Route path="/">
-                <Dashboard activities={yearActivities} streak={streak} year={year} />
+                <Dashboard
+                  activities={yearActivities}
+                  streak={streak}
+                  year={year}
+                />
               </Route>
             </Switch>
           )}
@@ -334,7 +339,11 @@ function App() {
                 <Map activities={activities} />
               </Route>
               <Route path="/">
-                <Dashboard activities={yearActivities} streak={streak} year={year} />
+                <Dashboard
+                  activities={yearActivities}
+                  streak={streak}
+                  year={year}
+                />
               </Route>
             </Switch>
           )}
