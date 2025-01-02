@@ -11,6 +11,7 @@ import {
   FitnessCenter,
   Loop,
   Functions,
+  ThumbUpAlt,
 } from "@mui/icons-material";
 import { MenuItem, Select } from "@mui/material";
 import { monthFromNumber } from "../utils/dateUtils";
@@ -158,9 +159,16 @@ function Recap({ activities, year }) {
 
     sum.gymTime = sum.gymTime / 3600;
 
+    // Other / Alternate
+    sum.otherTime = sum.otherTime / 3600;
+
     sum.time = sum.time / 3600;
     sum.distance = sum.distance / 1000;
-    sum.speed = (sum.avgWalkSpeed * sum.walks + sum.avgCycleSpeed * sum.cycles + sum.avgRunSpeed * sum.runs) / (sum.walks + sum.runs + sum.cycles);
+    sum.speed =
+      (sum.avgWalkSpeed * sum.walks +
+        sum.avgCycleSpeed * sum.cycles +
+        sum.avgRunSpeed * sum.runs) /
+      (sum.walks + sum.runs + sum.cycles);
 
     return sum;
   }, [acties]);
@@ -256,10 +264,14 @@ function Recap({ activities, year }) {
           <RecapRow>
             <Average>
               <AccessAlarm />
-              <div>{Math.floor(summary.runTime)}h{" "}
-                {Math.floor((summary.runTime % 1) * 60)}m</div>
-              <div>({Math.floor(summary.avgRunTime)}h{" "}
-                {Math.floor((summary.avgRunTime % 1) * 60)}m avg)</div>
+              <div>
+                {Math.floor(summary.runTime)}h{" "}
+                {Math.floor((summary.runTime % 1) * 60)}m
+              </div>
+              <div>
+                ({Math.floor(summary.avgRunTime)}h{" "}
+                {Math.floor((summary.avgRunTime % 1) * 60)}m avg)
+              </div>
             </Average>
             <Average>
               <LocalFireDepartment />
@@ -286,10 +298,14 @@ function Recap({ activities, year }) {
           <RecapRow>
             <Average>
               <AccessAlarm />
-              <div>{Math.floor(summary.cycleTime)}h{" "}
-                {Math.floor((summary.cycleTime % 1) * 60)}m</div>
-              <div>({Math.floor(summary.avgCycleTime)}h{" "}
-                {Math.floor((summary.avgCycleTime % 1) * 60)}m avg)</div>
+              <div>
+                {Math.floor(summary.cycleTime)}h{" "}
+                {Math.floor((summary.cycleTime % 1) * 60)}m
+              </div>
+              <div>
+                ({Math.floor(summary.avgCycleTime)}h{" "}
+                {Math.floor((summary.avgCycleTime % 1) * 60)}m avg)
+              </div>
             </Average>
             <Average>
               <LocalFireDepartment />
@@ -316,10 +332,14 @@ function Recap({ activities, year }) {
           <RecapRow>
             <Average>
               <AccessAlarm />
-              <div>{Math.floor(summary.gymTime)}h{" "}
-                {Math.floor((summary.gymTime % 1) * 60)}m</div>
-              <div>({Math.floor(summary.avgGymTime)}h{" "}
-                {Math.floor((summary.avgGymTime % 1) * 60)}m avg)</div>
+              <div>
+                {Math.floor(summary.gymTime)}h{" "}
+                {Math.floor((summary.gymTime % 1) * 60)}m
+              </div>
+              <div>
+                ({Math.floor(summary.avgGymTime)}h{" "}
+                {Math.floor((summary.avgGymTime % 1) * 60)}m avg)
+              </div>
             </Average>
             <Average>
               <LocalFireDepartment />
@@ -330,21 +350,56 @@ function Recap({ activities, year }) {
             <Average></Average>
           </RecapRow>
         </RecapUnit>
+        <RecapUnit bc="#ce93d8">
+          <SumText color="#ce93d8">{summary.others}</SumText>
+          <ThumbUpAlt color="secondary" className="icon" />
+          <Title className="title">
+            <ThumbUpAlt /> Alternate ({summary.others})
+            <Highlight color="#ce93d8" />
+          </Title>
+          <RecapRow>
+            <Average>
+              <AccessAlarm />
+              <div>
+                {Math.floor(summary.otherTime)}h{" "}
+                {Math.floor((summary.otherTime % 1) * 60)}m
+              </div>
+            </Average>
+            <Average>
+              <LocalFireDepartment />
+              <div>{summary.otherCalories.toFixed()} kcal</div>
+            </Average>
+            <Average></Average>
+            <Average></Average>
+          </RecapRow>
+        </RecapUnit>
       </Recaps>
       <Table>
         <thead>
           <Row>
             <HeaderCell></HeaderCell>
-            <HeaderCell><Loop /></HeaderCell>
-            <HeaderCell><AccessAlarm /></HeaderCell>
-            <HeaderCell><LocalFireDepartment /></HeaderCell>
-            <HeaderCell><Straighten /></HeaderCell>
-            <HeaderCell><Speed /></HeaderCell>
+            <HeaderCell>
+              <Loop />
+            </HeaderCell>
+            <HeaderCell>
+              <AccessAlarm />
+            </HeaderCell>
+            <HeaderCell>
+              <LocalFireDepartment />
+            </HeaderCell>
+            <HeaderCell>
+              <Straighten />
+            </HeaderCell>
+            <HeaderCell>
+              <Speed />
+            </HeaderCell>
           </Row>
         </thead>
         <tbody>
           <Row color="#66bb6a">
-            <Cell><DirectionsWalk /></Cell>
+            <Cell>
+              <DirectionsWalk />
+            </Cell>
             <Cell>{summary.walks}</Cell>
             <Cell>
               {Math.floor(summary.walkTime)}h{" "}
@@ -355,7 +410,9 @@ function Recap({ activities, year }) {
             <Cell>{summary.avgWalkSpeed.toFixed(1)}km/h</Cell>
           </Row>
           <Row color="#f44336">
-            <Cell><DirectionsRun /></Cell>
+            <Cell>
+              <DirectionsRun />
+            </Cell>
             <Cell>{summary.runs}</Cell>
             <Cell>
               {Math.floor(summary.runTime)}h{" "}
@@ -366,7 +423,9 @@ function Recap({ activities, year }) {
             <Cell>{summary.avgRunSpeed.toFixed(1)}km/h</Cell>
           </Row>
           <Row color="#ffa726">
-            <Cell><DirectionsBike /></Cell>
+            <Cell>
+              <DirectionsBike />
+            </Cell>
             <Cell>{summary.cycles}</Cell>
             <Cell>
               {Math.floor(summary.cycleTime)}h{" "}
@@ -377,7 +436,9 @@ function Recap({ activities, year }) {
             <Cell>{summary.avgCycleSpeed.toFixed(1)}km/h</Cell>
           </Row>
           <Row color="#29b6f6">
-            <Cell><FitnessCenter /></Cell>
+            <Cell>
+              <FitnessCenter />
+            </Cell>
             <Cell>{summary.gyms}</Cell>
             <Cell>
               {Math.floor(summary.gymTime)}h{" "}
@@ -387,12 +448,26 @@ function Recap({ activities, year }) {
             <Cell></Cell>
             <Cell></Cell>
           </Row>
+          <Row color="#ce93d8">
+            <Cell>
+              <ThumbUpAlt />
+            </Cell>
+            <Cell>{summary.others}</Cell>
+            <Cell>
+              {Math.floor(summary.otherTime)}h{" "}
+              {Math.floor((summary.otherTime % 1) * 60)}m
+            </Cell>
+            <Cell>{summary.otherCalories.toFixed()}kcal</Cell>
+            <Cell></Cell>
+            <Cell></Cell>
+          </Row>
           <Row color="#FFFFFF">
-            <Cell><Functions /></Cell>
+            <Cell>
+              <Functions />
+            </Cell>
             <Cell>{summary.activities}</Cell>
             <Cell>
-              {Math.floor(summary.time)}h{" "}
-              {Math.floor((summary.time % 1) * 60)}m
+              {Math.floor(summary.time)}h {Math.floor((summary.time % 1) * 60)}m
             </Cell>
             <Cell>{summary.calories.toFixed()}kcal</Cell>
             <Cell>{summary.distance.toFixed(1)}km</Cell>
@@ -401,15 +476,17 @@ function Recap({ activities, year }) {
         </tbody>
       </Table>
       <DayGroup>
-        {days.length > 0 && <>
-          <DayDay>Mon</DayDay>
-          <DayDay>Tue</DayDay>
-          <DayDay>Wed</DayDay>
-          <DayDay>Thu</DayDay>
-          <DayDay>Fri</DayDay>
-          <DayDay>Sat</DayDay>
-          <DayDay>Sun</DayDay>
-        </>}
+        {days.length > 0 && (
+          <>
+            <DayDay>Mon</DayDay>
+            <DayDay>Tue</DayDay>
+            <DayDay>Wed</DayDay>
+            <DayDay>Thu</DayDay>
+            <DayDay>Fri</DayDay>
+            <DayDay>Sat</DayDay>
+            <DayDay>Sun</DayDay>
+          </>
+        )}
         {days.map((day, i) => {
           if (day.date === null) return <NullDay key={"nullday" + i} />;
           return (
@@ -449,12 +526,13 @@ const Table = styled.table`
 `;
 const Row = styled.tr`
   & td {
-    background: ${(props) => props.color ? props.color + '40' : 'transparent'};
+    background: ${(props) =>
+      props.color ? props.color + "40" : "transparent"};
     &:first-child {
       border-radius: 16px 0 0 16px;
       padding-left: 16px;
     }
-  
+
     &:last-child {
       border-radius: 0 16px 16px 0;
       padding-right: 16px;
@@ -467,7 +545,6 @@ const Cell = styled.td`
   white-space: nowrap;
   padding: 4px 8px;
 `;
-
 
 const SumText = styled.div`
   position: absolute;

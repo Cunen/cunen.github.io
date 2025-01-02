@@ -119,12 +119,17 @@ export const runStravaImport = async (
       page++;
     }
 
+    console.log(results);
+
     const activities = results.map((r) => {
       const type = convertStravaType(r.type);
       const duration = r.elapsed_time;
       const distance = r.distance;
       const calories = getCaloriesByType(type, duration, distance);
       const map = r.map ? r.map.summary_polyline : null;
+      const elevationHigh = r.elev_high ?? 0;
+      const elevationLow = r.elev_low ?? 0;
+      const elevationGain = Math.max(elevationHigh - elevationLow, 0);
       return {
         type,
         calories,
@@ -132,10 +137,15 @@ export const runStravaImport = async (
         startTime: new Date(r.start_date),
         date: new Date(r.start_date),
         duration,
+        elevationHigh,
+        elevationLow,
+        elevationGain,
         distance,
         encodedPolyline: map,
       };
     });
+
+    console.log(activities);
 
     const userCollection = "user-" + firebaseUser.id;
     const dbRef = collection(db, userCollection);
