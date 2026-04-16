@@ -4,6 +4,7 @@ import {
   DirectionsBike,
   FitnessCenter,
   ThumbUpAlt,
+  Whatshot,
 } from "@mui/icons-material";
 import { Chip, CircularProgress, Typography } from "@mui/material";
 import React from "react";
@@ -261,18 +262,53 @@ function Dashboard({ activities, year, streak }) {
       else if (day.activities.some((a) => a.type === "Run")) return "#f44336";
       else if (day.activities.some((a) => a.type === "Cycle")) return "#ffa726";
       else if (day.activities.some((a) => a.type === "Other")) return "#ce93d8";
-      else if (day.activities.some((a) => a.type === "Workout")) return "#ce93d8";
+      else if (day.activities.some((a) => a.type === "Workout"))
+        return "#ce93d8";
       else if (day.activities.some((a) => a.type === "Walk")) return "#66bb6a";
       return "#ce93d8";
     };
 
     return (
       <>
-        <Totals>
+        <StreakWrapper>
           <Streak>
-            <Chip label={streak} color="primary" />
-            <Typography>Day streak</Typography>
+            <Whatshot color="#ff7429" />
+            {streak} Streak
           </Streak>
+          {activeDayRatio.toFixed(1)}% Active
+        </StreakWrapper>
+        <Distances>
+          <Distance>
+            <FitnessCenter className="icon walk" color="primary" />
+            <DistRow>{summary.gyms} Gyms</DistRow>
+          </Distance>
+          <Distance>
+            <DistRow>{summary.activities} Total</DistRow>
+            <DistRow>{getTime()[1]} / d</DistRow>
+          </Distance>
+          <Distance>
+            <ThumbUpAlt className="icon run" color="secondary" />
+            <DistRow>{summary.others} Other</DistRow>
+          </Distance>
+        </Distances>
+        <Distances>
+          <Distance>
+            <DirectionsWalk className="icon walk" color="success" />
+            <DistRow>{summary.walks} Walks</DistRow>
+            <DistRow>{summary.walkDist / 1000} km</DistRow>
+          </Distance>
+          <Distance>
+            <DirectionsRun className="icon run" color="error" />
+            <DistRow>{summary.runs} Runs</DistRow>
+            <DistRow>{summary.runDist} km</DistRow>
+          </Distance>
+          <Distance>
+            <DirectionsBike className="icon bike" color="warning" />
+            <DistRow>{summary.cycles} Cycles</DistRow>
+            <DistRow>{summary.cycleDist} km</DistRow>
+          </Distance>
+        </Distances>
+        <Totals>
           <CircularWrapper>
             <Circle>
               <CircleLabel>
@@ -474,29 +510,6 @@ function Dashboard({ activities, year, streak }) {
           <Typography>{getDistance()[1]}</Typography>
         </Bar>
 
-        <Legends>
-          <Legend>
-            <DirectionsWalk className="icon walk" color="success" />
-            <Typography>Walk</Typography>
-          </Legend>
-          <Legend>
-            <DirectionsRun className="icon run" color="error" />
-            <Typography>Run</Typography>
-          </Legend>
-          <Legend>
-            <DirectionsBike className="icon bike" color="warning" />
-            <Typography>Cycle</Typography>
-          </Legend>
-          <Legend>
-            <FitnessCenter className="icon gym" color="info" />
-            <Typography>Gym</Typography>
-          </Legend>
-          <Legend>
-            <ThumbUpAlt className="icon other" color="secondary" />
-            <Typography>Other</Typography>
-          </Legend>
-        </Legends>
-
         <Typography>
           Previous month: {monthFromNumber(new Date().getMonth() - 1)}
         </Typography>
@@ -512,14 +525,33 @@ function Dashboard({ activities, year, streak }) {
   return <Wrapper>{renderCircles()}</Wrapper>;
 }
 
-const Legends = styled.div`
+const Distances = styled.div`
   display: flex;
-  gap: 10px;
+  gap: 16px;
 `;
 
-const Legend = styled.div`
-  align-items: center;
+const Distance = styled.div`
+  border: 2px solid gray;
+  border-radius: 4px;
+  width: 92px;
   display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+
+  & svg {
+    position: absolute;
+    right: 0px;
+    opacity: 0.4;
+    z-index: 0;
+    font-size: 46px; 
+  }
+`;
+
+const DistRow = styled.div`
+  display: flex;
+  align-items: center;
+  z-index: 1;
 `;
 
 const Bar = styled.div`
@@ -603,13 +635,28 @@ const Totals = styled.div`
   display: flex;
 `;
 
-const Streak = styled.div`
+const StreakWrapper = styled.div`
   display: flex;
-  width: 92px;
-  gap: 8px;
+  gap: 4px;
+  padding: 12px 24px;
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
+  border: 2px solid #390000;
+  border-radius: 4px;
+  color: #c1c1c1;
+  font-size: 12px;
+`;
+
+const Streak = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 500;
+  color: white;
+  & svg {
+    color: #a92a2a;
+  }
 `;
 
 const Wrapper = styled.div`
