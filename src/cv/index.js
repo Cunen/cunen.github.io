@@ -101,11 +101,11 @@ function CVPage() {
         <Chapter>
           During bachelor's studies I focused on software development and user
           experience. I pursued my interests in writing a thesis about
-          transforming an open source map library into a usable shareable
+          transforming an open source map library into a shareable
           component.
         </Chapter>
         <Chapter>
-          During master's studies I focused on advanced software engineering nad
+          During master's studies I focused on advanced software engineering and
           human-technology interaction. Master's thesis focused on software and
           technology based spatial safety using location technologies, yet again
           following my interests in spatial systems.
@@ -133,11 +133,11 @@ function CVPage() {
           and global teams.
         </Chapter>
         <Chapter>
-          I became in FullStack development dealing with databases, backends,
-          frontends, cloud and pipelines. I became well known for my expertiese
+          I became fluent in FullStack development dealing with databases, backends,
+          frontends, cloud and pipelines. I became well known for my expertise
           in geographical systems, web development, web components, design
           systems and shared services. I ended up focusing more on the web-,
-          map-, and Frontend development which I had a passion for. Eventually
+          map-, and frontend development which I had a passion for. Eventually
           this lead to me assuming a Lead position mentoring developers in my
           own team, while consulting global teams to help them succeed with
           their projects.
@@ -145,7 +145,7 @@ function CVPage() {
         <Chapter>
           The highlight of my career is pioneering a framework-agnostic Google
           Lit web component project of shared branded components tied together
-          with a design system and a shared React solutions library, which was
+          with a design system and a shared React solutions library, which were all
           lead and developed almost exclusively by me. Inside the shared React
           solutions library my Bachelor's thesis finally came into fruition as I
           got to implement a fully fledged OpenLayers-context that could be
@@ -188,8 +188,7 @@ function CVPage() {
         <Chapter>
           A lot of tools exist in my toolkit in professional capacity and I've
           worked with them in large scale projects. Some of these tools I am
-          still fluent with, some may be a little rusty, but everything can be
-          picked back up some recapping.
+          still fluent with, some may be a little rusty, but everything can be picked back up.
         </Chapter>
         <Stack>
           <Tool img="docker.png" name="Docker" />
@@ -217,7 +216,7 @@ function CVPage() {
         </Title>
         <Chapter>
           Whenever I have time and interest, I keep on improving my skills
-          through trainings, education and certifications.
+          through training, education and certifications.
         </Chapter>
         <Stack>
           <Tool
@@ -249,8 +248,8 @@ function CVPage() {
           involving the security, maintainability and the potential negative
           effect on the critical thinking and technical understanding of the
           developers who use it. VIBE-coding can be fun, but if we aim for
-          sustainable quality development, we need to keep engineers who still
-          understand the solutions.
+          sustainable quality development, we need to keep engineers around who still
+          understand the solutions and architecture.
         </Chapter>
         <Chapter>
           PS: No AI was used to write this silly CV application, everything was
