@@ -67,7 +67,7 @@ const Details = styled.div`
   transition-timing-function: ease-in-out;
   transition-property: width, height;
   height: ${(props) => (props.$tiny ? "32px" : "128px")};
-  width: ${(props) => (props.$tiny ? "96px" : "214px")};
+  width: ${(props) => (props.$tiny ? "112px" : "214px")};
   white-space: nowrap;
   gap: 8px;
 `;
