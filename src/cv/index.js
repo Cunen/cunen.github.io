@@ -101,8 +101,7 @@ function CVPage() {
         <Chapter>
           During bachelor's studies I focused on software development and user
           experience. I pursued my interests in writing a thesis about
-          transforming an open source map library into a shareable
-          component.
+          transforming an open source map library into a shareable component.
         </Chapter>
         <Chapter>
           During master's studies I focused on advanced software engineering and
@@ -133,26 +132,27 @@ function CVPage() {
           and global teams.
         </Chapter>
         <Chapter>
-          I became fluent in FullStack development dealing with databases, backends,
-          frontends, cloud and pipelines. I became well known for my expertise
-          in geographical systems, web development, web components, design
-          systems and shared services. I ended up focusing more on the web-,
-          map-, and frontend development which I had a passion for. Eventually
-          this lead to me assuming a Lead position mentoring developers in my
-          own team, while consulting global teams to help them succeed with
-          their projects.
+          I became fluent in FullStack development dealing with databases,
+          backends, frontends, cloud and pipelines. I became well known for my
+          expertise in geographical systems, web development, web components,
+          design systems and shared services. I ended up focusing more on the
+          web-, map-, and frontend development which I had a passion for.
+          Eventually this lead to me assuming a Lead position mentoring
+          developers in my own team, while consulting global teams to help them
+          succeed with their projects.
         </Chapter>
         <Chapter>
           The highlight of my career is pioneering a framework-agnostic Google
           Lit web component project of shared branded components tied together
-          with a design system and a shared React solutions library, which were all
-          lead and developed almost exclusively by me. Inside the shared React
-          solutions library my Bachelor's thesis finally came into fruition as I
-          got to implement a fully fledged OpenLayers-context that could be
-          plugged into any React project with minimal configuration (CDD). This
-          development ecosystem became a globally accepted standard inside the
-          company and became a central force in the development strategy of our
-          software business with several large scale projects depending on it.
+          with a design system and a shared React solutions library, which were
+          all lead and developed almost exclusively by me. Inside the shared
+          React solutions library my Bachelor's thesis finally came into
+          fruition as I got to implement a fully fledged OpenLayers-context that
+          could be plugged into any React project with minimal configuration
+          (CDD). This development ecosystem became a globally accepted standard
+          inside the company and became a central force in the development
+          strategy of our software business with several large scale projects
+          depending on it.
         </Chapter>
       </TextContent>
       <TextContent>
@@ -188,11 +188,13 @@ function CVPage() {
         <Chapter>
           A lot of tools exist in my toolkit in professional capacity and I've
           worked with them in large scale projects. Some of these tools I am
-          still fluent with, some may be a little rusty, but everything can be picked back up.
+          still fluent with, some may be a little rusty, but everything can be
+          picked back up. Here's some I can remember from the top of my head.
         </Chapter>
         <Stack>
           <Tool img="docker.png" name="Docker" />
           <Tool img="tc.png" name="TeamCity" />
+          <Tool img="jenkins.png" name="Jenkins" />
           <Tool img="copilot.png" name="Copilot" />
           <Tool img="maps.png" name="Maps API" />
           <Tool img="aws.png" name="AWS" />
@@ -248,8 +250,8 @@ function CVPage() {
           involving the security, maintainability and the potential negative
           effect on the critical thinking and technical understanding of the
           developers who use it. VIBE-coding can be fun, but if we aim for
-          sustainable quality development, we need to keep engineers around who still
-          understand the solutions and architecture.
+          sustainable quality development, we need to keep engineers around who
+          still understand the solutions and architecture.
         </Chapter>
         <Chapter>
           PS: No AI was used to write this silly CV application, everything was
