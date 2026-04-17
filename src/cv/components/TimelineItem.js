@@ -54,6 +54,9 @@ const Year = styled.div`
   @media (max-width: 800px) {
     transform: ${(props) => props.$flip ? 'translate(-100%, -50%) translateX(-16px)' : 'translate(0%, -50%)'};
     left: 100%;
+    font-size: 10px;
+    width: 32px;
+    height: 32px;
   }
 `;
 
@@ -73,7 +76,8 @@ const Info = styled.div`
   white-space: nowrap;
 
   @media (max-width: 800px) {
-    transform: ${(props) => props.$flip ? 'translate(-56px, -50%) translateX(-100%)' : 'translate(56px, -50%)'};
+    transform: ${(props) => props.$flip ? 'translate(-40px, -50%) translateX(-100%)' : 'translate(40px, -50%)'};
+    font-size: 11px;
     top: 0;
     bottom: unset;
     left: ${(props) => props.$flip ? '0' : '100%'};
@@ -81,8 +85,8 @@ const Info = styled.div`
   }
 `;
 
-const Main = styled.div``;
+const Main = styled.span``;
 
-const Details = styled.div`
+const Details = styled.span`
   color: #c7c7c7;
 `;
