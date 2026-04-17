@@ -71,6 +71,10 @@ function CVPage() {
         <Title>
           Education <EduBall>●</EduBall>
         </Title>
+        <Stack>
+          <Tool img="tredu.png" name="TREDU" />
+          <Tool img="tuni.png" name="TUNI" />
+        </Stack>
         <Chapter>
           Obtained three relevant degrees on the field of software development:
           Associate's, Bachelor's and Master's.
@@ -92,6 +96,11 @@ function CVPage() {
         <Title>
           Career <WorkBall>●</WorkBall>
         </Title>
+        <Stack>
+          <Tool img="vianova.jfif" name="Vianova" />
+          <Tool img="viasys.jfif" name="ViasysVDC" />
+          <Tool img="topcon.png" name="Topcon" />
+        </Stack>
         <Chapter>
           While it may seem I have worked for a single company for a long time,
           the truth is far from what you may assume. The company has gone
