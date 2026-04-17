@@ -17,7 +17,12 @@ const Box = styled.div`
   width: 66vw;
   max-width: 1000px;
   overflow: visible;
-  padding-top: 64px;
+
+  @media (max-width: 800px) {
+    width: 50%;
+    padding: 0px;
+    height: 320px;
+  }
 `;
 
 const Line = styled.div`
@@ -26,4 +31,10 @@ const Line = styled.div`
   height: 4px;
   border-radius: 2px;
   background-color: #757575;
+
+  @media (max-width: 800px) {
+    width: 4px;
+    max-width: 4px;
+    height: 100%;
+  }
 `;
