@@ -2,7 +2,7 @@ import styled from "styled-components";
 import ProfileBox from "./components/ProfileBox";
 import Timeline from "./components/TimeLine";
 import TimelineItem from "./components/TimelineItem";
-import { Work } from "@mui/icons-material";
+import Tool from "./components/Tool";
 
 function CVPage() {
   return (
@@ -124,6 +124,183 @@ function CVPage() {
           software business with several large scale projects depending on it.
         </Chapter>
       </TextContent>
+      <TextContent>
+        <Title>Favourite Toolkit</Title>
+        <Chapter>
+          Lately I've been primarily focused on Frontend Web Development as that
+          is what I am passionate about and that is reflected in my favourite
+          tools.
+        </Chapter>
+        <Stack>
+          <Tool img="vite.jfif" name="Vite" />
+          <Tool img="react.png" name="React" />
+          <Tool img="lit.png" name="Google Lit" />
+          <Tool img="ts.png" name="TypeScript" />
+          <Tool img="ol.png" name="OpenLayers" />
+          <Tool img="node.png" name="Node" />
+          <Tool img="py.jfif" name="Python" />
+          <Tool img="robo.png" name="RobotFramework" />
+        </Stack>
+      </TextContent>
+      <TextContent>
+        <Title>Familiar Tools</Title>
+        <Chapter>
+          A lot of tools exist in my toolkit in professional capacity and I've
+          worked with them in large scale projects. Some of these tools I am
+          still fluent with, some may be a little rusty, but everything can be
+          picked back up some recapping.
+        </Chapter>
+        <Stack>
+          <Tool img="docker.png" name="Docker" />
+          <Tool img="tc.png" name="TeamCity" />
+          <Tool img="copilot.png" name="Copilot" />
+          <Tool img="maps.png" name="Maps API" />
+          <Tool img="aws.png" name="AWS" />
+          <Tool img="c.png" name="C#" />
+          <Tool img="playwright.png" name="Playwright" />
+          <Tool img="linux.png" name="Linux" />
+          <Tool img="angular.jfif" name="Angular" />
+          <Tool img="vue.png" name="Vue" />
+          <Tool img="svelte.png" name="Svelte" />
+          <Tool img="postman.png" name="Postman" />
+          <Tool img="postgre.png" name="PostgreSQL" />
+          <Tool img="graphql.png" name="GraphQL" />
+        </Stack>
+      </TextContent>
+      <TextContent>
+        <Title>Certifications</Title>
+        <Chapter>
+          Whenever I have time and interest, I keep on improving my skills
+          through trainings, education and certifications.
+        </Chapter>
+        <Stack>
+          <Tool
+            img="deep.jfif"
+            name="Machine Learning Specialization"
+            description="Supervised machine learning: regression and classification, advanced learning algorithms, unsupervised learning, recommenders, reinforcement learning. | DeepLearning.AI, Standford Online"
+            big
+          />
+          <Tool
+            img="deep.jfif"
+            name="Generative AI for Software Development"
+            description="Generative AI for Software Development, Team Software Engineering with AI, AI-Powered Software and System Design. | DeepLearning.AI"
+            big
+          />
+        </Stack>
+      </TextContent>
+      <TextContent>
+        <Title>About AI</Title>
+        <Chapter>
+          To keep this chapter short in order for it to not blow up into a
+          massive detailed rant about AI and AI development, I will just say
+          that AI can be extremely useful, helpful and a essential tool to have
+          in-depth knowledge in. The use of AI has a lot of caveats and dangers
+          involving the security, maintainability and the potential negative
+          effect on the critical thinking and technical understanding of the
+          developers who use it. VIBE-coding can be fun, but if we aim for
+          sustainable quality development, we need to keep engineers who still
+          understand the solutions.
+        </Chapter>
+        <Chapter>
+          PS: No AI was used to write this silly CV application, everything was
+          foolishly manually written and the stack is badly outdated.
+        </Chapter>
+      </TextContent>
+      <TextContent>
+        <Title>References</Title>
+        <Referrer>Tomi Virtanen</Referrer>
+        <RefTitle>Manager / Lead Software Engineer / Godtier Dev</RefTitle>
+        <Chapter>
+          Kalle has deep understanding of modern frontend technologies but can
+          also fluently work around the stack. He is a valuable asset to any web
+          development team. He has an innate ability to take complex
+          requirements and translate them into intuitive, user-friendly
+          interfaces. His attention to detail and commitment to delivering
+          high-quality code has set a standard that inspires those around him.
+          As a lead developer he providers mentorship and helps the more junior
+          developers reach their potential. If I would get to pick one person
+          for a project I would pick Kalle, as no what is the project, the specs
+          or the tech stack, he is the one that you can count on throughout the
+          way.
+        </Chapter>
+        <br />
+        <Referrer>Ari-Pekka Hujanen</Referrer>
+        <RefTitle>CTO / Senior Manager</RefTitle>
+        <Chapter>
+          I had the privilege of working with Kalle from the time I first
+          started as a consultant on his team. Even back then, he was an
+          exceptional engineer who consistently demonstrated a deep
+          understanding of software development, a passion for problem-solving,
+          and an impressive ability to tackle complex challenges. As I
+          transitioned into a senior engineering role and eventually took on a
+          direct management position, I saw firsthand how Kalle continued to
+          excel in his work. His technical expertise, combined with his
+          dedication and attention to detail, made him one of the best engineers
+          I've had the pleasure of working with. He consistently delivered
+          high-quality solutions and played a key role in the success of our
+          team. He was quickly recognized for his exceptional performance,
+          earning a well-deserved promotion from Software Engineer to Senior
+          Software Engineer. Kalle has a unique ability to grasp difficult
+          concepts quickly, contribute to the overall technical strategy, and
+          work collaboratively with both engineers and other teams. His
+          contributions were pivotal in ensuring the success of many of our
+          projects, and his impact on the team was invaluable. His hard work and
+          continued growth led him to be promoted once again, this time from
+          Senior Software Engineer to Lead Software Engineer (equivalent to
+          Staff Engineer in many companies). What truly sets Kalle apart is his
+          unwavering commitment to delivering the best possible results, always
+          focusing on the highest standards of quality. He is honest, dedicated,
+          and consistently puts in the effort to ensure that the work is done
+          right. His technical skills and work ethic make him an exceptional
+          engineer, and I have no doubt that he would be an asset to any team or
+          organization. I wholeheartedly recommend him for any software
+          engineering role.
+        </Chapter>
+        <br />
+        <Referrer>Olga Rink</Referrer>
+        <RefTitle>Software QA Engineer</RefTitle>
+        <Chapter>
+          I have been working with Kalle for the past 7 years. He is an
+          enthusiastic and positive talent. Kalle consistently takes
+          responsibility for new projects and ensures that work is done to a
+          high standard. He is the one who leads projects from the
+          design/requirement stage to successful releases. With his keen eye for
+          UX and insightful suggestions, he has implemented significant
+          improvements to both web and mobile apps, highlighting issues and
+          providing ready-made solutions. Kalle is also an excellent leader,
+          supporting and guiding other developers, helping them to grow. His
+          self-motivation, agility, and willingness to take on new
+          responsibilities set him apart. During challenging times, he protects
+          the team, researches solutions, and shares his knowledge to help
+          others. A true asset to any team.
+        </Chapter>
+        <br />
+        <Referrer>Sravanthi Bandaru</Referrer>
+        <RefTitle>Fullstack Developer</RefTitle>
+        <Chapter>
+          I have been working with Kalle for past 3.5years. Kalle possesses an
+          exceptional depth of technical expertise across a wide range of
+          technologies. He is known for his ability to solve complex problems
+          creatively and efficiently. Whether developing new features,
+          optimizing existing systems, or troubleshooting critical issues, Kalle
+          always demonstrates a high level of skill and cleaner approach. I have
+          been fortunate to work with Kalle. From him I learned to approach
+          complex problems strategically, apply best practices.
+        </Chapter>
+        <br />
+        <Referrer>Vy Nguyen</Referrer>
+        <RefTitle>Software Engineer</RefTitle>
+        <Chapter>
+          I've had the privilege of working with Kalle, and his expertise in
+          frontend development is truly exceptional. No matter the complexity of
+          the problem, he always has an effective, well-thought-out solution.
+          Beyond technical skills, I've learned a great deal from him about
+          planning and structuring work effectively. His ability to guide the
+          team with clarity and precision has been inspiring and instrumental in
+          my growth. Kalle is a phenomenal leader and a problem-solver, and I'm
+          grateful for the opportunity to work under his guidance.
+        </Chapter>
+      </TextContent>
     </Wrapper>
   );
 }
@@ -169,7 +346,7 @@ const TextContent = styled.div`
 `;
 const Title = styled.h2`
   margin-top: 0;
-  margin-bottom: 12px;s
+  margin-bottom: 12px;
 `;
 const Chapter = styled.p`
   font-size: 12px;
@@ -177,10 +354,30 @@ const Chapter = styled.p`
 `;
 
 const EduBall = styled.span`
-  color: #3340a3;
+  color: #286f1a;
 `;
 const WorkBall = styled.span`
-  color: #286f1a;
+  color: #3340a3;
+`;
+
+const Stack = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  @media (max-width: 800px) {
+    gap: 4px;
+  }
+`;
+
+const Referrer = styled.span`
+  font-weight: 700;
+  font-size: 14px;
+`;
+const RefTitle = styled.span`
+  font-size: 12px;
+  color: #ccc;
+  padding-bottom: 8px;
 `;
 
 export default CVPage;

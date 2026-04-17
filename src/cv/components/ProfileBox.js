@@ -28,6 +28,7 @@ const Box = styled.div`
   z-index: 2;
   border-radius: 100px 4px 4px 100px;
   box-shadow: 0 0 8px #ffffff66;
+  padding-right: 8px;
 `;
 
 const Face = styled.div`
