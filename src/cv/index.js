@@ -332,7 +332,11 @@ const Wrapper = styled.div`
   width: 100vw;
   height: 100vh;
   overflow: auto;
-  background: black;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(20, 20, 20, 1) 100%
+  );
   align-items: center;
   padding: 32px;
   gap: 32px;
@@ -349,7 +353,7 @@ const Wrapper = styled.div`
 const TextContent = styled.div`
   display: flex;
   flex-direction: column;
-  width: 524px;
+  width: 624px;
   max-width: 100%;
   color: white;
 `;
