@@ -1,13 +1,14 @@
 import styled from "styled-components";
 
-function ProfileBox() {
+function ProfileBox({ tiny }) {
   return (
-    <Box>
-      <Face />
-      <Details>
-        <Name>Kalle Kuparinen</Name>
-        <Title>Senior Software Developer / Lead Software Engineer</Title>
-        <Title>MSc. - Information Technology</Title>
+    <Box $tiny={tiny}>
+      <Face $tiny={tiny} className="face" />
+      <Details $tiny={tiny}>
+        <Name $tiny={tiny}>Kalle Kuparinen</Name>
+        {!tiny && <Title>Senior Software Developer</Title>}
+        {!tiny && <Title>Lead Software Engineer</Title>}
+        {!tiny && <Title>MSc. - Information Technology</Title>}
       </Details>
     </Box>
   );
@@ -16,42 +17,69 @@ function ProfileBox() {
 export default ProfileBox;
 
 const Box = styled.div`
+  transition-duration: 200ms;
+  transition-timing-function: ease-in-out;
+  transition-property: top, left, transform;
   display: flex;
   flex: 0 1 auto;
-  flex-direction: row;
+  flex-direction: row-reverse;
   gap: 16px;
   color: white;
   height: fit-content;
-  position: sticky;
+  position: absolute;
   top: 0;
   background: black;
   z-index: 2;
-  border-radius: 100px 4px 4px 100px;
+  border-radius: 4px 1000px 1000px 4px;
   box-shadow: 0 0 8px #ffffff66;
-  padding-right: 8px;
+  padding-left: 8px;
+  top: 16px;
+  left: 0;
+
+  &:hover .face {
+    width: 256px;
+    height: 256px;
+    min-width: 256px;
+  }
 `;
 
 const Face = styled.div`
-  width: 128px;
-  height: 128px;
-  min-width: 128px;
+  transition-duration: 200ms;
+  transition-timing-function: ease-in-out;
+  transition-property: width, height, min-width;
+  width: ${(props) => (props.$tiny ? "32px" : "128px")};
+  height: ${(props) => (props.$tiny ? "32px" : "128px")};
+  min-width: ${(props) => (props.$tiny ? "32px" : "128px")};
+
   border-radius: 50%;
   background: white;
   background-image: url("Amsterdam.jpg");
   background-size: 200%;
   background-position: 8% 15%;
-  box-shadow: 4px 0px 4px #ffffff33;
+  box-shadow: -4px 0px 4px #ffffff33;
 `;
 
 const Details = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  overflow: hidden;
+  transition-duration: 200ms;
+  transition-timing-function: ease-in-out;
+  transition-property: width, height;
+  height: ${(props) => (props.$tiny ? "32px" : "128px")};
+  width: ${(props) => (props.$tiny ? "96px" : "214px")};
+  white-space: nowrap;
+  gap: 8px;
 `;
 
 const Name = styled.span`
-  font-size: 24px;
-  font-weight: 700;
+  transition-duration: 200ms;
+  transition-timing-function: ease-in-out;
+  transition-property: font-size, font-weight;
+  font-size: ${(props) => (props.$tiny ? "14px" : "24px")};
+  font-weight: ${(props) => (props.$tiny ? "500" : "700")};
+  line-height: 32px;
+  white-space: nowrap;
 `;
 
 const Title = styled.span`

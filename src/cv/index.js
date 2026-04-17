@@ -3,13 +3,29 @@ import ProfileBox from "./components/ProfileBox";
 import Timeline from "./components/TimeLine";
 import TimelineItem from "./components/TimelineItem";
 import Tool from "./components/Tool";
+import { useState } from "react";
 
 function CVPage() {
+  const [top, setTop] = useState(true);
+
+  const handleScroll = (e) => {
+    if (!e.target) return;
+    const newTop = e.target.scrollTop <= 8;
+    if (newTop === top) return;
+    setTop(newTop);
+  };
+
   return (
-    <Wrapper>
-      <ProfileBox />
+    <Wrapper onScroll={handleScroll}>
+      <ProfileBox tiny={!top} />
+      <CV>CV</CV>
       <TextContent>
-        <Title>Timeline</Title>
+        <Title id="timeline">
+          Timeline
+          <span>
+            <a href="#timeline">#</a>
+          </span>
+        </Title>
       </TextContent>
       <Timelines>
         <Timeline>
@@ -68,8 +84,11 @@ function CVPage() {
         </Timeline>
       </Timelines>
       <TextContent>
-        <Title>
+        <Title id="education">
           Education <EduBall>●</EduBall>
+          <span>
+            <a href="#education">#</a>
+          </span>
         </Title>
         <Stack>
           <Tool img="tredu.png" name="TREDU" />
@@ -93,8 +112,11 @@ function CVPage() {
         </Chapter>
       </TextContent>
       <TextContent>
-        <Title>
+        <Title id="career">
           Career <WorkBall>●</WorkBall>
+          <span>
+            <a href="#career">#</a>
+          </span>
         </Title>
         <Stack>
           <Tool img="vianova.jfif" name="Vianova" />
@@ -134,7 +156,12 @@ function CVPage() {
         </Chapter>
       </TextContent>
       <TextContent>
-        <Title>Favourite Toolkit</Title>
+        <Title id="toolkit">
+          Favourite Toolkit
+          <span>
+            <a href="#toolkit">#</a>
+          </span>
+        </Title>
         <Chapter>
           Lately I've been primarily focused on Frontend Web Development as that
           is what I am passionate about and that is reflected in my favourite
@@ -152,7 +179,12 @@ function CVPage() {
         </Stack>
       </TextContent>
       <TextContent>
-        <Title>Familiar Tools</Title>
+        <Title id="familiar">
+          Familiar Tools
+          <span>
+            <a href="#familiar">#</a>
+          </span>
+        </Title>
         <Chapter>
           A lot of tools exist in my toolkit in professional capacity and I've
           worked with them in large scale projects. Some of these tools I am
@@ -177,7 +209,12 @@ function CVPage() {
         </Stack>
       </TextContent>
       <TextContent>
-        <Title>Certifications</Title>
+        <Title id="certs">
+          Certifications
+          <span>
+            <a href="#certs">#</a>
+          </span>
+        </Title>
         <Chapter>
           Whenever I have time and interest, I keep on improving my skills
           through trainings, education and certifications.
@@ -198,7 +235,12 @@ function CVPage() {
         </Stack>
       </TextContent>
       <TextContent>
-        <Title>About AI</Title>
+        <Title id="ai">
+          About AI
+          <span>
+            <a href="#ai">#</a>
+          </span>
+        </Title>
         <Chapter>
           To keep this chapter short in order for it to not blow up into a
           massive detailed rant about AI and AI development, I will just say
@@ -216,7 +258,12 @@ function CVPage() {
         </Chapter>
       </TextContent>
       <TextContent>
-        <Title>References</Title>
+        <Title id="references">
+          References
+          <span>
+            <a href="#references">#</a>
+          </span>
+        </Title>
         <Referrer>Tomi Virtanen</Referrer>
         <RefTitle>Manager / Lead Software Engineer / Godtier Dev</RefTitle>
         <Chapter>
@@ -360,6 +407,12 @@ const TextContent = styled.div`
 const Title = styled.h2`
   margin-top: 0;
   margin-bottom: 12px;
+  & a {
+    padding-left: 12px;
+    color: #ccc;
+    text-decoration: none;
+    font-size: 18px;
+  }
 `;
 const Chapter = styled.p`
   font-size: 12px;
@@ -377,6 +430,7 @@ const Stack = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
+  scroll-behavior: smooth;
 
   @media (max-width: 800px) {
     gap: 4px;
@@ -391,6 +445,14 @@ const RefTitle = styled.span`
   font-size: 12px;
   color: #ccc;
   padding-bottom: 8px;
+`;
+
+const CV = styled.div`
+  min-height: 96px;
+
+  @media (max-width: 800px) {
+    min-height: 112px;
+  }
 `;
 
 export default CVPage;
