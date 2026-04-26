@@ -1,20 +1,24 @@
-# Very outdated application created many years ago
+# Kalle's CV Application
 
-Very expired tech - no TS, no Vite, just old React which wasn't even cleaned up properly.
+Basic Vite setup with React/TypeScript
 
-This used to be a fitness tracker with Strava/Garmin connection and Google Firebase BE, but I ran out of free tier space for data storage so this was converted to just be a CV page. Probably should've updated the stack while I was at it...
-
-# Run app
-
-Run it locally
+Run app locally with
 
 ```bash
-npm install && npm start
+npm start
 ```
 
-# Deploy
+## Formatting
 
-Deploy to cunen.github.io
+Format with prettier
+
+```bash
+npm run format
+```
+
+## Deploying
+
+Deployed using gh-pages to http://cunen.github.io
 
 ```bash
 npm run deploy
