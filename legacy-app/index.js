@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals from '../src.old/reportWebVitals';
 import { HashRouter } from 'react-router-dom';
 import CVPage from './cv';
 

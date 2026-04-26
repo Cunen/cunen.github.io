@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "start": "vite",
     "format": "prettier --write .",
-    "deploy": "npm run build && gh-pages -d build"
+    "deploy": "npm run build && gh-pages -d dist"
   },
   "dependencies": {
     "prettier": "^3.8.3",

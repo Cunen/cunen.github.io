@@ -20,7 +20,7 @@ function CVPage() {
   return (
     <Wrapper onScroll={handleScroll}>
       <ProfileBox tiny={!top} />
-      <CV>CV</CV>
+      <CV />
       <TextContent>
         <Title id="timeline">
           Timeline
