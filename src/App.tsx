@@ -396,9 +396,9 @@ function CVPage() {
           </span>
         </Title>
         <Chapter>
-          My personal GitHub profile A lot of my projects are private and vast
-          amounts of my code is written for work, but there is some stuff
-          visible to the public.&nbsp;
+          A lot of my projects are private and vast amounts of my code is
+          written for work, but there is some stuff visible to the public in my
+          personal repository at&nbsp;
           <a href="https://github.com/cunen" target="_blank" rel="noreferrer">
             Cunen
           </a>
