@@ -158,6 +158,90 @@ function CVPage() {
         </Chapter>
       </TextContent>
       <TextContent>
+        <Title id="highlight">
+          Career Highlight <WorkBall>●</WorkBall>
+          <span>
+            <a href="#highlight">#</a>
+          </span>
+        </Title>
+        <Chapter>
+          Please explore the&nbsp;
+          <a href="https://ui.topcon.com" target="_blank" rel="noreferrer">
+            ui.topcon.com
+          </a>
+          &nbsp; documentation to see the software ecosystem that I have
+          developed for Topcon. The entire ecosystem is designed, built and
+          maintained primarily by me and it has been the foundation of the
+          global development strategy of Topcon, utilized in several large scale
+          web development projects. Everything was hosted internally in our
+          private npm registry.
+        </Chapter>
+        <Chapter>
+          Of course everything revolves around documentation. You can see simple
+          examples of getting started with the development ecosystem in&nbsp;
+          <a
+            href="https://ui.topcon.com/guide/quickstart/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Quick Start Guide
+          </a>
+        </Chapter>
+        <Chapter>
+          <h3>Web Components</h3>
+        </Chapter>
+        <Chapter>
+          Primary force behind the ecosystem is the branded web component
+          library, that is framework agnostic and built with Google Lit. In
+          addition, a React Wrapper was build to connect native events to
+          synthetic events. You can explore some of the&nbsp;
+          <a
+            href="https://ui.topcon.com/library/components/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Components
+          </a>
+          &nbsp;I've made over the years.
+        </Chapter>
+        <Chapter>
+          <h3>Design System</h3>
+        </Chapter>
+        <Chapter>
+          Another part of the branding and frontend development flow was the
+          design system and design tokens service, which aided the development
+          with convenient tokens and it integrated directly into the delivered
+          web components with convenient converters. Explore the tokens in&nbsp;
+          <a
+            href="https://ui.topcon.com/tokens/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Tokens
+          </a>
+        </Chapter>
+        <Chapter>
+          <h3>Shared React Solutions</h3>
+        </Chapter>
+        <Chapter>
+          When it comes to React development, me and my team have always had the
+          need to share solutions between React projects so it was the
+          motivation to create a shared library for React specifically. The
+          pride and joy of this particular project is the Topcon Application
+          Provider combined with the Topcon Map Provider, which enables any
+          developer to get started with a Topcon application with authentication
+          and a configuration-driven OpenLayers map context. You can explore the
+          utilities in&nbsp;
+          <a
+            href="https://ui.topcon.com/utilities/"
+            target="_blank"
+            rel="noreferrer"
+          >
+            React Utilities
+          </a>
+        </Chapter>
+      </TextContent>
+      <TextContent>
         <Title id="toolkit">
           Favourite Toolkit
           <span>
