@@ -513,6 +513,18 @@ function CVPage() {
           engineering role.
         </Chapter>
         <br />
+        <Referrer>Roberta Benassi</Referrer>
+        <RefTitle>Senior Software Engineer</RefTitle>
+        <Chapter>
+          Kalle is one of the most competent and straightforward senior
+          engineers I've ever had the pleasure of working with. He leads without
+          relying on motivational speeches. Instead, he brings clarity—cutting
+          through complexity and shaping a vision that makes the work feel
+          lighter, smoother, and more logical. By simplifying the difficult
+          parts, he removes the friction that slows teams down, helping even
+          less-experienced developers deliver with confidence.
+        </Chapter>
+        <br />
         <Referrer>Olga Rink</Referrer>
         <RefTitle>Software QA Engineer</RefTitle>
         <Chapter>
