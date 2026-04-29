@@ -72,14 +72,16 @@ function CVPage() {
           <TimelineItem
             year="2022"
             percentage={75}
-            title="Senior Software Engineer"
+            title="Software Engineer"
+            subtitle="Senior"
             description="Topcon"
             flip
           />
           <TimelineItem
             year="2024"
             percentage={88}
-            title="Lead Software Engineer"
+            title="Software Engineer"
+            subtitle="Lead"
             description="Topcon"
             flip
           />

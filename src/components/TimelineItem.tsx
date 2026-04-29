@@ -104,19 +104,30 @@ const Info = styled.div<{ $flip?: boolean }>`
 
   @media (max-width: 800px) {
     transform: ${(props) =>
-      props.$flip
-        ? 'translate(-40px, -50%) translateX(-100%)'
-        : 'translate(40px, -50%)'};
+      props.$flip ? 'translate(-40px, 50%)' : 'translate(40px, -50%)'};
     left: ${(props) => (props.$flip ? 'unset' : '100%')};
     right: ${(props) => (props.$flip ? '100%' : 'unset')};
+    bottom: ${(props) => (props.$flip ? '0' : 'unset')};
+    top: ${(props) => (props.$flip ? 'unset' : '0')};
+    margin-top: unset;
+    margin-bottom: unset;
+    line-height: 1.25;
   }
 `;
 
 const Main = styled.div`
   font-weight: 700;
   font-size: 14px;
+
+  @media (max-width: 800px) {
+    font-size: 12px;
+  }
 `;
 
 const Details = styled.div`
   color: #c7c7c7;
+
+  @media (max-width: 800px) {
+    font-size: 10px;
+  }
 `;
