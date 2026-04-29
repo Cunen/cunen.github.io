@@ -238,6 +238,119 @@ function CVPage() {
         </Stack>
       </TextContent>
       <TextContent>
+        <Title id="learning">
+          Learning
+          <span>
+            <a href="#learning">#</a>
+          </span>
+        </Title>
+        <Chapter>
+          I am a lifelong learner and I have a wide range of interests. I've
+          been very focused on frontend technologies and I want to keep my other
+          skills in other areas up to date as they do get rusty. You should
+          expect me to complete the following learning path before September
+          2026 (with more silly certs!). You will probably see some updates to
+          the&nbsp;
+          <a
+            href="https://github.com/Cunen/fullstack"
+            target="_blank"
+            rel="noreferrer"
+          >
+            FullStack
+          </a>
+          &nbsp;repository while I progress with these courses.
+          <br />
+          <br />
+          Note: I have worked with these tools before, but I want to learn them
+          more in-depth with actually writing the code myself and following
+          their modern best practices.
+        </Chapter>
+        <Stack>
+          <Tool
+            img="node.png"
+            name="Master NodeJS (40h)"
+            description="Master Node JS & Deno.js, build REST APIs with Node.js, GraphQL APIs, add Authentication, use MongoDB, SQL & much more! | Udemy"
+            big
+          />
+          <Tool
+            img="aws.png"
+            name="AWS Fundamentals (5h)"
+            description="2025, Master AWS Fundamentals! | Udemy "
+            big
+          />
+          <Tool
+            img="docker.png"
+            name="Docker Hands-On (4h)"
+            description="Fundamental Docker & DevOps | Udemy "
+            big
+          />
+          <Tool
+            img="docker.png"
+            name="Docker & Kubernetes: The Practical Guide (24h)"
+            description="Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up! | Udemy "
+            big
+          />
+          <Tool
+            img="jenkins.png"
+            name="Jenkins, From Zero To Hero: Become a DevOps Jenkins Master (11h)"
+            description="Become a DevOps Master learning Jenkins & integrations with powerful tools like Docker, Ansible, AWS, GIT & more! | Udemy "
+            big
+          />
+          <Tool
+            img="aws.png"
+            name="Ultimate AWS Certified Cloud Practitioner CLF-C02 2026 (15h)"
+            description="Full Practice Exam included + explanations | Learn Cloud Computing | Pass the AWS Cloud Practitioner CLF-C02 exam! | Udemy "
+            big
+          />
+        </Stack>
+      </TextContent>
+      <TextContent>
+        <Title id="code">
+          Code examples
+          <span>
+            <a href="#code">#</a>
+          </span>
+        </Title>
+        <Chapter>
+          My personal GitHub profile A lot of my projects are private and vast
+          amounts of my code is written for work, but there is some stuff
+          visible to the public.&nbsp;
+          <a href="https://github.com/cunen" target="_blank" rel="noreferrer">
+            Cunen
+          </a>
+        </Chapter>
+        <Chapter>
+          The code for this site can be found at&nbsp;
+          <a
+            href="https://github.com/Cunen/cunen.github.io"
+            target="_blank"
+            rel="noreferrer"
+          >
+            GitHub Pages
+          </a>
+          &nbsp;The repository used to host my personal fitness-tracker app with
+          Strava/Garmin integration, you'll find some of the old code in the
+          legacy-app folder.
+        </Chapter>
+        <Chapter>
+          I used to participate in the&nbsp;
+          <a href="https://github.com/cunen" target="_blank" rel="noreferrer">
+            Advent of Code
+          </a>
+        </Chapter>
+        <Chapter>
+          A messy public repository I use for testing, learning and reminding
+          myself of various technologies and concepts.&nbsp;
+          <a
+            href="https://github.com/Cunen/fullstack"
+            target="_blank"
+            rel="noreferrer"
+          >
+            FullStack
+          </a>
+        </Chapter>
+      </TextContent>
+      <TextContent>
         <Title id="ai">
           About AI
           <span>
