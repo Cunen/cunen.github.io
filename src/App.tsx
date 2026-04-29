@@ -418,7 +418,7 @@ function CVPage() {
         </Chapter>
         <Chapter>
           I used to participate in the&nbsp;
-          <a href="https://github.com/cunen" target="_blank" rel="noreferrer">
+          <a href="https://github.com/Cunen/advent-of-code" target="_blank" rel="noreferrer">
             Advent of Code
           </a>
         </Chapter>
