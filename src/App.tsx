@@ -22,12 +22,12 @@ function CVPage() {
       <ProfileBox tiny={!top} />
       <CV />
       <TextContent>
-        <Title id="timeline">
+        <ContentTitle id="timeline">
           Timeline
           <span>
             <a href="#timeline">#</a>
           </span>
-        </Title>
+        </ContentTitle>
       </TextContent>
       <Timelines>
         <Timeline>
@@ -85,13 +85,13 @@ function CVPage() {
           />
         </Timeline>
       </Timelines>
-      <TextContent>
-        <Title id="education">
+      <Details open>
+        <Summary id="education">
           Education <EduBall>●</EduBall>
           <span>
             <a href="#education">#</a>
           </span>
-        </Title>
+        </Summary>
         <Stack>
           <Tool img="tredu.png" name="TREDU" />
           <Tool img="tuni.png" name="TUNI" />
@@ -111,14 +111,14 @@ function CVPage() {
           technology based spatial safety using location technologies, yet again
           following my interests in spatial systems.
         </Chapter>
-      </TextContent>
-      <TextContent>
-        <Title id="career">
+      </Details>
+      <Details open>
+        <Summary id="career">
           Career <WorkBall>●</WorkBall>
           <span>
             <a href="#career">#</a>
           </span>
-        </Title>
+        </Summary>
         <Stack>
           <Tool img="vianova.jfif" name="Vianova" />
           <Tool img="viasys.jfif" name="ViasysVDC" />
@@ -156,14 +156,14 @@ function CVPage() {
           strategy of our software business with several large scale projects
           depending on it.
         </Chapter>
-      </TextContent>
-      <TextContent>
-        <Title id="highlight">
+      </Details>
+      <Details open>
+        <Summary id="highlight">
           Career Highlight <WorkBall>●</WorkBall>
           <span>
             <a href="#highlight">#</a>
           </span>
-        </Title>
+        </Summary>
         <Chapter>
           Please explore the&nbsp;
           <a href="https://ui.topcon.com" target="_blank" rel="noreferrer">
@@ -240,14 +240,14 @@ function CVPage() {
             React Utilities
           </a>
         </Chapter>
-      </TextContent>
-      <TextContent>
-        <Title id="toolkit">
+      </Details>
+      <Details open>
+        <Summary id="toolkit">
           Favourite Toolkit
           <span>
             <a href="#toolkit">#</a>
           </span>
-        </Title>
+        </Summary>
         <Chapter>
           Lately I've been primarily focused on Frontend Web Development as that
           is what I am passionate about and that is reflected in my favourite
@@ -263,14 +263,14 @@ function CVPage() {
           <Tool img="py.jfif" name="Python" />
           <Tool img="robo.png" name="RobotFramework" />
         </Stack>
-      </TextContent>
-      <TextContent>
-        <Title id="familiar">
+      </Details>
+      <Details open>
+        <Summary id="familiar">
           Familiar Tools
           <span>
             <a href="#familiar">#</a>
           </span>
-        </Title>
+        </Summary>
         <Chapter>
           A lot of tools exist in my toolkit in professional capacity and I've
           worked with them in large scale projects. Some of these tools I am
@@ -294,14 +294,14 @@ function CVPage() {
           <Tool img="postgre.png" name="PostgreSQL" />
           <Tool img="graphql.png" name="GraphQL" />
         </Stack>
-      </TextContent>
-      <TextContent>
-        <Title id="certs">
+      </Details>
+      <Details open>
+        <Summary id="certs">
           Certifications
           <span>
             <a href="#certs">#</a>
           </span>
-        </Title>
+        </Summary>
         <Chapter>
           Whenever I have time and interest, I keep on improving my skills
           through training, education and certifications.
@@ -320,14 +320,14 @@ function CVPage() {
             big
           />
         </Stack>
-      </TextContent>
-      <TextContent>
-        <Title id="learning">
+      </Details>
+      <Details open>
+        <Summary id="learning">
           Learning
           <span>
             <a href="#learning">#</a>
           </span>
-        </Title>
+        </Summary>
         <Chapter>
           I am a lifelong learner and I have a wide range of interests. I've
           been very focused on frontend technologies and I want to keep my other
@@ -387,14 +387,14 @@ function CVPage() {
             big
           />
         </Stack>
-      </TextContent>
-      <TextContent>
-        <Title id="code">
+      </Details>
+      <Details open>
+        <Summary id="code">
           Code examples
           <span>
             <a href="#code">#</a>
           </span>
-        </Title>
+        </Summary>
         <Chapter>
           A lot of my projects are private and vast amounts of my code is
           written for work, but there is some stuff visible to the public in my
@@ -433,14 +433,14 @@ function CVPage() {
             FullStack
           </a>
         </Chapter>
-      </TextContent>
-      <TextContent>
-        <Title id="ai">
+      </Details>
+      <Details open>
+        <Summary id="ai">
           About AI
           <span>
             <a href="#ai">#</a>
           </span>
-        </Title>
+        </Summary>
         <Chapter>
           To keep this chapter short in order for it to not blow up into a
           massive detailed rant about AI and AI development, I will just say
@@ -456,14 +456,14 @@ function CVPage() {
           PS: No AI was used to write this silly CV application, everything was
           foolishly manually written and the stack is badly outdated.
         </Chapter>
-      </TextContent>
-      <TextContent>
-        <Title id="references">
+      </Details>
+      <Details open>
+        <Summary id="references">
           References
           <span>
             <a href="#references">#</a>
           </span>
-        </Title>
+        </Summary>
         <Referrer>Tomi Virtanen</Referrer>
         <RefTitle>Manager / Lead Software Engineer / Godtier Dev</RefTitle>
         <Chapter>
@@ -568,7 +568,7 @@ function CVPage() {
           my growth. Kalle is a phenomenal leader and a problem-solver, and I'm
           grateful for the opportunity to work under his guidance.
         </Chapter>
-      </TextContent>
+      </Details>
     </Wrapper>
   );
 }
@@ -616,9 +616,19 @@ const TextContent = styled.div`
   max-width: 100%;
   color: white;
 `;
-const Title = styled.h2`
+
+const Details = styled.details`
+  display: flex;
+  flex-direction: column;
+  width: 624px;
+  max-width: 100%;
+  color: white;
+`;
+
+const ContentTitle = styled.h2`
   margin-top: 0;
   margin-bottom: 12px;
+  font-size: 20px;
   & a {
     padding-left: 12px;
     color: #ccc;
@@ -626,6 +636,19 @@ const Title = styled.h2`
     font-size: 18px;
   }
 `;
+
+const Summary = styled.summary`
+  margin-top: 0;
+  margin-bottom: 12px;
+  font-size: 20px;
+  & a {
+    padding-left: 12px;
+    color: #ccc;
+    text-decoration: none;
+    font-size: 18px;
+  }
+`;
+
 const Chapter = styled.p`
   font-size: 12px;
   margin: 4px 0;
