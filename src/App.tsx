@@ -284,15 +284,15 @@ function CVPage() {
           <Tool img="copilot.png" name="Copilot" />
           <Tool img="maps.png" name="Maps API" />
           <Tool img="aws.png" name="AWS" />
-          <Tool img="c.png" name="C#" />
+          <Tool img="mongo.png" name="MongoDB" />
           <Tool img="playwright.png" name="Playwright" />
           <Tool img="linux.png" name="Linux" />
           <Tool img="angular.jfif" name="Angular" />
           <Tool img="vue.png" name="Vue" />
           <Tool img="svelte.png" name="Svelte" />
           <Tool img="postman.png" name="Postman" />
-          <Tool img="postgre.png" name="PostgreSQL" />
           <Tool img="graphql.png" name="GraphQL" />
+          <Tool img="mysql.png" name="MySQL" />
         </Stack>
       </Details>
       <Details open>
@@ -418,7 +418,11 @@ function CVPage() {
         </Chapter>
         <Chapter>
           I used to participate in the&nbsp;
-          <a href="https://github.com/Cunen/advent-of-code" target="_blank" rel="noreferrer">
+          <a
+            href="https://github.com/Cunen/advent-of-code"
+            target="_blank"
+            rel="noreferrer"
+          >
             Advent of Code
           </a>
         </Chapter>
