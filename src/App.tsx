@@ -295,6 +295,7 @@ function CVPage() {
           <Tool img="postman.png" name="Postman" />
           <Tool img="graphql.png" name="GraphQL" />
           <Tool img="mysql.png" name="MySQL" />
+          <Tool img="azure.jfif" name="Azure" />
         </Stack>
       </Details>
       <Details open>
@@ -380,6 +381,12 @@ function CVPage() {
             img="jenkins.png"
             name="Jenkins, From Zero To Hero: Become a DevOps Jenkins Master (11h)"
             description="Become a DevOps Master learning Jenkins & integrations with powerful tools like Docker, Ansible, AWS, GIT & more! | Udemy "
+            big
+          />
+          <Tool
+            img="azure.jfif"
+            name="Master Microsoft Azure Fundamentals: AZ-900 Exam Prep 2025 (9h)"
+            description="Comprehensive AZ-900 Training with Practice Tests, Study Guides, and More for Microsoft Azure Certification Success | Udemy "
             big
           />
           <Tool
