@@ -352,13 +352,18 @@ function CVPage() {
           more in-depth with actually writing the code myself and following
           their modern best practices.
         </Chapter>
+        <Chapter>Completed</Chapter>
         <Stack>
           <Tool
             img="node.png"
             name="Master NodeJS (40h)"
             description="Master Node JS & Deno.js, build REST APIs with Node.js, GraphQL APIs, add Authentication, use MongoDB, SQL & much more! | Udemy"
+            subtext="12.05.2026 Certification | ude.my/UC-20629f57-a770-4189-9e22-3593315e8031/"
             big
           />
+        </Stack>
+        <Chapter>In Progress</Chapter>
+        <Stack>
           <Tool
             img="aws.png"
             name="AWS Fundamentals (5h)"

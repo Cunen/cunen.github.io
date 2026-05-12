@@ -4,16 +4,18 @@ interface ToolProps {
   img: string;
   name: string;
   description?: string;
+  subtext?: string;
   big?: boolean;
 }
 
-function Tool({ img, name, description, big }: ToolProps) {
+function Tool({ img, name, description, subtext, big }: ToolProps) {
   return (
     <Wrapper $big={big}>
       <Image $img={img} />
       <DescWrap>
         <Description>{name}</Description>
         {description && <Description>{description}</Description>}
+        {subtext && <Description>{subtext}</Description>}
       </DescWrap>
     </Wrapper>
   );
