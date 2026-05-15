@@ -361,15 +361,16 @@ function CVPage() {
             subtext="12.05.2026 Certification | ude.my/UC-20629f57-a770-4189-9e22-3593315e8031/"
             big
           />
-        </Stack>
-        <Chapter>In Progress</Chapter>
-        <Stack>
           <Tool
             img="aws.png"
             name="AWS Fundamentals (5h)"
-            description="2025, Master AWS Fundamentals! | Udemy "
+            description="2025, Master AWS Fundamentals! | Udemy"
+            subtext="15.05.2026 Certification | ude.my/UC-c4e9ea4a-5223-46af-8209-787756394e7d/"
             big
           />
+        </Stack>
+        <Chapter>In Progress</Chapter>
+        <Stack>
           <Tool
             img="docker.png"
             name="Docker Hands-On (4h)"
