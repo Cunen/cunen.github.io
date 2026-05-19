@@ -368,15 +368,16 @@ function CVPage() {
             subtext="15.05.2026 Certification | ude.my/UC-c4e9ea4a-5223-46af-8209-787756394e7d/"
             big
           />
-        </Stack>
-        <Chapter>In Progress</Chapter>
-        <Stack>
           <Tool
             img="docker.png"
             name="Docker Hands-On (4h)"
-            description="Fundamental Docker & DevOps | Udemy "
+            description="Fundamental Docker & DevOps | Udemy"
+            subtext="19.05.2026 Certification | ude.my/UC-b49272ac-b894-4b5e-a465-7d4ad1f82fd1/"
             big
           />
+        </Stack>
+        <Chapter>In Progress</Chapter>
+        <Stack>
           <Tool
             img="docker.png"
             name="Docker & Kubernetes: The Practical Guide (24h)"
