@@ -378,8 +378,15 @@ function CVPage() {
           <Tool
             img="azure.jfif"
             name="Master Microsoft Azure Fundamentals: AZ-900 Exam Prep 2025 (9h)"
-            description="Comprehensive AZ-900 Training with Practice Tests, Study Guides, and More for Microsoft Azure Certification Success | Udemy "
+            description="Comprehensive AZ-900 Training with Practice Tests, Study Guides, and More for Microsoft Azure Certification Success | Udemy"
             subtext="25.05.2026 Certification | ude.my/UC-c9c0c078-74fb-41e5-be7d-8aa70c0ca0e7/"
+            big
+          />
+          <Tool
+            img="jenkins.png"
+            name="Jenkins: Become a DevOps Jenkins Master (11h)"
+            description="Become a DevOps Master learning Jenkins & integrations with powerful tools like Docker, Ansible, AWS, GIT & more! | Udemy"
+            subtext="29.05.2026 Certification | ude.my/UC-52b9a2f0-9884-4eb2-9363-4b826877d4bb/"
             big
           />
         </Stack>
@@ -389,12 +396,6 @@ function CVPage() {
             img="docker.png"
             name="Docker & Kubernetes: The Practical Guide (24h)"
             description="Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up! | Udemy "
-            big
-          />
-          <Tool
-            img="jenkins.png"
-            name="Jenkins, From Zero To Hero: Become a DevOps Jenkins Master (11h)"
-            description="Become a DevOps Master learning Jenkins & integrations with powerful tools like Docker, Ansible, AWS, GIT & more! | Udemy "
             big
           />
           <Tool
