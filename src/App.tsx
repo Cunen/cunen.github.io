@@ -389,15 +389,16 @@ function CVPage() {
             subtext="29.05.2026 Certification | ude.my/UC-52b9a2f0-9884-4eb2-9363-4b826877d4bb/"
             big
           />
-        </Stack>
-        <Chapter>In Progress</Chapter>
-        <Stack>
           <Tool
             img="docker.png"
             name="Docker & Kubernetes: The Practical Guide (24h)"
             description="Learn Docker, Docker Compose, Multi-Container Projects, Deployment and all about Kubernetes from the ground up! | Udemy "
+            subtext="10.06.2026 Certification | ude.my/UC-8f2338a1-1f76-4ac2-bbf6-d54ee5c7aa87/"
             big
           />
+        </Stack>
+        <Chapter>In Progress</Chapter>
+        <Stack>
           <Tool
             img="aws.png"
             name="Ultimate AWS Certified Cloud Practitioner CLF-C02 2026 (15h)"
