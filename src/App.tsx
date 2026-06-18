@@ -85,6 +85,14 @@ function CVPage() {
             description="Topcon"
             flip
           />
+          <TimelineItem
+            year="2026"
+            percentage={100}
+            title="Software Developer"
+            subtitle="Senior"
+            description="Pareto"
+            flip
+          />
         </Timeline>
       </Timelines>
       <Details open>
@@ -125,6 +133,7 @@ function CVPage() {
           <Tool img="vianova.jfif" name="Vianova" />
           <Tool img="viasys.jfif" name="ViasysVDC" />
           <Tool img="topcon.png" name="Topcon" />
+          <Tool img="pareto.jfif" name="Pareto" />
         </Stack>
         <Chapter>
           While it may seem I have worked for a single company for a long time,
@@ -157,6 +166,10 @@ function CVPage() {
           inside the company and became a central force in the development
           strategy of our software business with several large scale projects
           depending on it.
+        </Chapter>
+        <Chapter>
+          The story continues with new adventures at Pareto as a Senior Software
+          Developer as a consultant.
         </Chapter>
       </Details>
       <Details open>
@@ -332,25 +345,11 @@ function CVPage() {
           </span>
         </Summary>
         <Chapter>
-          I am a lifelong learner and I have a wide range of interests. I've
-          been very focused on frontend technologies and I want to keep my other
-          skills in other areas up to date as they do get rusty. You should
-          expect me to complete the following learning path before September
-          2026 (with more silly certs!). You will probably see some updates to
-          the&nbsp;
-          <a
-            href="https://github.com/Cunen/fullstack"
-            target="_blank"
-            rel="noreferrer"
-          >
-            FullStack
-          </a>
-          &nbsp;repository while I progress with these courses.
-          <br />
-          <br />
-          Note: I have worked with these tools before, but I want to learn them
-          more in-depth with actually writing the code myself and following
-          their modern best practices.
+          I am a lifelong learner and I have a wide range of interests. Here's a
+          collection of some of the courses I have completed and some that I am
+          currently taking to stay up to date with technologies and best
+          practices. I am always looking for new courses to take, so if you have
+          any recommendations, please let me know!
         </Chapter>
         <Chapter>Completed</Chapter>
         <Stack>
@@ -396,13 +395,26 @@ function CVPage() {
             subtext="10.06.2026 Certification | ude.my/UC-8f2338a1-1f76-4ac2-bbf6-d54ee5c7aa87/"
             big
           />
-        </Stack>
-        <Chapter>In Progress</Chapter>
-        <Stack>
           <Tool
             img="aws.png"
             name="Ultimate AWS Certified Cloud Practitioner CLF-C02 2026 (15h)"
             description="Full Practice Exam included + explanations | Learn Cloud Computing | Pass the AWS Cloud Practitioner CLF-C02 exam! | Udemy "
+            subtext="18.06.2026 Certification | ude.my/UC-a30c4bea-65c5-44f8-a417-1f07fdea9b28/"
+            big
+          />
+        </Stack>
+        <Chapter>In Progress</Chapter>
+        <Stack>
+          <Tool
+            img="llm.jpg"
+            name="AI Engineer Core Track: LLM Engineering, RAG, QLoRA, Agents (34h)"
+            description="Become an LLM Engineer in 8 weeks: Build and deploy 8 LLM apps, mastering Generative AI, RAG, LoRA and AI Agents. | Udemy "
+            big
+          />
+          <Tool
+            img="aiagent.jfif"
+            name="AI Engineer Agentic Track: The Complete Agent & MCP Course (18h)"
+            description="Master AI Agents in 30 days: build 8 real-world projects with OpenAI Agents SDK, CrewAI, LangGraph, AutoGen and MCP. | Udemy "
             big
           />
         </Stack>
@@ -455,29 +467,6 @@ function CVPage() {
           >
             FullStack
           </a>
-        </Chapter>
-      </Details>
-      <Details open>
-        <Summary id="ai">
-          About AI
-          <span>
-            <a href="#ai">#</a>
-          </span>
-        </Summary>
-        <Chapter>
-          To keep this chapter short in order for it to not blow up into a
-          massive detailed rant about AI and AI development, I will just say
-          that AI can be extremely useful, helpful and a essential tool to have
-          in-depth knowledge in. The use of AI has a lot of caveats and dangers
-          involving the security, maintainability and the potential negative
-          effect on the critical thinking and technical understanding of the
-          developers who use it. VIBE-coding can be fun, but if we aim for
-          sustainable quality development, we need to keep engineers around who
-          still understand the solutions and architecture.
-        </Chapter>
-        <Chapter>
-          PS: No AI was used to write this silly CV application, everything was
-          foolishly manually written and the stack is badly outdated.
         </Chapter>
       </Details>
       <Details open>
