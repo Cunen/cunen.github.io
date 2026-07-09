@@ -402,15 +402,16 @@ function CVPage() {
             subtext="18.06.2026 Certification | ude.my/UC-a30c4bea-65c5-44f8-a417-1f07fdea9b28/"
             big
           />
-        </Stack>
-        <Chapter>In Progress</Chapter>
-        <Stack>
           <Tool
             img="llm.jpg"
             name="AI Engineer Core Track: LLM Engineering, RAG, QLoRA, Agents (34h)"
             description="Become an LLM Engineer in 8 weeks: Build and deploy 8 LLM apps, mastering Generative AI, RAG, LoRA and AI Agents. | Udemy "
+            subtext="09.07.2026 Certification | ude.my/UC-73a779e8-170a-452a-9124-ea5148e02d2c/"
             big
           />
+        </Stack>
+        <Chapter>In Progress</Chapter>
+        <Stack>
           <Tool
             img="aiagent.jfif"
             name="AI Engineer Agentic Track: The Complete Agent & MCP Course (18h)"
