@@ -409,13 +409,20 @@ function CVPage() {
             subtext="09.07.2026 Certification | ude.my/UC-73a779e8-170a-452a-9124-ea5148e02d2c/"
             big
           />
-        </Stack>
-        <Chapter>In Progress</Chapter>
-        <Stack>
           <Tool
             img="aiagent.jfif"
             name="AI Engineer Agentic Track: The Complete Agent & MCP Course (18h)"
             description="Master AI Agents in 30 days: build 8 real-world projects with OpenAI Agents SDK, CrewAI, LangGraph, AutoGen and MCP. | Udemy "
+            subtext="20.07.2026 Certification | ude.my/UC-145d7b33-6f03-4a9d-b87a-611f1aab5164/"
+            big
+          />
+        </Stack>
+        <Chapter>In Progress</Chapter>
+        <Stack>
+          <Tool
+            img="claude.png"
+            name="AI Coder: Complete Claude Code & Coding Agents Course (17h)"
+            description="Master Vibe Coding with AI Coding Agents: Claude Code, Copilot, Codex, Cursor, OpenCode, Antigravity + MCP, OpenClaw | Udemy "
             big
           />
         </Stack>
