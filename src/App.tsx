@@ -416,16 +416,16 @@ function CVPage() {
             subtext="20.07.2026 Certification | ude.my/UC-145d7b33-6f03-4a9d-b87a-611f1aab5164/"
             big
           />
-        </Stack>
-        <Chapter>In Progress</Chapter>
-        <Stack>
           <Tool
             img="claude.png"
             name="AI Coder: Complete Claude Code & Coding Agents Course (17h)"
             description="Master Vibe Coding with AI Coding Agents: Claude Code, Copilot, Codex, Cursor, OpenCode, Antigravity + MCP, OpenClaw | Udemy "
+            subtext="30.07.2026 Certification | ude.my/UC-5ff159e5-9b8a-4d90-a316-ff77896f1e93/"
             big
           />
         </Stack>
+        {/* <Chapter>In Progress</Chapter>
+        <Stack></Stack> */}
       </Details>
       <Details open>
         <Summary id="code">
