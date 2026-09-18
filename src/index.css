@@ -1,22 +1,75 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+:root {
+  --bg: #ffffff;
+  --surface: #ffffff;
+  --surface-muted: #f6f6f7;
+  --line: #e4e4e7;
+  --line-strong: #d0d0d6;
+  --text: #18181b;
+  --muted: #71717a;
+  --accent: #4f46e5;
+  --accent-soft: #eef2ff;
+  --going: #15803d;
+  --going-soft: #eaf7ee;
+  --interested: #b45309;
+  --interested-soft: #fdf4e3;
+  --danger: #b91c1c;
+  --overlay: rgb(24 24 27 / 45%);
+  --shadow: 0 12px 32px rgb(24 24 27 / 12%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0b0b0d;
+    --surface: #141417;
+    --surface-muted: #1b1b1f;
+    --line: #27272b;
+    --line-strong: #3a3a41;
+    --text: #f4f4f5;
+    --muted: #8f8f99;
+    --accent: #8b87ff;
+    --accent-soft: #1f1d3a;
+    --going: #6ee7a0;
+    --going-soft: #10291b;
+    --interested: #f0b866;
+    --interested-soft: #2c2113;
+    --danger: #f87171;
+    --overlay: rgb(0 0 0 / 60%);
+    --shadow: 0 12px 32px rgb(0 0 0 / 45%);
+  }
+}
 
 html,
 body,
 #root {
-  width: 100vw;
-  height: 100vh;
+  height: 100%;
+}
+
+body {
   margin: 0;
-  padding: 0;
+  background: var(--bg);
+  color: var(--text);
   font-family:
-    'Inter',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
     sans-serif;
   font-size: 14px;
   line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
 * {
   box-sizing: border-box;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+input {
+  font: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
