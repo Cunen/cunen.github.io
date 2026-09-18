@@ -71,7 +71,7 @@ const ChipList = ({
             <ChipRemove
               type="button"
               onClick={() => remove(value)}
-              aria-label={`Remove ${value}`}
+              aria-label={`Poista ${value}`}
             >
               ×
             </ChipRemove>
@@ -79,7 +79,7 @@ const ChipList = ({
         ))}
         <ChipInput
           value={draft}
-          placeholder={values.length ? 'Add…' : placeholder}
+          placeholder={values.length ? 'Lisää…' : placeholder}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={add}

@@ -45,7 +45,7 @@ const ArtistList = ({ artists, onChange }: Props) => {
 
   return (
     <Field>
-      <Label>Artists</Label>
+      <Label>Artistit</Label>
 
       {artists.length > 0 && (
         <Rows>
@@ -53,11 +53,11 @@ const ArtistList = ({ artists, onChange }: Props) => {
             <Row key={artist.id}>
               <NameInput
                 value={artist.name}
-                placeholder="Name"
+                placeholder="Nimi"
                 onChange={(event) =>
                   edit(artist.id, { name: event.target.value })
                 }
-                aria-label="Artist name"
+                aria-label="Artistin nimi"
               />
               <TimeInput
                 type="time"
@@ -65,7 +65,7 @@ const ArtistList = ({ artists, onChange }: Props) => {
                 onChange={(event) =>
                   edit(artist.id, { time: event.target.value })
                 }
-                aria-label={`Set time for ${artist.name || 'artist'}`}
+                aria-label={`Esiintymisaika: ${artist.name || 'artisti'}`}
               />
               <GenreInput
                 value={artist.genre}
@@ -73,12 +73,12 @@ const ArtistList = ({ artists, onChange }: Props) => {
                 onChange={(event) =>
                   edit(artist.id, { genre: event.target.value })
                 }
-                aria-label={`Genre for ${artist.name || 'artist'}`}
+                aria-label={`Genre: ${artist.name || 'artisti'}`}
               />
               <RemoveButton
                 type="button"
                 onClick={() => remove(artist.id)}
-                aria-label={`Remove ${artist.name || 'artist'}`}
+                aria-label={`Poista ${artist.name || 'artisti'}`}
               >
                 ×
               </RemoveButton>
@@ -90,30 +90,32 @@ const ArtistList = ({ artists, onChange }: Props) => {
       <Row key={draftKey}>
         <NameInput
           value={name}
-          placeholder={artists.length ? 'Add another artist' : 'Artist name'}
+          placeholder={
+            artists.length ? 'Lisää toinen artisti' : 'Artistin nimi'
+          }
           onChange={(event) => setName(event.target.value)}
           onKeyDown={addOnEnter}
-          aria-label="New artist name"
+          aria-label="Uuden artistin nimi"
         />
         <TimeInput
           type="time"
           value={time}
           onChange={(event) => setTime(event.target.value)}
           onKeyDown={addOnEnter}
-          aria-label="New artist set time"
+          aria-label="Uuden artistin esiintymisaika"
         />
         <GenreInput
           value={genre}
           placeholder="Genre"
           onChange={(event) => setGenre(event.target.value)}
           onKeyDown={addOnEnter}
-          aria-label="New artist genre"
+          aria-label="Uuden artistin genre"
         />
         <AddButton type="button" onClick={add} disabled={!name.trim()}>
-          Add
+          Lisää
         </AddButton>
       </Row>
-      <Note>Time and genre are optional.</Note>
+      <Note>Aika ja genre ovat valinnaisia.</Note>
     </Field>
   );
 };

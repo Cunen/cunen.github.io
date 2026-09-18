@@ -1,21 +1,37 @@
-import { format, getDate } from 'date-fns';
+import { getDate } from 'date-fns';
 import styled from 'styled-components';
 import { phone } from '../breakpoints';
-import type { CalendarEvent } from '../types';
+import { formatDate } from '../dates';
+import { UNTITLED, goingLabel, interestedLabel } from '../text';
+import type { DayOccupancy } from '../occupancy';
 
 type Props = {
   date: Date;
-  event?: CalendarEvent;
+  occupancy?: DayOccupancy;
   isToday: boolean;
   isPast: boolean;
+  /** True for the padding days that complete the first and last weeks. */
+  isOutsideMonth: boolean;
   canEdit: boolean;
   onOpen: () => void;
 };
 
-const DayCell = ({ date, event, isToday, isPast, canEdit, onOpen }: Props) => {
+const DayCell = ({
+  date,
+  occupancy,
+  isToday,
+  isPast,
+  isOutsideMonth,
+  canEdit,
+  onOpen,
+}: Props) => {
   const dayNumber = getDate(date);
+  const event = occupancy?.event;
+  const isStart = occupancy?.dayIndex === 0;
   const meta =
-    event && [event.startTime, event.location].filter(Boolean).join(' · ');
+    event && isStart
+      ? [event.startTime, event.location].filter(Boolean).join(' · ')
+      : '';
   // An empty day only leads somewhere when it can be filled in.
   const interactive = Boolean(event) || canEdit;
 
@@ -27,36 +43,44 @@ const DayCell = ({ date, event, isToday, isPast, canEdit, onOpen }: Props) => {
       $today={isToday}
       $past={isPast}
       $hasEvent={Boolean(event)}
+      $soldOut={Boolean(event?.soldOut)}
       aria-label={
         event
-          ? `${event.title || 'Untitled event'} on ${format(date, 'd MMMM')}`
-          : `Add an event on ${format(date, 'd MMMM')}`
+          ? `${event.title || UNTITLED} ${formatDate(date, 'd. MMMM')}`
+          : `Lisää keikka päivälle ${formatDate(date, 'd. MMMM')}`
       }
     >
       <DayHeader>
-        <DayNumber $today={isToday}>{dayNumber}</DayNumber>
-        {dayNumber === 1 && <MonthTag>{format(date, 'MMM')}</MonthTag>}
+        <DayNumber $today={isToday} $outside={isOutsideMonth}>
+          {dayNumber}
+        </DayNumber>
+        {event && event.days > 1 && (
+          <DayCounter>
+            {(occupancy?.dayIndex ?? 0) + 1}/{event.days}
+          </DayCounter>
+        )}
       </DayHeader>
 
       {event ? (
         <Event>
-          <Title>{event.title || 'Untitled event'}</Title>
+          <Title $continued={!isStart}>{event.title || UNTITLED}</Title>
           {meta && <Meta>{meta}</Meta>}
-          {event.artists.length > 0 && (
+          {isStart && event.artists.length > 0 && (
             <Artists>
               {event.artists.map((artist) => artist.name).join(', ')}
             </Artists>
           )}
-          {(event.going.length > 0 || event.interested.length > 0) && (
-            <Counts>
-              {event.going.length > 0 && (
-                <Going>{event.going.length} going</Going>
-              )}
-              {event.interested.length > 0 && (
-                <Interested>{event.interested.length} interested</Interested>
-              )}
-            </Counts>
-          )}
+          <Badges>
+            {event.soldOut && <SoldOut>Loppuunmyyty</SoldOut>}
+            {isStart && event.going.length > 0 && (
+              <Going>{goingLabel(event.going.length)}</Going>
+            )}
+            {isStart && event.interested.length > 0 && (
+              <Interested>
+                {interestedLabel(event.interested.length)}
+              </Interested>
+            )}
+          </Badges>
         </Event>
       ) : (
         canEdit && <AddHint aria-hidden="true">+</AddHint>
@@ -69,6 +93,7 @@ const Cell = styled.button<{
   $today: boolean;
   $past: boolean;
   $hasEvent: boolean;
+  $soldOut: boolean;
 }>`
   display: flex;
   flex-direction: column;
@@ -76,11 +101,17 @@ const Cell = styled.button<{
   min-height: 118px;
   padding: 8px;
   text-align: left;
+  /* Sold out outranks today's outline: it is the thing you need to notice. */
   border: 1px solid
-    ${({ $today }) => ($today ? 'var(--accent)' : 'var(--line)')};
+    ${({ $today, $soldOut }) =>
+      $soldOut ? 'var(--danger)' : $today ? 'var(--accent)' : 'var(--line)'};
   border-radius: 10px;
-  background: ${({ $hasEvent }) =>
-    $hasEvent ? 'var(--surface)' : 'transparent'};
+  background: ${({ $hasEvent, $soldOut }) =>
+    $soldOut
+      ? 'var(--danger-soft)'
+      : $hasEvent
+        ? 'var(--surface)'
+        : 'transparent'};
   opacity: ${({ $past, $hasEvent }) => ($past && !$hasEvent ? 0.45 : 1)};
   cursor: pointer;
   overflow: hidden;
@@ -89,8 +120,10 @@ const Cell = styled.button<{
     background 0.12s ease;
 
   &:hover:not(:disabled) {
-    border-color: var(--line-strong);
-    background: var(--surface);
+    border-color: ${({ $soldOut }) =>
+      $soldOut ? 'var(--danger)' : 'var(--line-strong)'};
+    background: ${({ $soldOut }) =>
+      $soldOut ? 'var(--danger-soft)' : 'var(--surface)'};
   }
 
   &:disabled {
@@ -102,14 +135,19 @@ const Cell = styled.button<{
     min-height: 58px;
     padding: 4px 3px;
     border-radius: 7px;
-    background: ${({ $hasEvent }) =>
-      $hasEvent ? 'var(--accent-soft)' : 'transparent'};
+    background: ${({ $hasEvent, $soldOut }) =>
+      $soldOut
+        ? 'var(--danger-soft)'
+        : $hasEvent
+          ? 'var(--accent-soft)'
+          : 'transparent'};
   }
 `;
 
 const DayHeader = styled.div`
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 6px;
 
   ${phone} {
@@ -117,22 +155,22 @@ const DayHeader = styled.div`
   }
 `;
 
-const DayNumber = styled.span<{ $today: boolean }>`
+const DayNumber = styled.span<{ $today: boolean; $outside: boolean }>`
   font-size: 12px;
   font-weight: ${({ $today }) => ($today ? 700 : 500)};
   color: ${({ $today }) => ($today ? 'var(--accent)' : 'var(--muted)')};
+  opacity: ${({ $outside }) => ($outside ? 0.45 : 1)};
 
   ${phone} {
     font-size: 11px;
   }
 `;
 
-const MonthTag = styled.span`
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  color: var(--text);
+/** `2/3` on the second day of a three-day event. */
+const DayCounter = styled.span`
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  color: var(--muted);
 
   ${phone} {
     font-size: 9px;
@@ -146,11 +184,13 @@ const Event = styled.div`
   min-width: 0;
 `;
 
-const Title = styled.span`
+const Title = styled.span<{ $continued: boolean }>`
   font-size: 13px;
   font-weight: 600;
   line-height: 1.3;
   overflow-wrap: anywhere;
+  /* Continuation days are quieter, so the day it starts reads as the anchor. */
+  color: ${({ $continued }) => ($continued ? 'var(--muted)' : 'inherit')};
 
   ${phone} {
     font-size: 10px;
@@ -182,12 +222,16 @@ const Artists = styled(Secondary)`
   overflow-wrap: anywhere;
 `;
 
-const Counts = styled.div`
+const Badges = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
   margin-top: 2px;
   font-size: 11px;
+
+  &:empty {
+    display: none;
+  }
 
   ${phone} {
     display: none;
@@ -208,6 +252,12 @@ const Going = styled(Badge)`
 const Interested = styled(Badge)`
   background: var(--interested-soft);
   color: var(--interested);
+`;
+
+const SoldOut = styled(Badge)`
+  background: var(--danger);
+  color: var(--on-danger);
+  font-weight: 600;
 `;
 
 const AddHint = styled.span`

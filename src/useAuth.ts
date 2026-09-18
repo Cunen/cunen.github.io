@@ -45,8 +45,8 @@ export const useAuth = () => {
       console.error('[calendar] Google sign-in failed', caught);
       setError(
         code === 'auth/popup-blocked'
-          ? 'Your browser blocked the sign-in popup.'
-          : 'Sign-in failed. Try again.'
+          ? 'Selain esti kirjautumisikkunan.'
+          : 'Kirjautuminen epäonnistui. Yritä uudelleen.'
       );
     }
   }, []);

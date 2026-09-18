@@ -31,7 +31,7 @@ const Modal = ({ eyebrow, label, children, footer, onClose }: Props) => {
       >
         <Header>
           <Eyebrow>{eyebrow}</Eyebrow>
-          <CloseButton type="button" onClick={onClose} aria-label="Close">
+          <CloseButton type="button" onClick={onClose} aria-label="Sulje">
             &times;
           </CloseButton>
         </Header>

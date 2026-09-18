@@ -1,6 +1,8 @@
-import { format } from 'date-fns';
 import styled from 'styled-components';
 import { phone } from '../breakpoints';
+import { formatDate, fromDateKey } from '../dates';
+import { lastDayOf } from '../occupancy';
+import { UNTITLED, goingLabel, interestedLabel } from '../text';
 import type { CalendarEvent } from '../types';
 
 type Props = {
@@ -12,8 +14,8 @@ const EventList = ({ events, onOpen }: Props) => {
   if (events.length === 0) {
     return (
       <Empty>
-        Nothing coming up yet. Switch to the calendar to pick a day and add the
-        first event.
+        Ei tulevia keikkoja. Vaihda kalenterinäkymään, valitse päivä ja lisää
+        ensimmäinen keikka.
       </Empty>
     );
   }
@@ -21,21 +23,36 @@ const EventList = ({ events, onOpen }: Props) => {
   return (
     <List>
       {events.map((event) => {
-        const date = new Date(`${event.date}T00:00:00`);
-        const meta = [event.startTime, event.location, event.price]
+        const date = fromDateKey(event.date);
+        const meta = [
+          event.startTime,
+          event.location,
+          event.price,
+          event.days > 1 ? `${event.days} päivää` : '',
+        ]
           .filter(Boolean)
           .join(' · ');
 
         return (
-          <Item key={event.date} type="button" onClick={() => onOpen(event)}>
+          <Item
+            key={event.date}
+            type="button"
+            onClick={() => onOpen(event)}
+            $soldOut={event.soldOut}
+          >
             <DateBlock>
-              <Weekday>{format(date, 'EEE')}</Weekday>
-              <DayNumber>{format(date, 'd')}</DayNumber>
-              <Month>{format(date, 'MMM')}</Month>
+              <Weekday>{formatDate(date, 'EEEEEE')}</Weekday>
+              <DayNumber>
+                {formatDate(date, 'd')}
+                {event.days > 1 && (
+                  <EndDay>&ndash;{formatDate(lastDayOf(event), 'd')}</EndDay>
+                )}
+              </DayNumber>
+              <Month>{formatDate(date, 'MMM')}</Month>
             </DateBlock>
 
             <Details>
-              <Title>{event.title || 'Untitled event'}</Title>
+              <Title>{event.title || UNTITLED}</Title>
               {meta && <Meta>{meta}</Meta>}
               {event.artists.length > 0 && (
                 <Artists>
@@ -45,11 +62,14 @@ const EventList = ({ events, onOpen }: Props) => {
             </Details>
 
             <Counts>
+              {event.soldOut && <SoldOut>Loppuunmyyty</SoldOut>}
               {event.going.length > 0 && (
-                <Going>{event.going.length} going</Going>
+                <Going>{goingLabel(event.going.length)}</Going>
               )}
               {event.interested.length > 0 && (
-                <Interested>{event.interested.length} interested</Interested>
+                <Interested>
+                  {interestedLabel(event.interested.length)}
+                </Interested>
               )}
             </Counts>
           </Item>
@@ -65,7 +85,7 @@ const List = styled.div`
   gap: 8px;
 `;
 
-const Item = styled.button`
+const Item = styled.button<{ $soldOut: boolean }>`
   display: grid;
   grid-template-columns: 52px 1fr auto;
   align-items: center;
@@ -73,16 +93,19 @@ const Item = styled.button`
   width: 100%;
   padding: 12px 14px;
   text-align: left;
-  border: 1px solid var(--line);
+  border: 1px solid
+    ${({ $soldOut }) => ($soldOut ? 'var(--danger)' : 'var(--line)')};
   border-radius: 12px;
-  background: var(--surface);
+  background: ${({ $soldOut }) =>
+    $soldOut ? 'var(--danger-soft)' : 'var(--surface)'};
   cursor: pointer;
   transition:
     border-color 0.12s ease,
     transform 0.12s ease;
 
   &:hover {
-    border-color: var(--line-strong);
+    border-color: ${({ $soldOut }) =>
+      $soldOut ? 'var(--danger)' : 'var(--line-strong)'};
   }
 
   ${phone} {
@@ -119,6 +142,14 @@ const Weekday = styled.span`
 const DayNumber = styled.span`
   font-size: 20px;
   font-weight: 600;
+  white-space: nowrap;
+`;
+
+/** The closing day of a multi-day event, kept smaller so the start still leads. */
+const EndDay = styled.span`
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--muted);
 `;
 
 const Month = styled.span`
@@ -184,6 +215,12 @@ const Going = styled(Badge)`
 const Interested = styled(Badge)`
   background: var(--interested-soft);
   color: var(--interested);
+`;
+
+const SoldOut = styled(Badge)`
+  background: var(--danger);
+  color: var(--on-danger);
+  font-weight: 600;
 `;
 
 const Empty = styled.p`

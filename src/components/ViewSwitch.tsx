@@ -8,12 +8,12 @@ type Props = {
 };
 
 const OPTIONS: { value: View; label: string }[] = [
-  { value: 'list', label: 'List' },
-  { value: 'calendar', label: 'Calendar' },
+  { value: 'list', label: 'Lista' },
+  { value: 'calendar', label: 'Kalenteri' },
 ];
 
 const ViewSwitch = ({ view, onChange }: Props) => (
-  <Switch role="tablist" aria-label="View">
+  <Switch role="tablist" aria-label="Näkymä">
     {OPTIONS.map((option) => (
       <Option
         key={option.value}

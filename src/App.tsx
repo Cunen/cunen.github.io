@@ -7,14 +7,18 @@ import EventList from './components/EventList';
 import EventModal from './components/EventModal';
 import ViewSwitch from './components/ViewSwitch';
 import type { View } from './components/ViewSwitch';
+import WeekdayRow from './components/WeekdayRow';
 import { phone } from './breakpoints';
-import { buildWeeks, toDateKey } from './dates';
+import { buildMonths, toDateKey } from './dates';
+import { buildOccupancy } from './occupancy';
 import { useAuth } from './useAuth';
 import { useEvents } from './useEvents';
+import { upcomingLabel } from './text';
 import { createEvent } from './types';
 import type { CalendarEvent } from './types';
 
-const WEEKS_PER_PAGE = 8;
+/** Half a year per load, so scrolling reaches well past the next few weekends. */
+const MONTHS_PER_LOAD = 6;
 const VIEW_KEY = 'calendar.view';
 
 const readStoredView = (): View => {
@@ -36,12 +40,16 @@ function App() {
   } = useAuth();
   const { events, syncState, writeState, saveEvent, deleteEvent } = useEvents();
   const [view, setView] = useState<View>(readStoredView);
-  const [weekCount, setWeekCount] = useState(WEEKS_PER_PAGE);
+  const [monthCount, setMonthCount] = useState(MONTHS_PER_LOAD);
   const [openEvent, setOpenEvent] = useState<CalendarEvent | null>(null);
 
   // Anchored once per mount so the grid does not shift while the app is open.
   const today = useMemo(() => startOfDay(new Date()), []);
-  const weeks = useMemo(() => buildWeeks(today, weekCount), [today, weekCount]);
+  const months = useMemo(
+    () => buildMonths(today, monthCount),
+    [today, monthCount]
+  );
+  const occupancy = useMemo(() => buildOccupancy(events), [events]);
 
   useEffect(() => {
     try {
@@ -60,7 +68,8 @@ function App() {
 
   const openDay = (date: Date) => {
     const key = toDateKey(date);
-    const existing = events[key];
+    // A later day of a multi-day event opens the event it belongs to.
+    const existing = occupancy[key]?.event;
     // Signed out, an empty day has nothing to show.
     if (!existing && !canEdit) return;
     setOpenEvent(existing ?? createEvent(key));
@@ -70,51 +79,56 @@ function App() {
 
   return (
     <Page>
-      <Header>
-        <Heading>
-          <Title>Calendar</Title>
-          <Subtitle>
-            {authError ? (
-              <Problem>{authError}</Problem>
-            ) : writeState === 'denied' ? (
-              <Problem>Not saved — your account is not allowed to edit</Problem>
-            ) : writeState === 'error' ? (
-              <Problem>Not saved — check your connection</Problem>
-            ) : syncState === 'loading' ? (
-              'Loading…'
-            ) : syncState === 'denied' ? (
-              <Problem>
-                The Firestore rules do not allow reading this calendar
-              </Problem>
-            ) : syncState === 'error' ? (
-              <Problem>
-                Offline — showing the last events synced to this device
-              </Problem>
-            ) : upcoming.length > 0 ? (
-              `${upcoming.length} upcoming ${upcoming.length === 1 ? 'event' : 'events'}`
-            ) : (
-              'Nothing coming up yet'
-            )}
-          </Subtitle>
-        </Heading>
-        <Controls>
-          <ViewSwitch view={view} onChange={setView} />
-          <AccountButton
-            user={user}
-            resolved={resolved}
-            onSignIn={() => void signIn()}
-            onSignOut={signOut}
-          />
-        </Controls>
-      </Header>
+      <StickyTop>
+        <Header>
+          <Heading>
+            <Title>Keikkaryhmä</Title>
+            <Subtitle>
+              {authError ? (
+                <Problem>{authError}</Problem>
+              ) : writeState === 'denied' ? (
+                <Problem>
+                  Ei tallennettu — tunnuksellasi ei ole muokkausoikeutta
+                </Problem>
+              ) : writeState === 'error' ? (
+                <Problem>Ei tallennettu — tarkista verkkoyhteys</Problem>
+              ) : syncState === 'loading' ? (
+                'Ladataan…'
+              ) : syncState === 'denied' ? (
+                <Problem>
+                  Firestoren säännöt eivät salli tämän kalenterin lukemista
+                </Problem>
+              ) : syncState === 'error' ? (
+                <Problem>
+                  Ei yhteyttä — näytetään viimeksi synkronoidut keikat
+                </Problem>
+              ) : upcoming.length > 0 ? (
+                upcomingLabel(upcoming.length)
+              ) : (
+                'Ei tulevia keikkoja'
+              )}
+            </Subtitle>
+          </Heading>
+          <Controls>
+            <ViewSwitch view={view} onChange={setView} />
+            <AccountButton
+              user={user}
+              resolved={resolved}
+              onSignIn={() => void signIn()}
+              onSignOut={signOut}
+            />
+          </Controls>
+        </Header>
+        {view === 'calendar' && <WeekdayRow />}
+      </StickyTop>
 
       {view === 'list' ? (
         <EventList events={upcoming} onOpen={setOpenEvent} />
       ) : (
         <>
           <Calendar
-            weeks={weeks}
-            events={events}
+            months={months}
+            occupancy={occupancy}
             today={today}
             canEdit={canEdit}
             onOpenDay={openDay}
@@ -122,9 +136,9 @@ function App() {
           <Footer>
             <LoadMore
               type="button"
-              onClick={() => setWeekCount((count) => count + WEEKS_PER_PAGE)}
+              onClick={() => setMonthCount((count) => count + MONTHS_PER_LOAD)}
             >
-              Load {WEEKS_PER_PAGE} more weeks
+              Lataa puoli vuotta lisää
             </LoadMore>
           </Footer>
         </>
@@ -157,10 +171,28 @@ function App() {
 const Page = styled.div`
   max-width: 1180px;
   margin: 0 auto;
-  padding: 28px 20px 48px;
+  /* No top padding: the sticky block carries it, so it stays above the title. */
+  padding: 0 20px 48px;
 
   ${phone} {
-    padding: 18px 12px 36px;
+    padding: 0 12px 36px;
+  }
+`;
+
+/**
+ * Keeps the controls and the weekday names in place while the months scroll past.
+ * The opaque background is what hides the cells passing underneath, and the
+ * z-index stays below the modal overlay.
+ */
+const StickyTop = styled.div`
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--bg);
+  padding: 28px 0 10px;
+
+  ${phone} {
+    padding: 18px 0 8px;
   }
 `;
 
@@ -169,13 +201,13 @@ const Header = styled.header`
   align-items: flex-end;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 22px;
+  margin-bottom: 14px;
 
   ${phone} {
     align-items: flex-start;
     flex-direction: column;
     gap: 12px;
-    margin-bottom: 16px;
+    margin-bottom: 10px;
   }
 `;
 

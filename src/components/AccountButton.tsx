@@ -16,12 +16,12 @@ const AccountButton = ({ user, resolved, onSignIn, onSignOut }: Props) => {
   if (!user) {
     return (
       <SignInButton type="button" onClick={onSignIn}>
-        Sign in to edit
+        Kirjaudu muokataksesi
       </SignInButton>
     );
   }
 
-  const name = user.displayName ?? user.email ?? 'Signed in';
+  const name = user.displayName ?? user.email ?? 'Kirjautunut';
 
   return (
     <Account>
@@ -34,7 +34,7 @@ const AccountButton = ({ user, resolved, onSignIn, onSignOut }: Props) => {
       )}
       <Name title={name}>{name}</Name>
       <SignOutButton type="button" onClick={onSignOut}>
-        Sign out
+        Kirjaudu ulos
       </SignOutButton>
     </Account>
   );

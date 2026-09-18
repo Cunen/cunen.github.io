@@ -1,5 +1,8 @@
 import styled from 'styled-components';
+import { formatDate } from '../dates';
 import { detectLinks } from '../links';
+import { lastDayOf } from '../occupancy';
+import { UNTITLED } from '../text';
 import type { CalendarEvent } from '../types';
 
 type Props = { event: CalendarEvent };
@@ -7,16 +10,22 @@ type Props = { event: CalendarEvent };
 /** The signed-out view: everything an event holds, nothing editable. */
 const EventDetails = ({ event }: Props) => {
   const facts = [
-    event.startTime && { label: 'Starts', value: event.startTime },
-    event.location && { label: 'Where', value: event.location },
-    event.price && { label: 'Price', value: event.price },
+    event.startTime && { label: 'Alkaa', value: event.startTime },
+    event.location && { label: 'Missä', value: event.location },
+    event.price && { label: 'Hinta', value: event.price },
+    event.days > 1 && {
+      label: 'Kesto',
+      value: `${event.days} päivää, päättyy ${formatDate(lastDayOf(event), 'd.M.')}`,
+    },
   ].filter((fact): fact is { label: string; value: string } => Boolean(fact));
 
   const links = detectLinks(event.description);
 
   return (
     <>
-      <Title>{event.title || 'Untitled event'}</Title>
+      <Title>{event.title || UNTITLED}</Title>
+
+      {event.soldOut && <SoldOutBanner>Loppuunmyyty</SoldOutBanner>}
 
       {facts.length > 0 && (
         <Facts>
@@ -31,7 +40,7 @@ const EventDetails = ({ event }: Props) => {
 
       {event.artists.length > 0 && (
         <Section>
-          <Label>Artists</Label>
+          <Label>Artistit</Label>
           <Artists>
             {event.artists.map((artist) => (
               <Artist key={artist.id}>
@@ -46,7 +55,7 @@ const EventDetails = ({ event }: Props) => {
 
       {event.description && (
         <Section>
-          <Label>Description</Label>
+          <Label>Kuvaus</Label>
           <Description>{event.description}</Description>
           {links.length > 0 && (
             <Links>
@@ -68,7 +77,7 @@ const EventDetails = ({ event }: Props) => {
 
       {event.going.length > 0 && (
         <Section>
-          <Label>Going</Label>
+          <Label>Tulossa</Label>
           <Names>
             {event.going.map((name) => (
               <GoingChip key={name}>{name}</GoingChip>
@@ -79,7 +88,7 @@ const EventDetails = ({ event }: Props) => {
 
       {event.interested.length > 0 && (
         <Section>
-          <Label>Interested</Label>
+          <Label>Kiinnostuneet</Label>
           <Names>
             {event.interested.map((name) => (
               <InterestedChip key={name}>{name}</InterestedChip>
@@ -96,6 +105,16 @@ const Title = styled.h2`
   font-size: 22px;
   font-weight: 600;
   overflow-wrap: anywhere;
+`;
+
+const SoldOutBanner = styled.p`
+  margin: 0;
+  border: 1px solid var(--danger);
+  border-radius: 10px;
+  background: var(--danger-soft);
+  padding: 8px 12px;
+  font-weight: 600;
+  color: var(--danger);
 `;
 
 const Facts = styled.div`

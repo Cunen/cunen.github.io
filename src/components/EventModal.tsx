@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import EventDetails from './EventDetails';
 import EventForm from './EventForm';
 import Modal from './Modal';
-import { formatLongDate } from '../dates';
+import { formatDate, formatLongDate, fromDateKey } from '../dates';
+import { lastDayOf } from '../occupancy';
 import type { CalendarEvent } from '../types';
 
 type Props = {
@@ -36,8 +37,12 @@ const EventModal = ({
     if (isExisting) onSave(next);
   };
 
-  const eyebrow = formatLongDate(new Date(`${draft.date}T00:00:00`));
-  const label = isExisting ? draft.title || 'Event' : 'New event';
+  // A multi-day event names both ends, so the header matches what the grid shows.
+  const eyebrow =
+    draft.days > 1
+      ? `${formatDate(fromDateKey(draft.date), 'EEEE d.M.')} – ${formatDate(lastDayOf(draft), 'EEEE d.M.yyyy')}`
+      : formatLongDate(fromDateKey(draft.date));
+  const label = isExisting ? draft.title || 'Keikka' : 'Uusi keikka';
 
   if (!canEdit) {
     return (
@@ -47,9 +52,9 @@ const EventModal = ({
         onClose={onClose}
         footer={
           <>
-            <Note>Sign in to change this event</Note>
+            <Note>Kirjaudu sisään muokataksesi</Note>
             <SecondaryButton type="button" onClick={onSignIn}>
-              Sign in with Google
+              Kirjaudu Googlella
             </SecondaryButton>
           </>
         }
@@ -68,9 +73,9 @@ const EventModal = ({
         isExisting ? (
           <>
             <DeleteButton type="button" onClick={onDelete}>
-              Delete event
+              Poista keikka
             </DeleteButton>
-            <Note>Saved automatically</Note>
+            <Note>Tallennetaan automaattisesti</Note>
           </>
         ) : (
           <>
@@ -80,7 +85,7 @@ const EventModal = ({
               disabled={draft.title.trim().length === 0}
               onClick={() => onSave(draft)}
             >
-              Add event
+              Lisää keikka
             </PrimaryButton>
           </>
         )

@@ -11,7 +11,7 @@ export type Artist = {
 
 export type CalendarEvent = {
   id: string;
-  /** The day this event occupies. At most one event exists per day. */
+  /** The day this event starts on. At most one event starts on a given day. */
   date: DateKey;
   title: string;
   /** 24h `HH:mm`, or an empty string when the start time is not decided yet. */
@@ -21,6 +21,9 @@ export type CalendarEvent = {
   price: string;
   /** Free text; any URLs in it are surfaced as links. */
   description: string;
+  /** How many calendar days the event covers, starting from `date`. 1 = one day. */
+  days: number;
+  soldOut: boolean;
   artists: Artist[];
   interested: string[];
   going: string[];
@@ -36,10 +39,20 @@ export const createEvent = (date: DateKey): CalendarEvent => ({
   location: '',
   price: '',
   description: '',
+  days: 1,
+  soldOut: false,
   artists: [],
   interested: [],
   going: [],
 });
+
+/** Anything longer is almost certainly a mistake, and the grid gets unreadable. */
+export const MAX_EVENT_DAYS = 5;
+
+export const clampDays = (value: number): number =>
+  Number.isFinite(value)
+    ? Math.min(Math.max(Math.trunc(value), 1), MAX_EVENT_DAYS)
+    : 1;
 
 export const createArtist = (name: string, time = '', genre = ''): Artist => ({
   id: crypto.randomUUID(),

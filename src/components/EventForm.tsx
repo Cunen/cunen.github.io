@@ -3,7 +3,16 @@ import styled from 'styled-components';
 import ArtistList from './ArtistList';
 import ChipList from './ChipList';
 import { detectLinks } from '../links';
+import { MAX_EVENT_DAYS } from '../types';
 import type { CalendarEvent } from '../types';
+
+const DAY_OPTIONS = Array.from(
+  { length: MAX_EVENT_DAYS },
+  (_, index) => index + 1
+);
+
+const dayOptionLabel = (days: number) =>
+  `${days} ${days === 1 ? 'päivä' : 'päivää'}`;
 
 type Props = {
   draft: CalendarEvent;
@@ -35,14 +44,14 @@ const EventForm = ({ draft, onChange }: Props) => {
       <TitleInput
         ref={titleRef}
         value={draft.title}
-        placeholder="Event name"
+        placeholder="Keikan nimi"
         onChange={(event) => onChange({ title: event.target.value })}
-        aria-label="Event name"
+        aria-label="Keikan nimi"
       />
 
       <Row>
         <Field>
-          <Label htmlFor="event-time">Starts</Label>
+          <Label htmlFor="event-time">Alkaa</Label>
           <Input
             id="event-time"
             type="time"
@@ -51,24 +60,48 @@ const EventForm = ({ draft, onChange }: Props) => {
           />
         </Field>
         <Field $grow>
-          <Label htmlFor="event-location">Where</Label>
+          <Label htmlFor="event-location">Missä</Label>
           <Input
             id="event-location"
             value={draft.location}
-            placeholder="Venue or address"
+            placeholder="Paikka tai osoite"
             onChange={(event) => onChange({ location: event.target.value })}
           />
         </Field>
         <Field>
-          <Label htmlFor="event-price">Price</Label>
+          <Label htmlFor="event-price">Hinta</Label>
           <PriceInput
             id="event-price"
             value={draft.price}
-            placeholder="20 € / free"
+            placeholder="20 € / ilmainen"
             onChange={(event) => onChange({ price: event.target.value })}
           />
         </Field>
+        <Field>
+          <Label htmlFor="event-days">Kesto</Label>
+          <DaySelect
+            id="event-days"
+            value={draft.days}
+            onChange={(event) => onChange({ days: Number(event.target.value) })}
+          >
+            {DAY_OPTIONS.map((days) => (
+              <option key={days} value={days}>
+                {dayOptionLabel(days)}
+              </option>
+            ))}
+          </DaySelect>
+        </Field>
       </Row>
+
+      <SoldOutToggle>
+        <input
+          id="event-sold-out"
+          type="checkbox"
+          checked={draft.soldOut}
+          onChange={(event) => onChange({ soldOut: event.target.checked })}
+        />
+        <label htmlFor="event-sold-out">Loppuunmyyty</label>
+      </SoldOutToggle>
 
       <ArtistList
         artists={draft.artists}
@@ -76,11 +109,11 @@ const EventForm = ({ draft, onChange }: Props) => {
       />
 
       <Field>
-        <Label htmlFor="event-description">Description</Label>
+        <Label htmlFor="event-description">Kuvaus</Label>
         <Textarea
           id="event-description"
           value={draft.description}
-          placeholder="Anything worth knowing. Paste Spotify, YouTube or ticket links here."
+          placeholder="Mitä muuta kannattaa tietää. Liitä tähän Spotify-, YouTube- tai lippulinkit."
           rows={3}
           onChange={(event) => onChange({ description: event.target.value })}
         />
@@ -102,20 +135,20 @@ const EventForm = ({ draft, onChange }: Props) => {
       </Field>
 
       <ChipList
-        label="Interested"
+        label="Kiinnostuneet"
         tone="interested"
         values={draft.interested}
-        placeholder="Who might come?"
-        hint="click a name to move it to going"
+        placeholder="Ketkä ehkä tulevat?"
+        hint="klikkaa nimeä siirtääksesi tulossa-listalle"
         onChange={(interested) => onChange({ interested })}
         onChipClick={(name) => moveTo('going', name)}
       />
       <ChipList
-        label="Going"
+        label="Tulossa"
         tone="going"
         values={draft.going}
-        placeholder="Who is definitely in?"
-        hint="click a name to move it back to interested"
+        placeholder="Ketkä ovat varmasti mukana?"
+        hint="klikkaa nimeä siirtääksesi takaisin kiinnostuneisiin"
         onChange={(going) => onChange({ going })}
         onChipClick={(name) => moveTo('interested', name)}
       />
@@ -184,6 +217,38 @@ const Input = styled.input`
 
 const PriceInput = styled(Input)`
   width: 104px;
+`;
+
+const DaySelect = styled.select`
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface-muted);
+  padding: 9px 10px;
+  font: inherit;
+  color: var(--text);
+
+  &:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+`;
+
+const SoldOutToggle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: -6px;
+
+  input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--danger);
+    cursor: pointer;
+  }
+
+  label {
+    cursor: pointer;
+  }
 `;
 
 const Textarea = styled.textarea`

@@ -13,6 +13,8 @@
   --interested: #b45309;
   --interested-soft: #fdf4e3;
   --danger: #b91c1c;
+  --danger-soft: #fdeceb;
+  --on-danger: #ffffff;
   --overlay: rgb(24 24 27 / 45%);
   --shadow: 0 12px 32px rgb(24 24 27 / 12%);
 }
@@ -33,6 +35,8 @@
     --interested: #f0b866;
     --interested-soft: #2c2113;
     --danger: #f87171;
+    --danger-soft: #2c1616;
+    --on-danger: #2c0d0d;
     --overlay: rgb(0 0 0 / 60%);
     --shadow: 0 12px 32px rgb(0 0 0 / 45%);
   }

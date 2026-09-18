@@ -1,11 +1,15 @@
-# Calendar
+# Keikkaryhmä
 
-A weekly calendar for planning events. Each day can hold one event with a start
+A weekly calendar for planning gigs. Each day can hold one event with a start
 time, a location, a price, the artists performing (each with an optional set time
 and genre), a description, and who is interested versus who is definitely going.
 
 The calendar is **read-only for everyone**. Signing in with Google turns on
 editing: adding events, changing them and deleting them.
+
+The interface is in Finnish; dates use the `fi` locale from date-fns. `src/text.ts`
+holds the labels that have to agree in number, and `formatDate` in `src/dates.ts` is
+the single place the locale is applied.
 
 Built with Vite, React, TypeScript and styled-components. Events live in Firestore.
 
@@ -18,13 +22,26 @@ Built with Vite, React, TypeScript and styled-components. Events live in Firesto
 | `src/useEvents.ts`       | Event state plus read (`syncState`) and write (`writeState`) status                    |
 | `src/useAuth.ts`         | Google sign-in, sign-out, and the `canEdit` flag the UI keys off                       |
 | `src/types.ts`           | `CalendarEvent` and `Artist`, keyed by `yyyy-MM-dd`                                    |
-| `src/dates.ts`           | Week building and formatting (Monday-first)                                            |
+| `src/dates.ts`           | Week building, month grouping, and formatting (Monday-first)                           |
 | `src/links.ts`           | Pulls Spotify/YouTube/etc. links out of a description                                  |
+| `src/occupancy.ts`       | Spreads multi-day events over the days they cover                                      |
+| `src/text.ts`            | Finnish labels whose wording depends on a count                                        |
 | `src/breakpoints.ts`     | The single phone breakpoint shared by every component                                  |
 | `src/components/`        | `Calendar`, `DayCell`, `EventList`, `ViewSwitch`, `AccountButton`, and the modal below |
 
 The modal is split three ways: `Modal` is the shell, `EventDetails` the read-only
 body, and `EventForm` the editable one. `EventModal` picks between them on `canEdit`.
+
+The calendar view renders one whole month at a time and loads six months per click.
+Each month is padded out to complete weeks; the padding days belong to the
+neighbouring month and are greyed, so a day near a boundary appears in both months.
+`WeekdayRow` sits in the sticky header rather than in the grid, and shares its
+column template with the day grid through `calendarGrid.ts`.
+
+An event covers `days` calendar days from its start date. `buildOccupancy` spreads
+it across them so each day can render it; a day that another event _starts_ on
+always keeps that event, so the two never fight over a cell. `soldOut` adds a red
+border and badge in the list and the grid, and a banner in the details view.
 
 The previous CV implementation is archived in `src-cv/` (not built or linted).
 
@@ -56,8 +73,8 @@ match /calendar-events/{eventId} {
 >
 > A signed-in uid is visible in Firebase console → Authentication → Users.
 
-Until the rule is in place the header reads _"Not saved — your account is not
-allowed to edit"_ and every edit is rolled back.
+Until the rule is in place the header reads _"Ei tallennettu — tunnuksellasi ei ole
+muokkausoikeutta"_ and every edit is rolled back.
 
 Sign-in uses a Google popup. The domain the app is served from must be listed under
 Firebase console → Authentication → Settings → Authorized domains; `localhost` is

@@ -6,7 +6,7 @@ import {
   setDoc,
 } from 'firebase/firestore';
 import { EVENTS_COLLECTION, db } from './firebase';
-import { createArtist } from './types';
+import { clampDays, createArtist } from './types';
 import type { Artist, CalendarEvent, DateKey, EventsByDate } from './types';
 
 const asString = (value: unknown): string =>
@@ -46,6 +46,8 @@ const toEvent = (id: string, data: Record<string, unknown>): CalendarEvent => ({
   location: asString(data.location),
   price: asString(data.price),
   description: asString(data.description),
+  days: typeof data.days === 'number' ? clampDays(data.days) : 1,
+  soldOut: data.soldOut === true,
   artists: asArtists(data.artists),
   interested: asStringArray(data.interested),
   going: asStringArray(data.going),
