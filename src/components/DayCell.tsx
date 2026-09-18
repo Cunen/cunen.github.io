@@ -1,5 +1,6 @@
 import { format, getDate } from 'date-fns';
 import styled from 'styled-components';
+import { phone } from '../breakpoints';
 import type { CalendarEvent } from '../types';
 
 type Props = {
@@ -7,16 +8,22 @@ type Props = {
   event?: CalendarEvent;
   isToday: boolean;
   isPast: boolean;
+  canEdit: boolean;
   onOpen: () => void;
 };
 
-const DayCell = ({ date, event, isToday, isPast, onOpen }: Props) => {
+const DayCell = ({ date, event, isToday, isPast, canEdit, onOpen }: Props) => {
   const dayNumber = getDate(date);
+  const meta =
+    event && [event.startTime, event.location].filter(Boolean).join(' · ');
+  // An empty day only leads somewhere when it can be filled in.
+  const interactive = Boolean(event) || canEdit;
 
   return (
     <Cell
       type="button"
       onClick={onOpen}
+      disabled={!interactive}
       $today={isToday}
       $past={isPast}
       $hasEvent={Boolean(event)}
@@ -34,13 +41,11 @@ const DayCell = ({ date, event, isToday, isPast, onOpen }: Props) => {
       {event ? (
         <Event>
           <Title>{event.title || 'Untitled event'}</Title>
-          {(event.startTime || event.location) && (
-            <Meta>
-              {[event.startTime, event.location].filter(Boolean).join(' · ')}
-            </Meta>
-          )}
+          {meta && <Meta>{meta}</Meta>}
           {event.artists.length > 0 && (
-            <Artists>{event.artists.join(', ')}</Artists>
+            <Artists>
+              {event.artists.map((artist) => artist.name).join(', ')}
+            </Artists>
           )}
           {(event.going.length > 0 || event.interested.length > 0) && (
             <Counts>
@@ -54,7 +59,7 @@ const DayCell = ({ date, event, isToday, isPast, onOpen }: Props) => {
           )}
         </Event>
       ) : (
-        <AddHint aria-hidden="true">+</AddHint>
+        canEdit && <AddHint aria-hidden="true">+</AddHint>
       )}
     </Cell>
   );
@@ -83,9 +88,22 @@ const Cell = styled.button<{
     border-color 0.12s ease,
     background 0.12s ease;
 
-  &:hover {
+  &:hover:not(:disabled) {
     border-color: var(--line-strong);
     background: var(--surface);
+  }
+
+  &:disabled {
+    cursor: default;
+  }
+
+  ${phone} {
+    gap: 3px;
+    min-height: 58px;
+    padding: 4px 3px;
+    border-radius: 7px;
+    background: ${({ $hasEvent }) =>
+      $hasEvent ? 'var(--accent-soft)' : 'transparent'};
   }
 `;
 
@@ -93,12 +111,20 @@ const DayHeader = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
+
+  ${phone} {
+    gap: 3px;
+  }
 `;
 
 const DayNumber = styled.span<{ $today: boolean }>`
   font-size: 12px;
   font-weight: ${({ $today }) => ($today ? 700 : 500)};
   color: ${({ $today }) => ($today ? 'var(--accent)' : 'var(--muted)')};
+
+  ${phone} {
+    font-size: 11px;
+  }
 `;
 
 const MonthTag = styled.span`
@@ -107,6 +133,10 @@ const MonthTag = styled.span`
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--text);
+
+  ${phone} {
+    font-size: 9px;
+  }
 `;
 
 const Event = styled.div`
@@ -121,15 +151,32 @@ const Title = styled.span`
   font-weight: 600;
   line-height: 1.3;
   overflow-wrap: anywhere;
+
+  ${phone} {
+    font-size: 10px;
+    line-height: 1.2;
+    /* Two lines is all a phone-width column can carry; the list view has the rest. */
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
 `;
 
-const Meta = styled.span`
+/** Everything below the title is desktop-only; phone cells only have room for a name. */
+const Secondary = styled.span`
+  ${phone} {
+    display: none;
+  }
+`;
+
+const Meta = styled(Secondary)`
   font-size: 12px;
   color: var(--muted);
   overflow-wrap: anywhere;
 `;
 
-const Artists = styled.span`
+const Artists = styled(Secondary)`
   font-size: 12px;
   color: var(--accent);
   overflow-wrap: anywhere;
@@ -141,6 +188,10 @@ const Counts = styled.div`
   gap: 4px;
   margin-top: 2px;
   font-size: 11px;
+
+  ${phone} {
+    display: none;
+  }
 `;
 
 const Badge = styled.span`
@@ -169,6 +220,10 @@ const AddHint = styled.span`
 
   ${Cell}:hover & {
     opacity: 1;
+  }
+
+  ${phone} {
+    display: none;
   }
 `;
 
