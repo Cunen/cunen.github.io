@@ -17,15 +17,17 @@ const dayOptionLabel = (days: number) =>
 
 type Props = {
   draft: CalendarEvent;
+  /** Only a blank event starts in the name field; see the call site. */
+  autoFocusTitle: boolean;
   onChange: (patch: Partial<CalendarEvent>) => void;
 };
 
-const EventForm = ({ draft, onChange }: Props) => {
+const EventForm = ({ draft, autoFocusTitle, onChange }: Props) => {
   const titleRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    titleRef.current?.focus();
-  }, []);
+    if (autoFocusTitle) titleRef.current?.focus();
+  }, [autoFocusTitle]);
 
   const moveTo = (list: 'interested' | 'going', name: string) => {
     const other = list === 'going' ? 'interested' : 'going';

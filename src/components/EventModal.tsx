@@ -3,8 +3,14 @@ import styled from 'styled-components';
 import EventDetails from './EventDetails';
 import EventForm from './EventForm';
 import Modal from './Modal';
-import { formatDate, formatLongDate, fromDateKey } from '../dates';
+import {
+  formatCompactDate,
+  formatDate,
+  formatLongDate,
+  fromDateKey,
+} from '../dates';
 import { lastDayOf } from '../occupancy';
+import { useIsPhone } from '../useIsPhone';
 import type { CalendarEvent } from '../types';
 
 type Props = {
@@ -29,6 +35,9 @@ const EventModal = ({
   onSignIn,
 }: Props) => {
   const [draft, setDraft] = useState(event);
+  // Deleting is one tap away from the form, so it asks before it happens.
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
+  const isPhone = useIsPhone();
 
   /** Saved events edit in place; a draft is only persisted once it is created. */
   const update = (patch: Partial<CalendarEvent>) => {
@@ -37,30 +46,34 @@ const EventModal = ({
     if (isExisting) onSave(next);
   };
 
-  // A multi-day event names both ends, so the header matches what the grid shows.
+  // A multi-day event names both ends, so the header matches what the grid
+  // shows. On a phone the weekday and the month shrink to their short forms,
+  // which is what leaves room for the closing button beside them.
+  const weekday = isPhone ? 'EEEEEE' : 'EEEE';
+  const start = fromDateKey(draft.date);
   const eyebrow =
     draft.days > 1
-      ? `${formatDate(fromDateKey(draft.date), 'EEEE d.M.')} – ${formatDate(lastDayOf(draft), 'EEEE d.M.yyyy')}`
-      : formatLongDate(fromDateKey(draft.date));
+      ? `${formatDate(start, `${weekday} d.M.`)} – ${formatDate(lastDayOf(draft), `${weekday} d.M.yyyy`)}`
+      : isPhone
+        ? formatCompactDate(start)
+        : formatLongDate(start);
   const label = isExisting ? draft.title || 'Keikka' : 'Uusi keikka';
 
-  // Two buttons, always in the same places: the destructive one on the left,
-  // the one that finishes and closes the modal on the right.
   if (!canEdit) {
     return (
       <Modal
         eyebrow={eyebrow}
         label={label}
         onClose={onClose}
+        action={
+          <PrimaryButton type="button" onClick={onClose}>
+            Sulje
+          </PrimaryButton>
+        }
         footer={
-          <>
-            <SecondaryButton type="button" onClick={onSignIn}>
-              Kirjaudu Googlella
-            </SecondaryButton>
-            <PrimaryButton type="button" onClick={onClose}>
-              Sulje
-            </PrimaryButton>
-          </>
+          <SecondaryButton type="button" onClick={onSignIn}>
+            Kirjaudu Googlella
+          </SecondaryButton>
         }
       >
         <EventDetails event={draft} />
@@ -73,36 +86,54 @@ const EventModal = ({
       eyebrow={eyebrow}
       label={label}
       onClose={onClose}
-      footer={
+      action={
         isExisting ? (
-          <>
-            <DeleteButton type="button" onClick={onDelete}>
-              Poista
-            </DeleteButton>
-            <PrimaryButton type="button" onClick={onClose}>
-              Valmis
-            </PrimaryButton>
-          </>
+          <PrimaryButton type="button" onClick={onClose}>
+            Valmis
+          </PrimaryButton>
         ) : (
-          <>
-            <CancelButton type="button" onClick={onClose}>
-              Peruuta
-            </CancelButton>
-            <PrimaryButton
-              type="button"
-              disabled={draft.title.trim().length === 0}
-              onClick={() => {
-                onSave(draft);
-                onClose();
-              }}
-            >
-              Lisää keikka
-            </PrimaryButton>
-          </>
+          <PrimaryButton
+            type="button"
+            disabled={draft.title.trim().length === 0}
+            onClick={() => {
+              onSave(draft);
+              onClose();
+            }}
+          >
+            Lisää keikka
+          </PrimaryButton>
+        )
+      }
+      footer={
+        !isExisting ? (
+          <CancelButton type="button" onClick={onClose}>
+            Peruuta
+          </CancelButton>
+        ) : confirmingDelete ? (
+          <Confirm>
+            <ConfirmQuestion>Poistetaanko keikka?</ConfirmQuestion>
+            <ConfirmButtons>
+              <CancelButton
+                type="button"
+                onClick={() => setConfirmingDelete(false)}
+              >
+                Peruuta
+              </CancelButton>
+              <DangerButton type="button" onClick={onDelete}>
+                Poista
+              </DangerButton>
+            </ConfirmButtons>
+          </Confirm>
+        ) : (
+          <DeleteButton type="button" onClick={() => setConfirmingDelete(true)}>
+            Poista
+          </DeleteButton>
         )
       }
     >
-      <EventForm draft={draft} onChange={update} />
+      {/* Landing in the name field is right for a blank event and wrong for one
+          that is already named: it would pop the keyboard over what you opened. */}
+      <EventForm draft={draft} autoFocusTitle={!isExisting} onChange={update} />
     </Modal>
   );
 };
@@ -140,6 +171,35 @@ const SecondaryButton = styled(FooterButton)`
   &:hover {
     border-color: var(--accent);
   }
+`;
+
+/** Replaces the delete button in place, so the answer is where the question is. */
+const Confirm = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+`;
+
+const ConfirmQuestion = styled.span`
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--danger);
+`;
+
+const ConfirmButtons = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const DangerButton = styled(FooterButton)`
+  border-color: var(--danger);
+  background: var(--danger);
+  font-weight: 600;
+  color: var(--on-danger);
 `;
 
 const PrimaryButton = styled.button`

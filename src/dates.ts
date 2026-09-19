@@ -70,3 +70,7 @@ export const formatMonth = (date: Date): string =>
 /** esim. `lauantai 26. syyskuuta 2026` — modaalin otsikko. */
 export const formatLongDate = (date: Date): string =>
   formatDate(date, 'EEEE d. MMMM yyyy');
+
+/** esim. `la 24. loka 2026` — sama päivä kapealla näytöllä. */
+export const formatCompactDate = (date: Date): string =>
+  formatDate(date, 'EEEEEE d. MMM yyyy');

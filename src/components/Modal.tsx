@@ -2,18 +2,34 @@ import { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import styled from 'styled-components';
 import { phone } from '../breakpoints';
+import { useIsPhone } from '../useIsPhone';
 
 type Props = {
   /** Small uppercase line in the header, above the content. */
   eyebrow: string;
   label: string;
   children: ReactNode;
-  /** The action row; it stays put while the body scrolls under it. */
+  /**
+   * The button that finishes and closes the dialog. On a phone it sits in the
+   * header, which the on-screen keyboard never covers; everywhere else it ends
+   * the footer row.
+   */
+  action?: ReactNode;
+  /** The rest of the actions — destructive or secondary, never the closing one. */
   footer?: ReactNode;
   onClose: () => void;
 };
 
-const Modal = ({ eyebrow, label, children, footer, onClose }: Props) => {
+const Modal = ({
+  eyebrow,
+  label,
+  children,
+  action,
+  footer,
+  onClose,
+}: Props) => {
+  const isPhone = useIsPhone();
+
   useEffect(() => {
     const onKeyDown = (keyEvent: KeyboardEvent) => {
       if (keyEvent.key === 'Escape') onClose();
@@ -52,11 +68,22 @@ const Modal = ({ eyebrow, label, children, footer, onClose }: Props) => {
       >
         <Header>
           <Eyebrow>{eyebrow}</Eyebrow>
+          {isPhone && action}
         </Header>
 
-        <Body>{children}</Body>
+        <Body>
+          {children}
+          {/* On a phone the remaining actions are just the end of the form, so
+              they scroll away with it instead of taking up a permanent strip. */}
+          {isPhone && footer && <InlineActions>{footer}</InlineActions>}
+        </Body>
 
-        {footer && <Footer>{footer}</Footer>}
+        {!isPhone && (footer || action) && (
+          <Footer>
+            {footer ?? <Spacer />}
+            {action}
+          </Footer>
+        )}
       </Dialog>
     </Overlay>
   );
@@ -82,7 +109,7 @@ const Overlay = styled.div`
   }
 `;
 
-/** A fixed frame: header and footer hold their place, only `Body` scrolls. */
+/** A fixed frame: the header holds its place, everything under it scrolls. */
 const Dialog = styled.div`
   display: flex;
   flex-direction: column;
@@ -105,9 +132,14 @@ const Header = styled.div`
   flex: none;
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   padding: 14px 16px;
   border-bottom: 1px solid var(--line);
+
+  ${phone} {
+    padding: 10px 12px 10px 16px;
+  }
 `;
 
 const Eyebrow = styled.span`
@@ -116,6 +148,12 @@ const Eyebrow = styled.span`
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--muted);
+
+  ${phone} {
+    /* Shares the row with the closing button, so it must not push it off. */
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
 `;
 
 const Body = styled.div`
@@ -128,6 +166,20 @@ const Body = styled.div`
   overflow-y: auto;
   /* Scrolling to the end of the form must not start scrolling the page behind. */
   overscroll-behavior: contain;
+
+  ${phone} {
+    /* Clears the home indicator on phones that have one. */
+    padding-bottom: calc(16px + env(safe-area-inset-bottom));
+  }
+`;
+
+const InlineActions = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
 `;
 
 const Footer = styled.div`
@@ -139,11 +191,10 @@ const Footer = styled.div`
   padding: 12px 16px;
   border-top: 1px solid var(--line);
   background: var(--surface);
+`;
 
-  ${phone} {
-    /* Clears the home indicator on phones that have one. */
-    padding-bottom: calc(12px + env(safe-area-inset-bottom));
-  }
+const Spacer = styled.div`
+  flex: 1;
 `;
 
 export default Modal;
