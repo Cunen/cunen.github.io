@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styled from 'styled-components';
+import { phone } from '../breakpoints';
 
 export type ChipTone = 'neutral' | 'interested' | 'going';
 
@@ -185,6 +186,11 @@ const ChipInput = styled.input`
 
   &:focus {
     outline: none;
+  }
+
+  ${phone} {
+    /* 16px keeps iOS from zooming the page in when the field takes focus. */
+    font-size: 16px;
   }
 `;
 

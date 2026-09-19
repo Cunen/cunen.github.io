@@ -27,7 +27,6 @@ const EventList = ({ events, onOpen }: Props) => {
         const meta = [
           event.startTime,
           event.location,
-          event.price,
           event.days > 1 ? `${event.days} päivää` : '',
         ]
           .filter(Boolean)

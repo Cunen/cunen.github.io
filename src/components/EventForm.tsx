@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef } from 'react';
 import styled from 'styled-components';
 import ArtistList from './ArtistList';
 import ChipList from './ChipList';
+import { phone } from '../breakpoints';
 import { detectLinks } from '../links';
 import { MAX_EVENT_DAYS } from '../types';
 import type { CalendarEvent } from '../types';
@@ -49,6 +50,26 @@ const EventForm = ({ draft, onChange }: Props) => {
         aria-label="Keikan nimi"
       />
 
+      {/* Who is coming is the thing everyone opens this for, so it leads. */}
+      <ChipList
+        label="Kiinnostuneet"
+        tone="interested"
+        values={draft.interested}
+        placeholder="Ketkä ehkä tulevat?"
+        hint="klikkaa nimeä siirtääksesi tulossa-listalle"
+        onChange={(interested) => onChange({ interested })}
+        onChipClick={(name) => moveTo('going', name)}
+      />
+      <ChipList
+        label="Tulossa"
+        tone="going"
+        values={draft.going}
+        placeholder="Ketkä ovat varmasti mukana?"
+        hint="klikkaa nimeä siirtääksesi takaisin kiinnostuneisiin"
+        onChange={(going) => onChange({ going })}
+        onChipClick={(name) => moveTo('interested', name)}
+      />
+
       <Row>
         <Field>
           <Label htmlFor="event-time">Alkaa</Label>
@@ -68,15 +89,10 @@ const EventForm = ({ draft, onChange }: Props) => {
             onChange={(event) => onChange({ location: event.target.value })}
           />
         </Field>
-        <Field>
-          <Label htmlFor="event-price">Hinta</Label>
-          <PriceInput
-            id="event-price"
-            value={draft.price}
-            placeholder="20 € / ilmainen"
-            onChange={(event) => onChange({ price: event.target.value })}
-          />
-        </Field>
+      </Row>
+
+      {/* Two small controls; side by side they cost one line instead of two. */}
+      <BottomRow>
         <Field>
           <Label htmlFor="event-days">Kesto</Label>
           <DaySelect
@@ -91,17 +107,16 @@ const EventForm = ({ draft, onChange }: Props) => {
             ))}
           </DaySelect>
         </Field>
-      </Row>
-
-      <SoldOutToggle>
-        <input
-          id="event-sold-out"
-          type="checkbox"
-          checked={draft.soldOut}
-          onChange={(event) => onChange({ soldOut: event.target.checked })}
-        />
-        <label htmlFor="event-sold-out">Loppuunmyyty</label>
-      </SoldOutToggle>
+        <SoldOutToggle>
+          <input
+            id="event-sold-out"
+            type="checkbox"
+            checked={draft.soldOut}
+            onChange={(event) => onChange({ soldOut: event.target.checked })}
+          />
+          <label htmlFor="event-sold-out">Loppuunmyyty</label>
+        </SoldOutToggle>
+      </BottomRow>
 
       <ArtistList
         artists={draft.artists}
@@ -133,25 +148,6 @@ const EventForm = ({ draft, onChange }: Props) => {
           </Links>
         )}
       </Field>
-
-      <ChipList
-        label="Kiinnostuneet"
-        tone="interested"
-        values={draft.interested}
-        placeholder="Ketkä ehkä tulevat?"
-        hint="klikkaa nimeä siirtääksesi tulossa-listalle"
-        onChange={(interested) => onChange({ interested })}
-        onChipClick={(name) => moveTo('going', name)}
-      />
-      <ChipList
-        label="Tulossa"
-        tone="going"
-        values={draft.going}
-        placeholder="Ketkä ovat varmasti mukana?"
-        hint="klikkaa nimeä siirtääksesi takaisin kiinnostuneisiin"
-        onChange={(going) => onChange({ going })}
-        onChipClick={(name) => moveTo('interested', name)}
-      />
     </>
   );
 };
@@ -180,6 +176,12 @@ const Row = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
+`;
+
+/** The checkbox sits on the select's baseline rather than on its label's. */
+const BottomRow = styled(Row)`
+  align-items: flex-end;
+  gap: 16px;
 `;
 
 const Field = styled.div<{ $grow?: boolean }>`
@@ -213,10 +215,11 @@ const Input = styled.input`
     outline: none;
     border-color: var(--accent);
   }
-`;
 
-const PriceInput = styled(Input)`
-  width: 104px;
+  ${phone} {
+    /* 16px keeps iOS from zooming the page in when the field takes focus. */
+    font-size: 16px;
+  }
 `;
 
 const DaySelect = styled.select`
@@ -231,13 +234,19 @@ const DaySelect = styled.select`
     outline: none;
     border-color: var(--accent);
   }
+
+  ${phone} {
+    /* 16px keeps iOS from zooming the page in when the field takes focus. */
+    font-size: 16px;
+  }
 `;
 
 const SoldOutToggle = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-top: -6px;
+  /* Lines the label up with the select next to it, not with its own label row. */
+  padding-bottom: 9px;
 
   input {
     width: 16px;
@@ -268,6 +277,11 @@ const Textarea = styled.textarea`
   &:focus {
     outline: none;
     border-color: var(--accent);
+  }
+
+  ${phone} {
+    /* 16px keeps iOS from zooming the page in when the field takes focus. */
+    font-size: 16px;
   }
 `;
 

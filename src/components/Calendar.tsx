@@ -1,6 +1,7 @@
 import { isSameDay, isSameMonth } from 'date-fns';
 import styled from 'styled-components';
 import DayCell from './DayCell';
+import EmptyDay from './EmptyDay';
 import { calendarColumns } from './calendarGrid';
 import { phone } from '../breakpoints';
 import { formatMonth, toDateKey } from '../dates';
@@ -21,18 +22,23 @@ const Calendar = ({ months, occupancy, today, canEdit, onOpenDay }: Props) => (
       <Month key={group.key}>
         <MonthHeading>{formatMonth(group.month)}</MonthHeading>
         <Grid>
-          {group.days.map((day) => (
-            <DayCell
-              key={toDateKey(day)}
-              date={day}
-              occupancy={occupancy[toDateKey(day)]}
-              isToday={isSameDay(day, today)}
-              isPast={day < today && !isSameDay(day, today)}
-              isOutsideMonth={!isSameMonth(day, group.month)}
-              canEdit={canEdit}
-              onOpen={() => onOpenDay(day)}
-            />
-          ))}
+          {group.days.map((day) =>
+            // The padding days are the neighbouring month's business; showing them
+            // here would repeat whatever event they carry.
+            isSameMonth(day, group.month) ? (
+              <DayCell
+                key={toDateKey(day)}
+                date={day}
+                occupancy={occupancy[toDateKey(day)]}
+                isToday={isSameDay(day, today)}
+                isPast={day < today && !isSameDay(day, today)}
+                canEdit={canEdit}
+                onOpen={() => onOpenDay(day)}
+              />
+            ) : (
+              <EmptyDay key={toDateKey(day)} aria-hidden="true" />
+            )
+          )}
         </Grid>
       </Month>
     ))}

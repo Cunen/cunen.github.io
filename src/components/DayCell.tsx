@@ -1,5 +1,6 @@
 import { getDate } from 'date-fns';
 import styled from 'styled-components';
+import { dayCellHeight } from './calendarGrid';
 import { phone } from '../breakpoints';
 import { formatDate } from '../dates';
 import { UNTITLED, goingLabel, interestedLabel } from '../text';
@@ -10,8 +11,6 @@ type Props = {
   occupancy?: DayOccupancy;
   isToday: boolean;
   isPast: boolean;
-  /** True for the padding days that complete the first and last weeks. */
-  isOutsideMonth: boolean;
   canEdit: boolean;
   onOpen: () => void;
 };
@@ -21,7 +20,6 @@ const DayCell = ({
   occupancy,
   isToday,
   isPast,
-  isOutsideMonth,
   canEdit,
   onOpen,
 }: Props) => {
@@ -51,9 +49,7 @@ const DayCell = ({
       }
     >
       <DayHeader>
-        <DayNumber $today={isToday} $outside={isOutsideMonth}>
-          {dayNumber}
-        </DayNumber>
+        <DayNumber $today={isToday}>{dayNumber}</DayNumber>
         {event && event.days > 1 && (
           <DayCounter>
             {(occupancy?.dayIndex ?? 0) + 1}/{event.days}
@@ -98,7 +94,7 @@ const Cell = styled.button<{
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-height: 118px;
+  ${dayCellHeight}
   padding: 8px;
   text-align: left;
   /* Sold out outranks today's outline: it is the thing you need to notice. */
@@ -132,7 +128,6 @@ const Cell = styled.button<{
 
   ${phone} {
     gap: 3px;
-    min-height: 58px;
     padding: 4px 3px;
     border-radius: 7px;
     background: ${({ $hasEvent, $soldOut }) =>
@@ -155,11 +150,10 @@ const DayHeader = styled.div`
   }
 `;
 
-const DayNumber = styled.span<{ $today: boolean; $outside: boolean }>`
+const DayNumber = styled.span<{ $today: boolean }>`
   font-size: 12px;
   font-weight: ${({ $today }) => ($today ? 700 : 500)};
   color: ${({ $today }) => ($today ? 'var(--accent)' : 'var(--muted)')};
-  opacity: ${({ $outside }) => ($outside ? 0.45 : 1)};
 
   ${phone} {
     font-size: 11px;

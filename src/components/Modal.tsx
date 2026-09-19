@@ -8,6 +8,7 @@ type Props = {
   eyebrow: string;
   label: string;
   children: ReactNode;
+  /** The action row; it stays put while the body scrolls under it. */
   footer?: ReactNode;
   onClose: () => void;
 };
@@ -21,6 +22,26 @@ const Modal = ({ eyebrow, label, children, footer, onClose }: Props) => {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, [onClose]);
 
+  // The page behind stays where it was: without this the calendar scrolls under
+  // the dialog, and on a phone the whole overlay pans with the finger. Pinning
+  // the body rather than hiding its overflow is what keeps the scroll position,
+  // and the padding stands in for the scrollbar that goes with it.
+  useEffect(() => {
+    const { body, documentElement } = document;
+    const offset = window.scrollY;
+    const scrollbar = window.innerWidth - documentElement.clientWidth;
+    const previous = body.style.cssText;
+    body.style.position = 'fixed';
+    body.style.top = `-${offset}px`;
+    body.style.width = '100%';
+    body.style.overflow = 'hidden';
+    if (scrollbar > 0) body.style.paddingRight = `${scrollbar}px`;
+    return () => {
+      body.style.cssText = previous;
+      window.scrollTo(0, offset);
+    };
+  }, []);
+
   return (
     <Overlay onMouseDown={onClose}>
       <Dialog
@@ -31,9 +52,6 @@ const Modal = ({ eyebrow, label, children, footer, onClose }: Props) => {
       >
         <Header>
           <Eyebrow>{eyebrow}</Eyebrow>
-          <CloseButton type="button" onClick={onClose} aria-label="Sulje">
-            &times;
-          </CloseButton>
         </Header>
 
         <Body>{children}</Body>
@@ -47,12 +65,15 @@ const Modal = ({ eyebrow, label, children, footer, onClose }: Props) => {
 const Overlay = styled.div`
   position: fixed;
   inset: 0;
+  /* Measured against the visible viewport, so a phone's toolbars never hide
+     the footer underneath themselves. */
+  height: 100dvh;
   z-index: 10;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   padding: 24px 16px;
-  overflow-y: auto;
+  overflow: hidden;
   background: var(--overlay);
 
   ${phone} {
@@ -61,38 +82,32 @@ const Overlay = styled.div`
   }
 `;
 
+/** A fixed frame: header and footer hold their place, only `Body` scrolls. */
 const Dialog = styled.div`
+  display: flex;
+  flex-direction: column;
   width: min(520px, 100%);
-  margin: auto;
+  max-height: 100%;
   border: 1px solid var(--line);
   border-radius: 14px;
   background: var(--surface);
   box-shadow: var(--shadow);
+  overflow: hidden;
 
   ${phone} {
-    display: flex;
-    flex-direction: column;
-    min-height: 100%;
-    margin: 0;
+    height: 100%;
     border: 0;
     border-radius: 0;
   }
 `;
 
 const Header = styled.div`
+  flex: none;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
   padding: 14px 16px;
   border-bottom: 1px solid var(--line);
-
-  ${phone} {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background: var(--surface);
-  }
 `;
 
 const Eyebrow = styled.span`
@@ -103,43 +118,31 @@ const Eyebrow = styled.span`
   color: var(--muted);
 `;
 
-const CloseButton = styled.button`
-  border: 0;
-  background: none;
-  padding: 0 4px;
-  font-size: 22px;
-  line-height: 1;
-  color: var(--muted);
-  cursor: pointer;
-
-  &:hover {
-    color: var(--text);
-  }
-`;
-
 const Body = styled.div`
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
   padding: 16px;
-
-  ${phone} {
-    flex: 1;
-  }
+  overflow-y: auto;
+  /* Scrolling to the end of the form must not start scrolling the page behind. */
+  overscroll-behavior: contain;
 `;
 
 const Footer = styled.div`
+  flex: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   padding: 12px 16px;
   border-top: 1px solid var(--line);
+  background: var(--surface);
 
   ${phone} {
-    position: sticky;
-    bottom: 0;
-    background: var(--surface);
+    /* Clears the home indicator on phones that have one. */
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
   }
 `;
 

@@ -13,3 +13,12 @@ export const calendarColumns = `
     gap: 3px;
   }
 `;
+
+/** The height a day occupies, shared so real days and padding days line up. */
+export const dayCellHeight = `
+  min-height: 118px;
+
+  ${phone} {
+    min-height: 58px;
+  }
+`;

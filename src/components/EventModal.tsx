@@ -44,6 +44,8 @@ const EventModal = ({
       : formatLongDate(fromDateKey(draft.date));
   const label = isExisting ? draft.title || 'Keikka' : 'Uusi keikka';
 
+  // Two buttons, always in the same places: the destructive one on the left,
+  // the one that finishes and closes the modal on the right.
   if (!canEdit) {
     return (
       <Modal
@@ -52,10 +54,12 @@ const EventModal = ({
         onClose={onClose}
         footer={
           <>
-            <Note>Kirjaudu sisään muokataksesi</Note>
             <SecondaryButton type="button" onClick={onSignIn}>
               Kirjaudu Googlella
             </SecondaryButton>
+            <PrimaryButton type="button" onClick={onClose}>
+              Sulje
+            </PrimaryButton>
           </>
         }
       >
@@ -73,17 +77,24 @@ const EventModal = ({
         isExisting ? (
           <>
             <DeleteButton type="button" onClick={onDelete}>
-              Poista keikka
+              Poista
             </DeleteButton>
-            <Note>Tallennetaan automaattisesti</Note>
+            <PrimaryButton type="button" onClick={onClose}>
+              Valmis
+            </PrimaryButton>
           </>
         ) : (
           <>
-            <Spacer />
+            <CancelButton type="button" onClick={onClose}>
+              Peruuta
+            </CancelButton>
             <PrimaryButton
               type="button"
               disabled={draft.title.trim().length === 0}
-              onClick={() => onSave(draft)}
+              onClick={() => {
+                onSave(draft);
+                onClose();
+              }}
             >
               Lisää keikka
             </PrimaryButton>
@@ -96,36 +107,35 @@ const EventModal = ({
   );
 };
 
-const Spacer = styled.div`
-  flex: 1;
-`;
-
-const Note = styled.span`
-  font-size: 12px;
-  color: var(--muted);
-`;
-
-const DeleteButton = styled.button`
+const FooterButton = styled.button`
   border: 1px solid var(--line);
   border-radius: 9px;
   background: none;
-  padding: 8px 12px;
-  color: var(--danger);
+  padding: 9px 14px;
   cursor: pointer;
+  white-space: nowrap;
+`;
+
+const DeleteButton = styled(FooterButton)`
+  color: var(--danger);
 
   &:hover {
     border-color: var(--danger);
   }
 `;
 
-const SecondaryButton = styled.button`
-  border: 1px solid var(--line);
-  border-radius: 9px;
+const CancelButton = styled(FooterButton)`
+  color: var(--muted);
+
+  &:hover {
+    border-color: var(--line-strong);
+    color: var(--text);
+  }
+`;
+
+const SecondaryButton = styled(FooterButton)`
   background: var(--surface-muted);
-  padding: 8px 14px;
   font-weight: 500;
-  cursor: pointer;
-  white-space: nowrap;
 
   &:hover {
     border-color: var(--accent);
@@ -136,9 +146,10 @@ const PrimaryButton = styled.button`
   border: 0;
   border-radius: 9px;
   background: var(--accent);
-  padding: 9px 16px;
+  padding: 10px 18px;
   font-weight: 600;
   color: #fff;
+  white-space: nowrap;
   cursor: pointer;
 
   &:disabled {

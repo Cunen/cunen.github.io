@@ -87,7 +87,7 @@ const ArtistList = ({ artists, onChange }: Props) => {
         </Rows>
       )}
 
-      <Row key={draftKey}>
+      <DraftRow key={draftKey}>
         <NameInput
           value={name}
           placeholder={
@@ -112,9 +112,9 @@ const ArtistList = ({ artists, onChange }: Props) => {
           aria-label="Uuden artistin genre"
         />
         <AddButton type="button" onClick={add} disabled={!name.trim()}>
-          Lisää
+          Lisää artisti
         </AddButton>
-      </Row>
+      </DraftRow>
       <Note>Aika ja genre ovat valinnaisia.</Note>
     </Field>
   );
@@ -148,11 +148,29 @@ const Row = styled.div`
 
   ${phone} {
     /* Name takes its own line; time and genre share the next one. */
-    grid-template-columns: 1fr 1fr 44px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 32px;
     grid-template-areas:
       'name name remove'
       'time genre genre';
     row-gap: 6px;
+  }
+`;
+
+/**
+ * The row you type a new artist into. Its button carries a word rather than an
+ * ×, so it needs more width than the remove column, and on a phone the three
+ * fields and the button each get a full-width line to be comfortably tappable.
+ */
+const DraftRow = styled(Row)`
+  grid-template-columns: 1fr 108px 120px auto;
+
+  ${phone} {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      'name name'
+      'time genre'
+      'add add';
+    row-gap: 8px;
   }
 `;
 
@@ -171,6 +189,12 @@ const Input = styled.input`
   &:focus {
     outline: none;
     border-color: var(--accent);
+  }
+
+  ${phone} {
+    /* 16px keeps iOS from zooming the page in when the field takes focus. */
+    padding: 10px;
+    font-size: 16px;
   }
 `;
 
@@ -214,9 +238,10 @@ const AddButton = styled.button`
   border: 1px solid var(--line);
   border-radius: 9px;
   background: var(--surface-muted);
-  padding: 8px 4px;
+  padding: 8px 12px;
   font-size: 13px;
   color: var(--text);
+  white-space: nowrap;
   cursor: pointer;
 
   &:hover:not(:disabled) {
@@ -229,9 +254,9 @@ const AddButton = styled.button`
   }
 
   ${phone} {
-    grid-area: remove;
-    padding: 8px 0;
-    font-size: 11px;
+    grid-area: add;
+    padding: 11px 0;
+    font-size: 14px;
   }
 `;
 

@@ -44,7 +44,6 @@ const toEvent = (id: string, data: Record<string, unknown>): CalendarEvent => ({
   title: asString(data.title),
   startTime: asString(data.startTime),
   location: asString(data.location),
-  price: asString(data.price),
   description: asString(data.description),
   days: typeof data.days === 'number' ? clampDays(data.days) : 1,
   soldOut: data.soldOut === true,

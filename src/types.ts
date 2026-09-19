@@ -17,8 +17,6 @@ export type CalendarEvent = {
   /** 24h `HH:mm`, or an empty string when the start time is not decided yet. */
   startTime: string;
   location: string;
-  /** Free text so "20 €", "15 / 20 at the door" and "free" all work. */
-  price: string;
   /** Free text; any URLs in it are surfaced as links. */
   description: string;
   /** How many calendar days the event covers, starting from `date`. 1 = one day. */
@@ -37,7 +35,6 @@ export const createEvent = (date: DateKey): CalendarEvent => ({
   title: '',
   startTime: '',
   location: '',
-  price: '',
   description: '',
   days: 1,
   soldOut: false,

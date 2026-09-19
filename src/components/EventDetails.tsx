@@ -12,7 +12,6 @@ const EventDetails = ({ event }: Props) => {
   const facts = [
     event.startTime && { label: 'Alkaa', value: event.startTime },
     event.location && { label: 'Missä', value: event.location },
-    event.price && { label: 'Hinta', value: event.price },
     event.days > 1 && {
       label: 'Kesto',
       value: `${event.days} päivää, päättyy ${formatDate(lastDayOf(event), 'd.M.')}`,
