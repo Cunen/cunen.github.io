@@ -14,6 +14,7 @@ import { buildOccupancy } from './occupancy';
 import { useAuth } from './useAuth';
 import { useEvents } from './useEvents';
 import { upcomingLabel } from './text';
+import { useIsPhone } from './useIsPhone';
 import { createEvent } from './types';
 import type { CalendarEvent } from './types';
 
@@ -42,6 +43,7 @@ function App() {
   const [view, setView] = useState<View>(readStoredView);
   const [monthCount, setMonthCount] = useState(MONTHS_PER_LOAD);
   const [openEvent, setOpenEvent] = useState<CalendarEvent | null>(null);
+  const isPhone = useIsPhone();
 
   // Anchored once per mount so the grid does not shift while the app is open.
   const today = useMemo(() => startOfDay(new Date()), []);
@@ -77,8 +79,21 @@ function App() {
 
   const isExisting = Boolean(openEvent && events[openEvent.date]);
 
+  const account = (
+    <AccountButton
+      user={user}
+      resolved={resolved}
+      onSignIn={() => void signIn()}
+      onSignOut={signOut}
+    />
+  );
+
   return (
     <Page>
+      {/* A phone has no room for the account beside the title, and nothing needs
+          it in view, so it rides above the sticky block and scrolls away. */}
+      {isPhone && <AccountRow>{account}</AccountRow>}
+
       <StickyTop>
         <Header>
           <Heading>
@@ -111,12 +126,7 @@ function App() {
           </Heading>
           <Controls>
             <ViewSwitch view={view} onChange={setView} />
-            <AccountButton
-              user={user}
-              resolved={resolved}
-              onSignIn={() => void signIn()}
-              onSignOut={signOut}
-            />
+            {!isPhone && account}
           </Controls>
         </Header>
         {view === 'calendar' && <WeekdayRow />}
@@ -192,8 +202,15 @@ const StickyTop = styled.div`
   padding: 28px 0 10px;
 
   ${phone} {
-    padding: 18px 0 8px;
+    /* The account row above it carries the space off the top of the page. */
+    padding: 6px 0 8px;
   }
+`;
+
+const AccountRow = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 0 2px;
 `;
 
 const Header = styled.header`
@@ -204,9 +221,9 @@ const Header = styled.header`
   margin-bottom: 14px;
 
   ${phone} {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 12px;
+    /* Title, count and the view switch share one line; see ViewSwitch. */
+    align-items: center;
+    gap: 10px;
     margin-bottom: 10px;
   }
 `;
@@ -222,8 +239,8 @@ const Controls = styled.div`
   flex-wrap: wrap;
 
   ${phone} {
-    width: 100%;
-    justify-content: space-between;
+    flex: none;
+    flex-wrap: nowrap;
   }
 `;
 
@@ -232,6 +249,10 @@ const Title = styled.h1`
   font-size: 22px;
   font-weight: 600;
   letter-spacing: -0.01em;
+
+  ${phone} {
+    font-size: 19px;
+  }
 `;
 
 const Subtitle = styled.p`

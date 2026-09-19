@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { phone } from '../breakpoints';
 
 export type View = 'list' | 'calendar';
 
@@ -35,6 +36,10 @@ const Switch = styled.div`
   border: 1px solid var(--line);
   border-radius: 999px;
   background: var(--surface-muted);
+
+  ${phone} {
+    padding: 2px;
+  }
 `;
 
 const Option = styled.button<{ $active: boolean }>`
@@ -51,6 +56,12 @@ const Option = styled.button<{ $active: boolean }>`
 
   &:hover {
     color: var(--text);
+  }
+
+  ${phone} {
+    /* Narrow enough to sit next to the title on the smallest phones. */
+    padding: 6px 11px;
+    font-size: 12px;
   }
 `;
 
